@@ -1,0 +1,35 @@
+<.header>
+  Entry <%= @entry.id %>
+  <:subtitle>This is a entry record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/entries/#{@entry}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit entry</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Description"><%= @entry.description %></:item>
+  <:item title="Title"><%= @entry.title %></:item>
+  <:item title="Year"><%= @entry.year %></:item>
+  <:item title="Month"><%= @entry.month %></:item>
+  <:item title="Day"><%= @entry.day %></:item>
+  <:item title="Weekday"><%= @entry.weekday %></:item>
+  <:item title="Importance"><%= @entry.importance %></:item>
+  <:item title="Fuzzy"><%= @entry.fuzzy %></:item>
+  <:item title="Needs review"><%= @entry.needs_review %></:item>
+  <:item title="Tags"><%= @entry.tags %></:item>
+</.list>
+
+<.back navigate={~p"/entries"}>Back to entries</.back>
+
+<.modal :if={@live_action == :edit} id="entry-modal" show on_cancel={JS.patch(~p"/entries/#{@entry}")}>
+  <.live_component
+    module={WspomWeb.EntryLive.FormComponent}
+    id={@entry.id}
+    title={@page_title}
+    action={@live_action}
+    entry={@entry}
+    patch={~p"/entries/#{@entry}"}
+  />
+</.modal>

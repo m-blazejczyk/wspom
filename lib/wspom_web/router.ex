@@ -18,6 +18,13 @@ defmodule WspomWeb.Router do
     pipe_through :browser
 
     live "/", Live
+
+    live "/entries", EntryLive.Index, :index
+    live "/entries/new", EntryLive.Index, :new
+    live "/entries/:id/edit", EntryLive.Index, :edit
+
+    live "/entries/:id", EntryLive.Show, :show
+    live "/entries/:id/show/edit", EntryLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.

@@ -1,0 +1,50 @@
+<.header>
+  Listing Entries
+  <:actions>
+    <.link patch={~p"/entries/new"}>
+      <.button>New Entry</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="entries"
+  rows={@streams.entries}
+  row_click={fn {_id, entry} -> JS.navigate(~p"/entries/#{entry}") end}
+>
+  <:col :let={{_id, entry}} label="Description"><%= entry.description %></:col>
+  <:col :let={{_id, entry}} label="Title"><%= entry.title %></:col>
+  <:col :let={{_id, entry}} label="Year"><%= entry.year %></:col>
+  <:col :let={{_id, entry}} label="Month"><%= entry.month %></:col>
+  <:col :let={{_id, entry}} label="Day"><%= entry.day %></:col>
+  <:col :let={{_id, entry}} label="Weekday"><%= entry.weekday %></:col>
+  <:col :let={{_id, entry}} label="Importance"><%= entry.importance %></:col>
+  <:col :let={{_id, entry}} label="Fuzzy"><%= entry.fuzzy %></:col>
+  <:col :let={{_id, entry}} label="Needs review"><%= entry.needs_review %></:col>
+  <:col :let={{_id, entry}} label="Tags"><%= entry.tags %></:col>
+  <:action :let={{_id, entry}}>
+    <div class="sr-only">
+      <.link navigate={~p"/entries/#{entry}"}>Show</.link>
+    </div>
+    <.link patch={~p"/entries/#{entry}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, entry}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: entry.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="entry-modal" show on_cancel={JS.patch(~p"/entries")}>
+  <.live_component
+    module={WspomWeb.EntryLive.FormComponent}
+    id={@entry.id || :new}
+    title={@page_title}
+    action={@live_action}
+    entry={@entry}
+    patch={~p"/entries"}
+  />
+</.modal>

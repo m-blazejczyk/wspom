@@ -17,8 +17,7 @@ defmodule WspomWeb.Router do
   scope "/", WspomWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
-    live "/wspom", Live
+    live "/", Live
   end
 
   # Other scopes may use custom stacks.

@@ -22,4 +22,16 @@ defmodule WspomWeb.Live do
     </h2>
     """
   end
+
+  def handle_event("guess", %{"number" => guess}, socket) do
+    message = if String.to_integer(guess) == socket.assigns.target do
+      "Your guess: #{guess}. You won!!!"
+    else
+      "Your guess: #{guess}. Wrong. Guess again."
+    end
+    {
+      :noreply,
+      assign(socket, message: message)
+    }
+  end
 end

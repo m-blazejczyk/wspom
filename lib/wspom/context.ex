@@ -1,10 +1,5 @@
 defmodule Wspom.Context do
-  @moduledoc """
-  The Context context.
-  """
-
-  import Ecto.Query, warn: false
-  alias Wspom.Repo
+  # alias Wspom.Repo
 
   alias Wspom.Context.Entry
 
@@ -18,7 +13,7 @@ defmodule Wspom.Context do
 
   """
   def list_entries do
-    Repo.all(Entry)
+    [%Entry{}]
   end
 
   @doc """
@@ -35,7 +30,9 @@ defmodule Wspom.Context do
       ** (Ecto.NoResultsError)
 
   """
-  def get_entry!(id), do: Repo.get!(Entry, id)
+  def get_entry!(id) do
+    %Entry{}
+  end
 
   @doc """
   Creates a entry.
@@ -50,9 +47,10 @@ defmodule Wspom.Context do
 
   """
   def create_entry(attrs \\ %{}) do
-    %Entry{}
-    |> Entry.changeset(attrs)
-    |> Repo.insert()
+    # %Entry{}
+    # |> Entry.changeset(attrs)
+    # |> Repo.insert()
+    {:ok, %Entry{}}
   end
 
   @doc """
@@ -68,9 +66,10 @@ defmodule Wspom.Context do
 
   """
   def update_entry(%Entry{} = entry, attrs) do
-    entry
-    |> Entry.changeset(attrs)
-    |> Repo.update()
+    # entry
+    # |> Entry.changeset(attrs)
+    # |> Repo.update()
+    {:ok, %Entry{}}
   end
 
   @doc """
@@ -86,7 +85,8 @@ defmodule Wspom.Context do
 
   """
   def delete_entry(%Entry{} = entry) do
-    Repo.delete(entry)
+    # Repo.delete(entry)
+    {:ok, %Entry{}}
   end
 
   @doc """

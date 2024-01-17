@@ -2,7 +2,7 @@ defmodule WspomWeb.EntryLive.Index do
   use WspomWeb, :live_view
 
   alias Wspom.Context
-  alias Wspom.Context.Entry
+  alias Wspom.Entry
 
   @impl true
   def mount(_params, _session, socket) do

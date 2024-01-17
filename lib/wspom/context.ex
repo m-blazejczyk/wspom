@@ -1,7 +1,7 @@
 defmodule Wspom.Context do
   # alias Wspom.Repo
 
-  alias Wspom.Context.Entry
+  alias Wspom.Entry
 
   @doc """
   Returns the list of entries.

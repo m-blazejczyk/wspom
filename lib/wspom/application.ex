@@ -13,7 +13,8 @@ defmodule Wspom.Application do
       # Start a worker by calling: Wspom.Worker.start_link(arg)
       # {Wspom.Worker, arg},
       # Start to serve requests, typically the last entry
-      WspomWeb.Endpoint
+      WspomWeb.Endpoint,
+      Wspom.Database
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

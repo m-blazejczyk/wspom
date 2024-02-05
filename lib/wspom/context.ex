@@ -13,7 +13,7 @@ defmodule Wspom.Context do
 
   """
   def list_entries do
-    [%Entry{}]
+    Wspom.Database.all_entries()
   end
 
   @doc """
@@ -30,7 +30,7 @@ defmodule Wspom.Context do
       ** (Ecto.NoResultsError)
 
   """
-  def get_entry!(id) do
+  def get_entry!(_id) do
     %Entry{}
   end
 
@@ -46,7 +46,7 @@ defmodule Wspom.Context do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_entry(attrs \\ %{}) do
+  def create_entry(_attrs \\ %{}) do
     # %Entry{}
     # |> Entry.changeset(attrs)
     # |> Repo.insert()
@@ -65,7 +65,7 @@ defmodule Wspom.Context do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_entry(%Entry{} = entry, attrs) do
+  def update_entry(%Entry{}, _attrs) do
     # entry
     # |> Entry.changeset(attrs)
     # |> Repo.update()
@@ -84,7 +84,7 @@ defmodule Wspom.Context do
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_entry(%Entry{} = entry) do
+  def delete_entry(%Entry{}) do
     # Repo.delete(entry)
     {:ok, %Entry{}}
   end

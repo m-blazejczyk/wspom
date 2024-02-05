@@ -10,11 +10,9 @@ defmodule Wspom.Application do
     children = [
       WspomWeb.Telemetry,
       {Phoenix.PubSub, name: Wspom.PubSub},
-      # Start a worker by calling: Wspom.Worker.start_link(arg)
-      # {Wspom.Worker, arg},
+      Wspom.Database,
       # Start to serve requests, typically the last entry
-      WspomWeb.Endpoint,
-      Wspom.Database
+      WspomWeb.Endpoint
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -12,7 +12,6 @@
   rows={@streams.entries}
   row_click={fn {_id, entry} -> JS.navigate(~p"/entries/#{entry}") end}
 >
-  <:col :let={{_id, entry}} label="Description"><%= entry.description %></:col>
   <:col :let={{_id, entry}} label="Title"><%= entry.title %></:col>
   <:col :let={{_id, entry}} label="Year"><%= entry.year %></:col>
   <:col :let={{_id, entry}} label="Month"><%= entry.month %></:col>
@@ -21,7 +20,8 @@
   <:col :let={{_id, entry}} label="Importance"><%= entry.importance %></:col>
   <:col :let={{_id, entry}} label="Fuzzy"><%= entry.fuzzy %></:col>
   <:col :let={{_id, entry}} label="Needs review"><%= entry.needs_review %></:col>
-  <:col :let={{_id, entry}} label="Tags"><%= entry.tags %></:col>
+  <:col :let={{_id, entry}} label="Description"><%= String.slice(entry.description, 0, 30) %></:col>
+  <:col :let={{_id, entry}} label="Tags"><%= Wspom.Entry.tags_to_string(entry.tags) %></:col>
   <:action :let={{_id, entry}}>
     <div class="sr-only">
       <.link navigate={~p"/entries/#{entry}"}>Show</.link>

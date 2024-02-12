@@ -6,7 +6,7 @@ defmodule WspomWeb.EntryLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :entries, Context.list_entries())}
+    {:ok, socket |> assign(:entries, Context.list_entries())}
   end
 
   @impl true

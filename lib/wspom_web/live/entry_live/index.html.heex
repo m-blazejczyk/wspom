@@ -8,7 +8,9 @@
 </.header>
 
 <%= for entry <- @entries do %>
-  <div>Title: <%= entry.title %></div>
+  <div class="text-1xl font-bold underline">
+    Title: <%= entry.title %>
+  </div>
   <div>Year: <%= entry.year %></div>
   <div>Month: <%= entry.month %></div>
   <div>Day: <%= entry.day %></div>

@@ -7,30 +7,52 @@
   </:actions>
 </.header>
 
-<%= for entry <- @entries do %>
-  <div class="text-1xl font-bold underline">
-    Title: <%= entry.title %>
+<div class="relative flex flex-col justify-center overflow-hidden bg-gray-50 py-2 gap-4">
+  <%= for entry <- @entries do %>
+  <div class="relative bg-white mx-2 px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-lg sm:px-4">
+    <div class="divide-y divide-gray-300/50">
+      <div>
+        <div class="text-gray-900 font-bold text-xl mb-2">
+          <%= entry.title %>
+        </div>
+        <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-gray-200 py-1 px-2 my-2 font-sans text-xs leading-none text-gray-800">
+          <b><%= entry.year %></b>
+          <span class="uppercase">, <%= entry.month %> <%= entry.day %>, </span>
+          <b class="uppercase"><%= entry.weekday %></b>, 
+          <b class="text-red-600">±<%= entry.fuzzy %></b> days 
+        </div>
+        <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-red-300 py-1 px-2 my-2 font-sans text-xs uppercase leading-none text-gray-800 font-bold">
+          <%= entry.importance %>
+        </div>
+        <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-blue-300 py-1 px-2 my-2 font-sans text-xs uppercase leading-none text-gray-800 font-bold">
+          <%= entry.needs_review %>
+        </div>
+        <br>
+        <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-green-500 py-1 px-2 mt-1 mb-2 font-sans text-xs uppercase leading-none text-gray-800 font-bold">
+          t<%= Wspom.Entry.tags_to_string(entry.tags) %>ag_1
+        </div>
+      </div>
+      <div class="p-4 justify-between leading-normal">
+        <.link patch={~p"/entries/#{entry}/edit"}>Edit</.link>
+        <.link
+          phx-click={JS.push("delete", value: %{id: entry.id}) |> hide("##{entry.id}")}
+          data-confirm="Are you sure?"
+        >
+          Delete
+        </.link>
+      </div>
+      <div class="py-3">
+        <div class="text-gray-600">
+          <p><%= String.slice(entry.description, 0, 200) %></p>
+        </div>
+        <div class="float-right text-gray-200">
+          ... Show all
+        </div>
+      </div>
+    </div>
   </div>
-  <div>Year: <%= entry.year %></div>
-  <div>Month: <%= entry.month %></div>
-  <div>Day: <%= entry.day %></div>
-  <div>Weekday: <%= entry.weekday %></div>
-  <div>Importance: <%= entry.importance %></div>
-  <div>Fuzzy: <%= entry.fuzzy %></div>
-  <div>Needs_review: <%= entry.needs_review %></div>
-  <div>Description: <%= String.slice(entry.description, 0, 30) %></div>
-  <div>Tags: <%= Wspom.Entry.tags_to_string(entry.tags) %></div>
-  <div class="sr-only">
-    <.link navigate={~p"/entries/#{entry}"}>Show</.link>
-  </div>
-  <.link patch={~p"/entries/#{entry}/edit"}>Edit</.link>
-  <.link
-    phx-click={JS.push("delete", value: %{id: entry.id}) |> hide("##{entry.id}")}
-    data-confirm="Are you sure?"
-  >
-    Delete
-  </.link>
-<% end %>
+  <% end %>
+</div>
 
 <.modal :if={@live_action in [:new, :edit]} id="entry-modal" show on_cancel={JS.patch(~p"/entries")}>
   <.live_component

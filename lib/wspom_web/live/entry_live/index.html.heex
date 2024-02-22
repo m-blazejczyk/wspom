@@ -54,13 +54,13 @@
   <% end %>
 </div>
 
-<.modal :if={@live_action in [:new, :edit]} id="entry-modal" show on_cancel={JS.patch(~p"/entries")}>
+<.modal :if={@live_action in [:new, :edit]} id="entry-modal" show on_cancel={JS.patch(~p"/")}>
   <.live_component
     module={WspomWeb.EntryLive.FormComponent}
     id={@entry.id || :new}
     title={@page_title}
     action={@live_action}
     entry={@entry}
-    patch={~p"/entries"}
+    patch={~p"/"}
   />
 </.modal>

@@ -21,7 +21,7 @@
   <:item title="Tags"><%= @entry.tags %></:item>
 </.list>
 
-<.back navigate={~p"/entries"}>Back to entries</.back>
+<.back navigate={~p"/"}>Back to entries</.back>
 
 <.modal :if={@live_action == :edit} id="entry-modal" show on_cancel={JS.patch(~p"/entries/#{@entry}")}>
   <.live_component

@@ -7,9 +7,9 @@ defmodule Wspom.Entry do
       tags
       |> MapSet.to_list()
       |> Enum.sort()
-      |> Enum.join(', ')
+      |> Enum.join(", ")
     else
-      ''
+      ""
     end
   end
 end

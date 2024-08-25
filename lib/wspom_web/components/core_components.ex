@@ -15,9 +15,9 @@ defmodule WspomWeb.CoreComponents do
   Icons are provided by [heroicons](https://heroicons.com). See `icon/1` for usage.
   """
   use Phoenix.Component
+  use Gettext, backend: WspomWeb.Gettext
 
   alias Phoenix.LiveView.JS
-  import WspomWeb.Gettext
 
   @doc """
   Renders a modal.

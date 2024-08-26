@@ -3,10 +3,13 @@ defmodule WspomWeb.EntryLive.Index do
 
   alias Wspom.Context
   alias Wspom.Entry
+  alias Wspom.Filter
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, socket |> assign(:entries, Context.list_entries())}
+    {:ok, socket
+      |> assign(:entries, Context.list_entries())
+      |> assign(:filter, Filter.default())}
   end
 
   @impl true

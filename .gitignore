@@ -38,6 +38,7 @@ npm-debug.log
 # Database files
 *.db
 *.db-*
+*.dat
 
 # mix LOCK file
 mix.lock

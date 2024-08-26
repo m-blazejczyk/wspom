@@ -1,6 +1,8 @@
 defmodule Wspom.Filter do
   use Timex
 
+  alias Wspom.Entry
+
   defstruct [:which, :day, :month, :year, :tag]
 
   @spec default() :: %Wspom.Filter{}
@@ -15,5 +17,13 @@ defmodule Wspom.Filter do
   end
   def toString(_) do
     "Another filter"
+  end
+
+  def filter(%Wspom.Filter{which: :day, day: day, month: month}, entries) do
+    entries
+    |> Enum.filter(fn entry -> month == entry.month and day == entry.day end)
+  end
+  def filter(_, entries) do
+    entries
   end
 end

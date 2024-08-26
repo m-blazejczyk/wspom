@@ -7,9 +7,10 @@ defmodule WspomWeb.EntryLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
+    filter = Filter.default()
     {:ok, socket
-      |> assign(:entries, Context.list_entries())
-      |> assign(:filter, Filter.default())}
+      |> assign(:filter, filter)
+      |> assign(:entries, filter |> Filter.filter(Context.list_entries()))}
   end
 
   @impl true

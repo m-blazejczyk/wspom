@@ -24,12 +24,11 @@ defmodule Wspom.Database do
         log_notice("### TEST MODE: file loaded ###")
         load_db_file() |> summarize_db()
       else
-        n = 5
-        log_notice("### TEST MODE: #{n} entries generated ###")
-        {Enum.map(1..n, &generate_entry/1),
-          MapSet.new(),
-          %{},
-          1}
+        entries = Enum.map(1..5, &generate_entry/1) ++
+          [%Entry{description: "One year ago", title: "Entry 6", id: 6,
+            year: 2023, month: 8, day: 26, weekday: 2}]
+        log_notice("### TEST MODE: #{length(entries)} entries generated ###")
+        {entries, MapSet.new(), %{}, 1}
       end
     end
   end

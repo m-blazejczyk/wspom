@@ -12,25 +12,63 @@
   <div class="relative bg-white mx-2 px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-lg sm:px-4">
     <div class="divide-y divide-gray-300/50">
       <div>
-        <div class="text-gray-900 font-bold text-xl mb-2">
-          <%= entry.title %>
+        <div>
+          <button type="button" class="py-1 px-2 my-0 font-sans text-xs font-bold text-center rounded-lg text-gray-700 bg-gray-200 border border-gray-700 hover:bg-transparent focus:ring-4 focus:outline-none focus:ring-blue-300">
+            <%= entry.year %>
+          </button>
+          <span class="text-gray-900 font-bold text-xl mb-2">
+            <%= entry.title %>
+          </span>
+          <button type="button" class="ml-2 text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
+            <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
+            </svg>
+            <span class="sr-only">Delete entry</span>
+          </button>
+          <button type="button" class="ml-2 text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
+            <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M14 4v3a1 1 0 0 1-1 1h-3m4 10v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2m11-3v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H18a1 1 0 0 1 1 1Z"/>
+            </svg>
+            <span class="sr-only">Clone entry</span>
+          </button>
+          <button type="button" class="text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
+            <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28"/>
+            </svg>
+            <span class="sr-only">Edit entry</span>
+          </button>
         </div>
-        <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-gray-200 py-1 px-2 my-2 font-sans text-xs leading-none text-gray-800">
-          <b><%= entry.year %></b>
-          <span class="uppercase">, <%= entry.month %> <%= entry.day %>, </span>
-          <b class="uppercase"><%= entry.weekday %></b>, 
-          <b class="text-red-600">±<%= entry.fuzzy %></b> days 
+        <div>
+          <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-gray-200 py-1 px-2 my-2 font-sans text-xs leading-none text-gray-800">
+            <b class="uppercase"><%= Timex.day_name(entry.weekday) %></b>
+          </div>
+          <%= if entry.fuzzy > 0 do %>
+            <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-gray-200 py-1 px-2 my-2 font-sans text-xs leading-none text-gray-800">
+              <b class="text-red-600">±<%= entry.fuzzy %></b> days 
+            </div>
+          <% end %>
+          <%= if entry.importance != :normal do %>
+            <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-red-300 py-1 px-2 my-2 font-sans text-xs uppercase leading-none text-gray-800 font-bold">
+              <%= entry.importance %>
+            </div>
+          <% end %>
+          <%= if entry.needs_review do %>
+            <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-blue-300 py-1 px-2 my-2 font-sans text-xs uppercase leading-none text-gray-800 font-bold">
+              Needs review
+            </div>
+          <% end %>
         </div>
-        <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-red-300 py-1 px-2 my-2 font-sans text-xs uppercase leading-none text-gray-800 font-bold">
-          <%= entry.importance %>
-        </div>
-        <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-blue-300 py-1 px-2 my-2 font-sans text-xs uppercase leading-none text-gray-800 font-bold">
-          <%= entry.needs_review %>
-        </div>
-        <br>
-        <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-green-500 py-1 px-2 mt-1 mb-2 font-sans text-xs uppercase leading-none text-gray-800 font-bold">
-          t<%= Wspom.Entry.tags_to_string(entry.tags) %>ag_1
-        </div>
+        <%= if MapSet.size(entry.tags) > 0 do %>
+          <%= for tag <- entry.tags do %>
+            <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-green-500 py-1 px-2 mt-1 mb-2 font-sans text-xs uppercase leading-none text-gray-800 font-bold">
+              <%= tag %>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-red-500 py-1 px-2 mt-1 mb-2 font-sans text-xs uppercase leading-none text-red-200 font-bold">
+            No tags!
+          </div>
+        <% end %>
       </div>
       <div class="p-4 justify-between leading-normal">
         <.link patch={~p"/entries/#{entry}/edit"}>Edit</.link>
@@ -43,10 +81,14 @@
       </div>
       <div class="py-3">
         <div class="text-gray-600">
-          <p><%= String.slice(entry.description, 0, 200) %></p>
-        </div>
-        <div class="float-right text-gray-200">
-          ... Show all
+          <p>
+            <%= if String.length(entry.description) > 260 do %>
+              <%= String.slice(entry.description, 0, 260) %> […]
+              <button type="button" class="ml-4 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300">Show all</button>
+            <% else %>
+              <%= entry.description %>
+            <% end %>
+          </p>
         </div>
       </div>
     </div>

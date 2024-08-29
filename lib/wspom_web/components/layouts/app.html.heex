@@ -9,13 +9,25 @@
         ph <%= Application.spec(:phoenix, :vsn) %>
       </p>
     </div>
-    <div class="flex flex-grow items-center gap-4 font-semibold leading-6 text-zinc-900">
-      <span class="center">
-        Filter:
+    <div class="flex flex-grow items-center">
+      <button type="button" class="py-1 px-2 my-0 mr-2 font-sans text-xs font-bold text-center rounded-lg text-gray-700 bg-gray-200 border border-gray-700 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300">
+        <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12l4-4m-4 4 4 4"/>
+        </svg>
+      </button>
+      <span class="center mr-1">
+        <svg class="w-4 h-4 text-orange-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M18.796 4H5.204a1 1 0 0 0-.753 1.659l5.302 6.058a1 1 0 0 1 .247.659v4.874a.5.5 0 0 0 .2.4l3 2.25a.5.5 0 0 0 .8-.4v-7.124a1 1 0 0 1 .247-.659l5.302-6.059c.566-.646.106-1.658-.753-1.658Z"/>
+        </svg>
       </span>
       <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-orange-400 py-1 px-2 my-2 font-sans text-xs uppercase leading-none text-gray-800 font-bold">
         <%= Wspom.Filter.toString(@filter) %>
       </div>
+      <button type="button" class="py-1 px-2 my-0 ml-2 font-sans text-xs font-bold text-center rounded-lg text-gray-700 bg-gray-200 border border-gray-700 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300">
+        <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 12H5m14 0-4 4m4-4-4-4"/>
+        </svg>
+      </button>
     </div>
   </div>
 </nav>

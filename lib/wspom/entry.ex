@@ -12,4 +12,8 @@ defmodule Wspom.Entry do
       ""
     end
   end
+
+  def compare(e1, e2) when e1.year > e2.year, do: :gt
+  def compare(e1, e2) when e1.year < e2.year, do: :lt
+  def compare(e1, e2) when e1.year == e2.year, do: :eq
 end

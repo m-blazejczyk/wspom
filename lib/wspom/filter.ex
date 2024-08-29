@@ -22,6 +22,7 @@ defmodule Wspom.Filter do
   def filter(%Wspom.Filter{which: :day, day: day, month: month}, entries) do
     entries
     |> Enum.filter(fn entry -> month == entry.month and day == entry.day end)
+    |> Enum.sort(Entry)
   end
   def filter(_, entries) do
     entries

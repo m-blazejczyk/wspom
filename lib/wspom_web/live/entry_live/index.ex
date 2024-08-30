@@ -10,7 +10,8 @@ defmodule WspomWeb.EntryLive.Index do
     filter = Filter.default()
     {:ok, socket
       |> assign(:filter, filter)
-      |> assign(:entries, filter |> Filter.filter(Context.list_entries()))}
+      |> assign(:entries, filter |> Filter.filter(Context.list_entries()))
+      |> assign(:expanded, MapSet.new())}
   end
 
   @impl true
@@ -47,5 +48,15 @@ defmodule WspomWeb.EntryLive.Index do
     {:ok, _} = Context.delete_entry(entry)
 
     {:noreply, stream_delete(socket, :entries, entry)}
+  end
+  def handle_event("expand", %{"id" => id}, socket) do
+    id_int = String.to_integer(id)
+    {:noreply, socket
+      |> assign(:expanded, socket.assigns.expanded |> MapSet.put(id_int))}
+  end
+  def handle_event("unexpand", %{"id" => id}, socket) do
+    id_int = String.to_integer(id)
+    {:noreply, socket
+      |> assign(:expanded, socket.assigns.expanded |> MapSet.delete(id_int))}
   end
 end

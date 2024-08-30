@@ -16,7 +16,7 @@
           <button type="button" class="py-1 px-2 my-0 font-sans text-xs font-bold text-center rounded-lg text-gray-700 bg-gray-200 border border-gray-700 hover:bg-transparent focus:ring-4 focus:outline-none focus:ring-blue-300">
             <%= entry.year %>
           </button>
-          <span class="text-gray-900 font-bold text-xl mb-2">
+          <span class="text-gray-900 font-bold text-xl mb-2 ml-3">
             <%= entry.title %>
           </span>
           <button type="button" class="ml-2 text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
@@ -83,8 +83,17 @@
         <div class="text-gray-600">
           <p>
             <%= if String.length(entry.description) > 260 do %>
-              <%= String.slice(entry.description, 0, 260) %> […]
-              <button type="button" class="ml-4 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300">Show all</button>
+              <%= if @expanded |> MapSet.member?(entry.id) do %>
+                <%= entry.description %>
+                <.link href="#" phx-click="unexpand" phx-value-id={entry.id}>
+                  <button type="button" class="float-right ml-2 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300">Show less</button>
+                </.link>
+              <% else %>
+                <%= String.slice(entry.description, 0, 260) %> […]
+                <.link href="#" phx-click="expand" phx-value-id={entry.id}>
+                  <button type="button" class="float-right ml-2 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300">Show more</button>
+                </.link>
+              <% end %>
             <% else %>
               <%= entry.description %>
             <% end %>

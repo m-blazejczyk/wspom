@@ -1,4 +1,6 @@
 defmodule Wspom.Migrations do
+  require Logger
+
   @versions [{2, &Wspom.Migrations.add_index/1}]
 
   def migrate(state) do
@@ -7,12 +9,13 @@ defmodule Wspom.Migrations do
 
   defp maybe_migrate({migration_version, _}, {_, _, _, current} = state)
   when current >= migration_version do
+    Logger.notice("No need to migrate the database")
     state
   end
   defp maybe_migrate({migration_version, fun}, {entries, tags, cascades, current})
   when current < migration_version do
     {new_entries, new_tags, new_cascades, descr} = fun.({entries, tags, cascades})
-    IO.puts("Migrating the database to version #{migration_version}: #{descr}")
+    Logger.notice("Migrating the database to version #{migration_version}: #{descr}")
     {new_entries, new_tags, new_cascades, migration_version}
   end
 

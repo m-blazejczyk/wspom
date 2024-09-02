@@ -1,6 +1,7 @@
 defmodule Wspom.Database do
   use Agent
   require Logger
+  alias Wspom.Migrations
   alias Wspom.Entry
 
   @prod_mode false
@@ -18,11 +19,11 @@ defmodule Wspom.Database do
   defp init_entry_data() do
     if @prod_mode do
       log_notice("### PRODUCTION MODE ###")
-      load_db_file() |> summarize_db()
+      load_db_file() |> maybe_migrate_and_save() |> summarize_db()
     else
       if File.exists?(@db_file) do
         log_notice("### TEST MODE: file loaded ###")
-        load_db_file() |> summarize_db()
+        load_db_file() |> maybe_migrate_and_save() |> summarize_db()
       else
         entries = Enum.map(1..5, &generate_entry/1) ++
           [%Entry{description: "One year ago", title: "Entry 6", id: 6,
@@ -36,6 +37,15 @@ defmodule Wspom.Database do
   defp load_db_file() do
     # This will raise an exception in case of trouble, and that's great!
     {[_ | _], %MapSet{}, %{}, _} = File.read!(@db_file) |> :erlang.binary_to_term
+  end
+
+  defp maybe_migrate_and_save({_, _, _, current} = state) do
+    {new_entries, new_tags, new_cascades, new_version} = Migrations.migrate(state)
+    if new_version > current do
+      save({new_entries, new_tags, new_cascades, new_version})
+    else
+      state
+    end
   end
 
   defp summarize_db({entries, tags, cascades, current} = state) do

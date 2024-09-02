@@ -81,23 +81,25 @@
       </div>
       <div class="py-3">
         <div class="text-gray-600">
-          <p>
-            <%= if String.length(entry.description) > 260 do %>
-              <%= if @expanded |> MapSet.member?(entry.id) do %>
-                <%= entry.description %>
-                <.link href="#" phx-click="unexpand" phx-value-id={entry.id}>
-                  <button type="button" class="float-right ml-2 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300">Show less</button>
-                </.link>
-              <% else %>
-                <%= String.slice(entry.description, 0, 260) %> […]
-                <.link href="#" phx-click="expand" phx-value-id={entry.id}>
-                  <button type="button" class="float-right ml-2 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300">Show more</button>
-                </.link>
+          <%= if String.length(entry.description) > 260 do %>
+            <%= if @expanded |> MapSet.member?(entry.id) do %>
+              <%= for paragraph <- entry.description |> String.split("\n") do %>
+                <p><%= paragraph %></p>
               <% end %>
+              <.link href="#" phx-click="unexpand" phx-value-id={entry.id}>
+                <button type="button" class="float-right ml-2 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300">Show less</button>
+              </.link>
             <% else %>
-              <%= entry.description %>
+              <p><%= String.slice(entry.description, 0, 260) %> […]</p>
+              <.link href="#" phx-click="expand" phx-value-id={entry.id}>
+                <button type="button" class="float-right ml-2 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300">Show more</button>
+              </.link>
             <% end %>
-          </p>
+          <% else %>
+            <%= for paragraph <- entry.description |> String.split("\n") do %>
+              <p><%= paragraph %></p>
+            <% end %>
+          <% end %>
         </div>
       </div>
     </div>

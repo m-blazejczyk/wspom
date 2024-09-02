@@ -1,6 +1,5 @@
 defmodule Wspom.Context do
-  # alias Wspom.Repo
-
+  alias Wspom.Database
   alias Wspom.Entry
 
   @doc """
@@ -13,7 +12,7 @@ defmodule Wspom.Context do
 
   """
   def list_entries do
-    Wspom.Database.all_entries()
+    Database.all_entries()
   end
 
   @doc """

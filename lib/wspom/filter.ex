@@ -24,7 +24,16 @@ defmodule Wspom.Filter do
     |> Enum.filter(fn entry -> month == entry.month and day == entry.day end)
     |> Enum.sort(Entry)
   end
-  def filter(_, entries) do
-    entries
+
+  def next(%Wspom.Filter{which: :day, day: day, month: month}, _entries) do
+    # The year does not matter but let's pick a leap year
+    new_date = Date.new!(2024, month, day) |> Timex.shift(days: 1)
+    %Wspom.Filter{which: :day, day: new_date.day, month: new_date.month}
+  end
+
+  def prev(%Wspom.Filter{which: :day, day: day, month: month}, _entries) do
+    # The year does not matter but let's pick a leap year
+    new_date = Date.new!(2024, month, day) |> Timex.shift(days: -1)
+    %Wspom.Filter{which: :day, day: new_date.day, month: new_date.month}
   end
 end

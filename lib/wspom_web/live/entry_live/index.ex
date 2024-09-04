@@ -59,4 +59,16 @@ defmodule WspomWeb.EntryLive.Index do
     {:noreply, socket
       |> assign(:expanded, socket.assigns.expanded |> MapSet.delete(id_int))}
   end
+  def handle_event("prev", _, socket) do
+    new_filter = Filter.prev(socket.assigns.filter, socket.assigns.entries)
+    {:noreply, socket
+      |> assign(:filter, new_filter)
+      |> assign(:entries, new_filter |> Filter.filter(Context.list_entries()))}
+  end
+  def handle_event("next", _, socket) do
+    new_filter = Filter.next(socket.assigns.filter, socket.assigns.entries)
+    {:noreply, socket
+      |> assign(:filter, new_filter)
+      |> assign(:entries, new_filter |> Filter.filter(Context.list_entries()))}
+  end
 end

@@ -60,15 +60,31 @@ defmodule WspomWeb.EntryLive.Index do
       |> assign(:expanded, socket.assigns.expanded |> MapSet.delete(id_int))}
   end
   def handle_event("prev", _, socket) do
-    new_filter = Filter.prev(socket.assigns.filter, socket.assigns.entries)
+    {new_filter, new_entries} = Filter.prev(
+      socket.assigns.filter, Context.list_entries())
     {:noreply, socket
       |> assign(:filter, new_filter)
-      |> assign(:entries, new_filter |> Filter.filter(Context.list_entries()))}
+      |> assign(:entries, new_entries)}
   end
   def handle_event("next", _, socket) do
-    new_filter = Filter.next(socket.assigns.filter, socket.assigns.entries)
+    {new_filter, new_entries} = Filter.next(
+      socket.assigns.filter, Context.list_entries())
     {:noreply, socket
       |> assign(:filter, new_filter)
-      |> assign(:entries, new_filter |> Filter.filter(Context.list_entries()))}
+      |> assign(:entries, new_entries)}
+  end
+  def handle_event("filter-year", %{"year" => year}, socket) do
+    {new_filter, new_entries} = Filter.to_year(
+      socket.assigns.filter, String.to_integer(year), Context.list_entries())
+    {:noreply, socket
+      |> assign(:filter, new_filter)
+      |> assign(:entries, new_entries)}
+  end
+  def handle_event("filter-day", _, socket) do
+    {new_filter, new_entries} = Filter.to_day(
+      socket.assigns.filter, Context.list_entries())
+    {:noreply, socket
+      |> assign(:filter, new_filter)
+      |> assign(:entries, new_entries)}
   end
 end

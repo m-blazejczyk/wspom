@@ -103,7 +103,7 @@ defmodule Wspom.Context do
       %Ecto.Changeset{data: %Entry{}}
 
   """
-  def change_entry(%Entry{} = entry, attrs \\ %{}) do
+  def change_entry(entry, attrs \\ %{}) do
     Entry.changeset(entry, attrs)
   end
 end

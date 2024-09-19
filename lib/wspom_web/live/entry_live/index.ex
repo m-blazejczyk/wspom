@@ -19,18 +19,6 @@ defmodule WspomWeb.EntryLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"id" => id}) do
-    socket
-    |> assign(:page_title, "Edit Entry")
-    |> assign(:entry, Context.get_entry!(id))
-  end
-
-  defp apply_action(socket, :new, _params) do
-    socket
-    |> assign(:page_title, "New Entry")
-    |> assign(:entry, %Entry{})
-  end
-
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:page_title, "Listing Entries")
@@ -86,5 +74,18 @@ defmodule WspomWeb.EntryLive.Index do
     {:noreply, socket
       |> assign(:filter, new_filter)
       |> assign(:entries, new_entries)}
+  end
+  def handle_event("edit", %{"id" => id}, socket) do
+    id_int = String.to_integer(id)
+    {:noreply, socket
+      |> assign(:entry, socket.assigns.entries |> Enum.find(fn e -> e.id == id_int end))
+      |> assign(:live_action, :edit)
+      |> assign(:page_title, "Edit Entry")}
+  end
+  def handle_event("new", _, socket) do
+    {:noreply, socket
+      |> assign(:entry, %Entry{})
+      |> assign(:live_action, :new)
+      |> assign(:page_title, "New Entry")}
   end
 end

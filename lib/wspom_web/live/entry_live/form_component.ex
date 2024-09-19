@@ -19,18 +19,15 @@ defmodule WspomWeb.EntryLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:description]} type="text" label="Description" />
         <.input field={@form[:title]} type="text" label="Title" />
         <.input field={@form[:year]} type="number" label="Year" />
         <.input field={@form[:month]} type="number" label="Month" />
         <.input field={@form[:day]} type="number" label="Day" />
-        <.input field={@form[:weekday]} type="number" label="Weekday" />
-        <.input field={@form[:importance]} type="number" label="Importance" />
+        <.input field={@form[:description]} type="textarea" label="Description" />
         <.input field={@form[:fuzzy]} type="number" label="Fuzzy" />
-        <.input field={@form[:needs_review]} type="number" label="Needs review" />
-        <.input field={@form[:tags]} type="text" label="Tags" />
+        <.input field={@form[:needs_review]} type="checkbox" label="Needs review" />
         <:actions>
-          <.button phx-disable-with="Saving...">Save Entry</.button>
+          <.button phx-disable-with="Saving…">Save</.button>
         </:actions>
       </.simple_form>
     </div>
@@ -39,7 +36,9 @@ defmodule WspomWeb.EntryLive.FormComponent do
 
   @impl true
   def update(%{entry: entry} = assigns, socket) do
+    # IO.inspect(assigns, label: "*** UPDATE ASSIGNS ***")
     changeset = Context.change_entry(entry)
+    # IO.inspect(changeset, label: "*** UPDATE CHANGESET ***")
 
     {:ok,
      socket

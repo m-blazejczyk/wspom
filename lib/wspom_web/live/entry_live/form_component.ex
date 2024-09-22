@@ -3,13 +3,17 @@ defmodule WspomWeb.EntryLive.FormComponent do
 
   alias Wspom.Context
 
+  # This is required in order for the form to load the initial value of the tags from Entry.
+  defimpl Phoenix.HTML.Safe, for: MapSet do
+    def to_iodata(set), do: Wspom.Entry.tags_to_string(set)
+  end
+
   @impl true
   def render(assigns) do
     ~H"""
     <div>
       <.header>
         <%= @title %>
-        <:subtitle>Use this form to manage entry records in your database.</:subtitle>
       </.header>
 
       <.simple_form
@@ -20,10 +24,11 @@ defmodule WspomWeb.EntryLive.FormComponent do
         phx-submit="save"
       >
         <.input field={@form[:title]} type="text" label="Title" />
+        <.input field={@form[:tags]} type="text" label="Tags" />
+        <.input field={@form[:description]} type="textarea" label="Description" />
         <.input field={@form[:year]} type="number" label="Year" />
         <.input field={@form[:month]} type="number" label="Month" />
         <.input field={@form[:day]} type="number" label="Day" />
-        <.input field={@form[:description]} type="textarea" label="Description" />
         <.input field={@form[:fuzzy]} type="number" label="Fuzzy" />
         <.input field={@form[:needs_review]} type="checkbox" label="Needs review" />
         <:actions>
@@ -36,14 +41,12 @@ defmodule WspomWeb.EntryLive.FormComponent do
 
   @impl true
   def update(%{entry: entry} = assigns, socket) do
-    # IO.inspect(assigns, label: "*** UPDATE ASSIGNS ***")
     changeset = Context.change_entry(entry)
-    # IO.inspect(changeset, label: "*** UPDATE CHANGESET ***")
 
     {:ok,
-     socket
-     |> assign(assigns)
-     |> assign_form(changeset)}
+      socket
+      |> assign(assigns)
+      |> assign_form(changeset)}
   end
 
   @impl true

@@ -6,6 +6,7 @@ defmodule Wspom.Database do
   # Otherwise, some functions in the Filter module won't work well.
 
   use Agent
+  use Timex
   require Logger
   alias Wspom.Migrations
   alias Wspom.Entry
@@ -104,6 +105,59 @@ defmodule Wspom.Database do
 
   def save() do
     Agent.update(__MODULE__, fn data -> save(data) end)
+  end
+
+  @doc """
+  Updates an entry if the changeset is valid.
+  Returns {:ok, %Entry{}} or {:error, %Ecto.Changeset{}}.
+  Notes:
+   - changeset.data contains the original entry (type: %Entry{})
+   - changeset.changes contains a map containing the changes,
+     e.g. %{day: 5, tags: "michal rodzice rodzina"}
+  """
+  def update_entry(%Ecto.Changeset{valid?: false} = cs) do
+    {:error, cs}
+  end
+  def update_entry(%Ecto.Changeset{data: entry, changes: changes} = changeset) do
+    # Go over all changes and update the entry for each of them - or throw an error
+    case Enum.reduce(changes, {:continue, entry}, &update_field/2) do
+      {:error, {field, error}} ->
+        {:error, changeset |> Ecto.Changeset.add_error(field, error)}
+      {:continue, new_entry} ->
+        case Date.new(new_entry.year, new_entry.month, new_entry.day) do
+          {:ok, new_date} ->
+            new_entry = %Entry{new_entry | date: new_date, weekday: Timex.weekday(new_date)}
+            {:ok, new_entry}
+          {:error, _} ->
+            {:error, changeset |> Ecto.Changeset.add_error(:day, "invalid date")}
+        end
+    end
+
+    # Update the tags
+  end
+
+  @doc """
+  Used by Enum.reduce() to go over a map.
+  The first argument is a tuple with {field_name, new_value}.
+  The second argument is the accumulator - one of:
+  {:continue, %Entry{}}
+  {:error, message} (where 'message' is a string)
+  Returns the new accumulator.
+  """
+  defp update_field(_, {:error, _} = error) do
+    # Once an error was encountered, ignore all subsequent changes
+    error
+  end
+  defp update_field({field_name, _field_value}, {:continue, %Entry{} = _entry})
+    when field_name == :weekday or field_name == :date do
+    {:error, {field_name, "Not allowed to set #{field_name} directly"}}
+  end
+  defp update_field({field_name, _field_value}, {:continue, %Entry{} = _entry})
+    when field_name == :importance or field_name == :tags do
+    {:error, {field_name, "#{field_name}: not implemented"}}
+  end
+  defp update_field({field_name, field_value}, {:continue, %Entry{} = entry}) do
+    {:continue, entry |> Map.put(field_name, field_value)}
   end
 
   def tag_entry_and_save(data) do

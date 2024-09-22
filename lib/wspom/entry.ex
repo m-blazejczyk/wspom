@@ -17,6 +17,34 @@ defmodule Wspom.Entry do
     |> validate_number(:day, greater_than: 0, less_than: 32)
     |> validate_number(:month, greater_than: 0, less_than: 13)
     |> validate_number(:year, greater_than: 1899, less_than: 2025)
+    |> validate_date()
+    |> ignore_tags()
+  end
+
+  defp ignore_tags(%Ecto.Changeset{} = changeset) do
+    # This function is needed because of the (very annoying) way Changeset.cast works.
+    # Because 'tags' is a MapSet in Entry, Changeset.cast always returns an error,
+    # complaining about the 'tags' field.
+    # This function simply removes any errors related to 'tags' from the changeset.
+    # We will validate tags separately.
+    new_changeset = %Ecto.Changeset{changeset | errors: Keyword.delete(changeset.errors, :tags)}
+    if length(new_changeset.errors) == 0 do
+      %Ecto.Changeset{new_changeset | valid?: true}
+    else
+      new_changeset
+    end
+  end
+
+  defp validate_date(%Ecto.Changeset{} = changeset) do
+    new_year = Map.get(changeset.changes, :year, Map.get(changeset.data, :year))
+    new_month = Map.get(changeset.changes, :month, Map.get(changeset.data, :month))
+    new_day = Map.get(changeset.changes, :day, Map.get(changeset.data, :day))
+    case Date.new(new_year, new_month, new_day) do
+      {:ok, _} ->
+        changeset
+      {:error, _} ->
+        changeset |> Ecto.Changeset.add_error(:day, "invalid date")
+    end
   end
 
   def to_editable_map(%Wspom.Entry{} = entry) do

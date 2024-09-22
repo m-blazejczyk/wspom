@@ -14,6 +14,9 @@ defmodule Wspom.Entry do
     |> cast(attrs, [:description, :title, :year, :month, :day, :weekday, :date,
       :importance, :fuzzy, :needs_review, :tags])
     |> validate_required([:description, :title, :year, :month, :day])
+    |> validate_number(:day, greater_than: 0, less_than: 32)
+    |> validate_number(:month, greater_than: 0, less_than: 13)
+    |> validate_number(:year, greater_than: 1899, less_than: 2025)
   end
 
   def to_editable_map(%Wspom.Entry{} = entry) do
@@ -28,7 +31,7 @@ defmodule Wspom.Entry do
       tags
       |> MapSet.to_list()
       |> Enum.sort()
-      |> Enum.join(", ")
+      |> Enum.join(" ")
     else
       ""
     end

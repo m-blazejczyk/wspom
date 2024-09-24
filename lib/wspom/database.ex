@@ -127,7 +127,7 @@ defmodule Wspom.Database do
         case Date.new(new_entry.year, new_entry.month, new_entry.day) do
           {:ok, new_date} ->
             new_entry = %Entry{new_entry | date: new_date, weekday: Timex.weekday(new_date)}
-            {:ok, new_entry}
+            {:ok, replace_entry_and_save(new_entry)}
           {:error, _} ->
             {:error, changeset |> Ecto.Changeset.add_error(:day, "invalid date")}
         end
@@ -136,14 +136,12 @@ defmodule Wspom.Database do
     # Update the tags
   end
 
-  @doc """
-  Used by Enum.reduce() to go over a map.
-  The first argument is a tuple with {field_name, new_value}.
-  The second argument is the accumulator - one of:
-  {:continue, %Entry{}}
-  {:error, message} (where 'message' is a string)
-  Returns the new accumulator.
-  """
+  # Used by Enum.reduce() to go over a map.
+  # The first argument is a tuple with {field_name, new_value}.
+  # The second argument is the accumulator - one of:
+  # {:continue, %Entry{}}
+  # {:error, message} (where 'message' is a string)
+  # Returns the new accumulator.
   defp update_field(_, {:error, _} = error) do
     # Once an error was encountered, ignore all subsequent changes
     error
@@ -160,8 +158,38 @@ defmodule Wspom.Database do
     {:continue, entry |> Map.put(field_name, field_value)}
   end
 
+  defp replace_entry_and_save(%Entry{} = entry) do
+    log_notice("Saving modified entry…")
+    Agent.update(__MODULE__, fn {entries, tags, cascades, version} ->
+      {entries |> find_and_replace([], entry),
+        tags,
+        cascades,
+        version}
+      |> save()
+    end)
+    entry
+  end
+
+  defp find_and_replace([], acc, _), do: acc
+  defp find_and_replace([head | rest], acc, nil) do
+    # This variant will be called AFTER we found the entry to be replaced
+    # Just keep building the list
+    find_and_replace(rest, [head | acc], nil)
+  end
+  defp find_and_replace([head | rest], acc, %Entry{} = entry) do
+    # This variant will be called BEFORE we find the entry to be replaced
+    if head.id == entry.id do
+      # We found it! Recursively call find_and_replace with entry set to nil
+      # to prevent unnecessary comparisons
+      find_and_replace(rest, [entry | acc], nil)
+    else
+      # We haven't found it yet. Keep going!
+      find_and_replace(rest, [head | acc], entry)
+    end
+  end
+
   def tag_entry_and_save(data) do
-    log_notice("\nSaving entered data…")
+    log_notice("Saving entered data…")
     Agent.update(__MODULE__, fn {entries, tags, cascades, version} ->
       {entries |> tag_entries(data),
         tags |> add_tags(data),
@@ -169,11 +197,10 @@ defmodule Wspom.Database do
         version}
       |> save()
     end)
-    log_notice("Saved.\n")
   end
 
   def modify_tags_cascades_and_save(data) do
-    log_notice("\nMaking requested changes to tags and/or cascades…")
+    log_notice("Making requested changes to tags and/or cascades…")
     Agent.update(__MODULE__, fn {entries, tags, cascades, version} ->
       {entries |> rename_tag_in_entries(data),
         tags |> rename_tag_in_tags(data),
@@ -181,7 +208,6 @@ defmodule Wspom.Database do
         version}
       |> save()
     end)
-    log_notice("Saved.\n")
   end
 
   defp tag_entries([], _), do: []
@@ -262,6 +288,7 @@ defmodule Wspom.Database do
 
     # Save.
     File.write! "wspom.dat", :erlang.term_to_binary(state)
+    log_notice("Saved!")
 
     # Return the state.
     state

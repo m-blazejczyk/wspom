@@ -103,7 +103,7 @@ defmodule Wspom.Migrations do
   defp fix_one_br(entry) do
     new_descr = if entry.description == nil do
       Logger.warning("Nil description for #{entry.title}")
-      nil
+      ""
     else
       entry.description
         |> String.replace("<br><br>", "\n")

@@ -46,17 +46,13 @@ defmodule WspomWeb.EntryLive.FormComponent do
     {:ok,
       socket
       |> assign(assigns)
-      |> assign_form(changeset)}
+      |> assign_new(:form, fn -> to_form(changeset) end)}
   end
 
   @impl true
   def handle_event("validate", %{"entry" => entry_params}, socket) do
-    changeset =
-      socket.assigns.entry
-      |> Context.change_entry(entry_params)
-      |> Map.put(:action, :validate)
-
-    {:noreply, assign_form(socket, changeset)}
+    changeset = Context.change_entry(socket.assigns.entry, entry_params)
+    {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
   end
 
   def handle_event("save", %{"entry" => entry_params}, socket) do
@@ -74,7 +70,7 @@ defmodule WspomWeb.EntryLive.FormComponent do
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
+        {:noreply, assign(socket, form: to_form(changeset))}
     end
   end
 
@@ -89,12 +85,8 @@ defmodule WspomWeb.EntryLive.FormComponent do
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
+        {:noreply, assign(socket, form: to_form(changeset))}
     end
-  end
-
-  defp assign_form(socket, %Ecto.Changeset{} = changeset) do
-    assign(socket, :form, to_form(changeset))
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})

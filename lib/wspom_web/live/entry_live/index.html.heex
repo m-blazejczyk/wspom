@@ -8,8 +8,9 @@
 </.header>
 
 <div class="relative flex flex-col justify-center overflow-hidden bg-gray-50 py-2 gap-4">
-  <%= for entry <- @entries do %>
-  <div class="relative bg-white mx-2 px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-lg sm:px-4">
+  <div
+    :for={ {_dom_id, entry} <- @streams.entries }
+    class="relative bg-white mx-2 px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-lg sm:px-4">
     <div class="divide-y divide-gray-300/50">
       <div>
         <div>
@@ -42,7 +43,7 @@
             </svg>
             <span class="sr-only">Clone entry</span>
           </button>
-          <.link href="#" phx-click="edit" phx-value-id={entry.id}>
+          <.link patch={~p"/entries/#{entry}/edit"}>
             <button type="button" class="text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
               <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28"/>
@@ -116,15 +117,15 @@
       </div>
     </div>
   </div>
-  <% end %>
 </div>
 
-<.modal :if={@live_action in [:new, :edit]} id="entry-modal" show>
+<.modal :if={@live_action in [:new, :edit]} id="entry-modal" show on_cancel={JS.patch(~p"/entries")}>
   <.live_component
     module={WspomWeb.EntryLive.FormComponent}
     id={@entry.id || :new}
     title={@page_title}
     action={@live_action}
     entry={@entry}
+    patch={~p"/entries"}
   />
 </.modal>

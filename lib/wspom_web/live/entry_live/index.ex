@@ -9,8 +9,8 @@ defmodule WspomWeb.EntryLive.Index do
   def mount(_params, _session, socket) do
     filter = Filter.default()
     {:ok, socket
+      |> stream(:entries, filter |> Filter.filter(Context.list_entries()))
       |> assign(:filter, filter)
-      |> assign(:entries, filter |> Filter.filter(Context.list_entries()))
       |> assign(:expanded, MapSet.new())}
   end
 
@@ -23,6 +23,18 @@ defmodule WspomWeb.EntryLive.Index do
     socket
     |> assign(:page_title, "Listing Entries")
     |> assign(:entry, nil)
+  end
+
+  defp apply_action(socket, :edit, %{"id" => id}) do
+    socket
+    |> assign(:page_title, "Edit Entry")
+    |> assign(:entry, Context.get_entry!(id))
+  end
+
+  defp apply_action(socket, :new, _params) do
+    socket
+    |> assign(:page_title, "New Entry")
+    |> assign(:entry, %Entry{})
   end
 
   @impl true
@@ -75,17 +87,17 @@ defmodule WspomWeb.EntryLive.Index do
       |> assign(:filter, new_filter)
       |> assign(:entries, new_entries)}
   end
-  def handle_event("edit", %{"id" => id}, socket) do
-    id_int = String.to_integer(id)
-    {:noreply, socket
-      |> assign(:entry, socket.assigns.entries |> Enum.find(fn e -> e.id == id_int end))
-      |> assign(:live_action, :edit)
-      |> assign(:page_title, "Edit Entry")}
-  end
-  def handle_event("new", _, socket) do
-    {:noreply, socket
-      |> assign(:entry, %Entry{})
-      |> assign(:live_action, :new)
-      |> assign(:page_title, "New Entry")}
-  end
+  # def handle_event("edit", %{"id" => id}, socket) do
+  #   id_int = String.to_integer(id)
+  #   {:noreply, socket
+  #     |> assign(:entry, socket.assigns.entries |> Enum.find(fn e -> e.id == id_int end))
+  #     |> assign(:live_action, :edit)
+  #     |> assign(:page_title, "Edit Entry")}
+  # end
+  # def handle_event("new", _, socket) do
+  #   {:noreply, socket
+  #     |> assign(:entry, %Entry{})
+  #     |> assign(:live_action, :new)
+  #     |> assign(:page_title, "New Entry")}
+  # end
 end

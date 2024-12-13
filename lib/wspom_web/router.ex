@@ -17,13 +17,15 @@ defmodule WspomWeb.Router do
   scope "/", WspomWeb do
     pipe_through :browser
 
-    live "/", EntryLive.Index, :index
-  end
+    get "/", PageController, :home
 
-  # Other scopes may use custom stacks.
-  # scope "/api", WspomWeb do
-  #   pipe_through :api
-  # end
+    live "/entries", EntryLive.Index, :index
+    live "/entries/new", EntryLive.Index, :new
+    live "/entries/:id/edit", EntryLive.Index, :edit
+
+    live "/entries/:id", EntryLive.Show, :show
+    live "/entries/:id/show/edit", EntryLive.Show, :edit
+  end
 
   # Enable LiveDashboard in development
   if Application.compile_env(:wspom, :dev_routes) do

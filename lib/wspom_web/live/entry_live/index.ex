@@ -19,25 +19,26 @@ defmodule WspomWeb.EntryLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :index, %{"filter" => _which, "day" => _day, "month" => _month} = params) do
-    # This is any subsequent page load - we have query params
-    filter = Filter.from_params(params)
-
+  defp build_socket_for_index(socket, filter) do
     socket
     |> assign(:page_title, filter |> Filter.toTitle())
     |> assign(:entry, nil)
     |> assign(:filter, filter)
+    |> assign(:expanded, MapSet.new())
     |> stream(:entries, filter |> Filter.filter(Context.list_entries()), reset: true)
+  end
+
+  defp apply_action(socket, :index, %{"filter" => _which, "day" => _day, "month" => _month} = params) do
+    # This is any subsequent page load - we have query params
+    filter = Filter.from_params(params)
+    socket
+    |> build_socket_for_index(filter)
   end
   defp apply_action(socket, :index, %{}) do
     # This is the initial load - no query parameters
     filter = Filter.default()
-
     socket
-    |> assign(:page_title, filter |> Filter.toTitle())
-    |> assign(:entry, nil)
-    |> assign(:filter, filter)
-    |> stream(:entries, filter |> Filter.filter(Context.list_entries()), reset: true)
+    |> build_socket_for_index(filter)
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do

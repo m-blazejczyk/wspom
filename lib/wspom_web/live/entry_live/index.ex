@@ -7,10 +7,10 @@ defmodule WspomWeb.EntryLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    filter = Filter.default()
     {:ok, socket
-      |> stream(:entries, filter |> Filter.filter(Context.list_entries()))
-      |> assign(:filter, filter)
+      # Do not initialize the data here - it will happen in handle_params below
+      |> stream(:entries, [])
+      |> assign(:filter, nil)
       |> assign(:expanded, MapSet.new())}
   end
 
@@ -19,10 +19,25 @@ defmodule WspomWeb.EntryLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :index, _params) do
+  defp apply_action(socket, :index, %{"filter" => _which, "day" => _day, "month" => _month} = params) do
+    # This is any subsequent page load - we have query params
+    filter = Filter.from_params(params)
+
     socket
-    |> assign(:page_title, "Listing Entries")
+    |> assign(:page_title, filter |> Filter.toTitle())
     |> assign(:entry, nil)
+    |> assign(:filter, filter)
+    |> stream(:entries, filter |> Filter.filter(Context.list_entries()), reset: true)
+  end
+  defp apply_action(socket, :index, %{}) do
+    # This is the initial load - no query parameters
+    filter = Filter.default()
+
+    socket
+    |> assign(:page_title, filter |> Filter.toTitle())
+    |> assign(:entry, nil)
+    |> assign(:filter, filter)
+    |> stream(:entries, filter |> Filter.filter(Context.list_entries()), reset: true)
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
@@ -59,20 +74,20 @@ defmodule WspomWeb.EntryLive.Index do
     {:noreply, socket
       |> assign(:expanded, socket.assigns.expanded |> MapSet.delete(id_int))}
   end
-  def handle_event("prev", _, socket) do
-    {new_filter, new_entries} = Filter.prev(
-      socket.assigns.filter, Context.list_entries())
-    {:noreply, socket
-      |> assign(:filter, new_filter)
-      |> assign(:entries, new_entries)}
-  end
-  def handle_event("next", _, socket) do
-    {new_filter, new_entries} = Filter.next(
-      socket.assigns.filter, Context.list_entries())
-    {:noreply, socket
-      |> assign(:filter, new_filter)
-      |> assign(:entries, new_entries)}
-  end
+  # def handle_event("prev", _, socket) do
+  #   {new_filter, new_entries} = Filter.prev(
+  #     socket.assigns.filter, Context.list_entries())
+  #   {:noreply, socket
+  #     |> assign(:filter, new_filter)
+  #     |> assign(:entries, new_entries)}
+  # end
+  # def handle_event("next", _, socket) do
+  #   {new_filter, new_entries} = Filter.next(
+  #     socket.assigns.filter, Context.list_entries())
+  #   {:noreply, socket
+  #     |> assign(:filter, new_filter)
+  #     |> assign(:entries, new_entries)}
+  # end
   def handle_event("filter-year", %{"year" => year}, socket) do
     {new_filter, new_entries} = Filter.to_year(
       socket.assigns.filter, String.to_integer(year), Context.list_entries())

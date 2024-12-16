@@ -5,16 +5,41 @@ defmodule Wspom.Filter do
   # in the right location in the list.
   # Otherwise, some functions in the Filter module won't work well.
 
+alias Timex.DateTime
   use Timex
 
   alias Wspom.Entry
 
-  defstruct [:which, :day, :month, :year, :tag]
+  # In addition to the "current" state of the filter, we also have to
+  # store the "Next" and "Previous" so that it can be used in navigation.
+  defstruct [:which, :day, :month, :year, :tag,
+    :next_day, :next_month, :prev_day, :prev_month]
 
+  @spec init_day_from_date(DateTime.t()) :: %Wspom.Filter{}
+  defp init_day_from_date(dt) do
+    next_date = dt |> Timex.shift(days: 1)
+    prev_date = dt |> Timex.shift(days: -1)
+
+    %Wspom.Filter{
+      which: :day,
+      day: dt.day, month: dt.month,
+      next_day: next_date.day, next_month: next_date.month,
+      prev_day: prev_date.day, prev_month: prev_date.month}
+  end
+
+  # This function is only called on the initial page load.
   @spec default() :: %Wspom.Filter{}
   def default() do
-    now = Timex.now("America/Montreal")
-    %Wspom.Filter{which: :day, day: now.day, month: now.month}
+    init_day_from_date(Timex.now("America/Montreal"))
+  end
+
+  @spec from_params(%{}) :: %Wspom.Filter{}
+  def from_params(%{"filter" => "day", "day" => day, "month" => month}) do
+    # The year can be anything in this case but let's pick a leap year
+    init_day_from_date(Timex.to_date({2024, String.to_integer(month), String.to_integer(day)}))
+  end
+  def from_params(%{"filter" => "year", "day" => _day, "month" => _month, "year" => _year}) do
+    nil
   end
 
   @spec toString(%Wspom.Filter{}) :: String.t()
@@ -25,7 +50,26 @@ defmodule Wspom.Filter do
     Integer.to_string(year)
   end
   def toString(_) do
-    "Another filter"
+    "Unknown filter"
+  end
+
+  @spec toTitle(%Wspom.Filter{}) :: String.t()
+  def toTitle(%Wspom.Filter{day: day, month: month}) do
+    Timex.month_shortname(month) <> " " <> Integer.to_string(day)
+  end
+
+  def prev_link(%Wspom.Filter{which: :day, prev_day: day, prev_month: month}) do
+    "/entries?filter=day&day=#{day}&month=#{month}"
+  end
+  def prev_link(%Wspom.Filter{which: :year, prev_day: day, prev_month: month, year: year}) do
+    "/entries?filter=year&day=#{day}&month=#{month}&year=#{year}"
+  end
+
+  def next_link(%Wspom.Filter{which: :day, next_day: day, next_month: month}) do
+    "/entries?filter=day&day=#{day}&month=#{month}"
+  end
+  def next_link(%Wspom.Filter{which: :year, next_day: day, next_month: month, year: year}) do
+    "/entries?filter=year&day=#{day}&month=#{month}&year=#{year}"
   end
 
   @spec filter(%Wspom.Filter{}, list(%Wspom.Entry{})) :: list(%Wspom.Entry{})

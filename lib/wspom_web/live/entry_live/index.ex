@@ -11,7 +11,7 @@ defmodule WspomWeb.EntryLive.Index do
       # Do not initialize the data here - it will happen in handle_params below
       |> stream(:entries, [])
       |> assign(:filter, nil)
-      |> assign(:expanded, MapSet.new())}
+    }
   end
 
   @impl true
@@ -24,7 +24,6 @@ defmodule WspomWeb.EntryLive.Index do
     |> assign(:page_title, filter |> Filter.toTitle())
     |> assign(:entry, nil)
     |> assign(:filter, filter)
-    |> assign(:expanded, MapSet.new())
     |> stream(:entries, filter |> Filter.filter(Context.list_entries()), reset: true)
   end
 
@@ -64,16 +63,6 @@ defmodule WspomWeb.EntryLive.Index do
     {:ok, _} = Context.delete_entry(entry)
 
     {:noreply, stream_delete(socket, :entries, entry)}
-  end
-  def handle_event("expand", %{"id" => id}, socket) do
-    id_int = String.to_integer(id)
-    {:noreply, socket
-      |> assign(:expanded, socket.assigns.expanded |> MapSet.put(id_int))}
-  end
-  def handle_event("unexpand", %{"id" => id}, socket) do
-    id_int = String.to_integer(id)
-    {:noreply, socket
-      |> assign(:expanded, socket.assigns.expanded |> MapSet.delete(id_int))}
   end
   # def handle_event("prev", _, socket) do
   #   {new_filter, new_entries} = Filter.prev(

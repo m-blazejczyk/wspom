@@ -4,9 +4,12 @@
       <a href="/">
         <img src={~p"/images/uppercase-square-w.svg"} width="45" />
       </a>
-      <p class="px-2 text-xs font-semibold leading-6">
-        v 0.2<br>
+      <p class="px-2 text-xs leading-2">
+        wsp <%= Application.spec(:wspom, :vsn) %>
+        <br>
         ph <%= Application.spec(:phoenix, :vsn) %>
+        <br>
+        elx <%= System.version %>
       </p>
     </div>
     <div class="flex flex-grow items-center">

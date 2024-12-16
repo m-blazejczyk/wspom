@@ -58,11 +58,12 @@ defmodule WspomWeb.EntryLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    entry = Context.get_entry!(id)
-    {:ok, _} = Context.delete_entry(entry)
+  def handle_event("delete", %{"id" => _id}, socket) do
+    # entry = Context.get_entry!(id)
+    # {:ok, _} = Context.delete_entry(entry)
 
-    {:noreply, stream_delete(socket, :entries, entry)}
+    # {:noreply, stream_delete(socket, :entries, entry)}
+    {:noreply, socket}
   end
   # def handle_event("prev", _, socket) do
   #   {new_filter, new_entries} = Filter.prev(

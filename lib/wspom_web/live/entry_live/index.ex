@@ -19,25 +19,27 @@ defmodule WspomWeb.EntryLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp build_socket_for_index(socket, filter) do
+  defp build_socket_for_index(socket, filter, entries) do
     socket
     |> assign(:page_title, filter |> Filter.toTitle())
     |> assign(:entry, nil)
     |> assign(:filter, filter)
-    |> stream(:entries, filter |> Filter.filter(Context.list_entries()), reset: true)
+    |> stream(:entries, filter |> Filter.filter(entries), reset: true)
   end
 
   defp apply_action(socket, :index, %{"filter" => _which, "day" => _day, "month" => _month} = params) do
     # This is any subsequent page load - we have query params
-    filter = Filter.from_params(params)
+    entries = Context.list_entries()
+    filter = Filter.from_params(params, entries)
     socket
-    |> build_socket_for_index(filter)
+    |> build_socket_for_index(filter, entries)
   end
   defp apply_action(socket, :index, %{}) do
     # This is the initial load - no query parameters
+    entries = Context.list_entries()
     filter = Filter.default()
     socket
-    |> build_socket_for_index(filter)
+    |> build_socket_for_index(filter, entries)
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
@@ -65,45 +67,4 @@ defmodule WspomWeb.EntryLive.Index do
     # {:noreply, stream_delete(socket, :entries, entry)}
     {:noreply, socket}
   end
-  # def handle_event("prev", _, socket) do
-  #   {new_filter, new_entries} = Filter.prev(
-  #     socket.assigns.filter, Context.list_entries())
-  #   {:noreply, socket
-  #     |> assign(:filter, new_filter)
-  #     |> assign(:entries, new_entries)}
-  # end
-  # def handle_event("next", _, socket) do
-  #   {new_filter, new_entries} = Filter.next(
-  #     socket.assigns.filter, Context.list_entries())
-  #   {:noreply, socket
-  #     |> assign(:filter, new_filter)
-  #     |> assign(:entries, new_entries)}
-  # end
-  def handle_event("filter-year", %{"year" => year}, socket) do
-    {new_filter, new_entries} = Filter.to_year(
-      socket.assigns.filter, String.to_integer(year), Context.list_entries())
-    {:noreply, socket
-      |> assign(:filter, new_filter)
-      |> assign(:entries, new_entries)}
-  end
-  def handle_event("filter-day", _, socket) do
-    {new_filter, new_entries} = Filter.to_day(
-      socket.assigns.filter, Context.list_entries())
-    {:noreply, socket
-      |> assign(:filter, new_filter)
-      |> assign(:entries, new_entries)}
-  end
-  # def handle_event("edit", %{"id" => id}, socket) do
-  #   id_int = String.to_integer(id)
-  #   {:noreply, socket
-  #     |> assign(:entry, socket.assigns.entries |> Enum.find(fn e -> e.id == id_int end))
-  #     |> assign(:live_action, :edit)
-  #     |> assign(:page_title, "Edit Entry")}
-  # end
-  # def handle_event("new", _, socket) do
-  #   {:noreply, socket
-  #     |> assign(:entry, %Entry{})
-  #     |> assign(:live_action, :new)
-  #     |> assign(:page_title, "New Entry")}
-  # end
 end

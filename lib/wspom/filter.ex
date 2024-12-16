@@ -111,6 +111,8 @@ defmodule Wspom.Filter do
   end
 
   defp find_next_prev_by_year(entry, {now, {min_diff_prev, prev_date}, {min_diff_next, next_date}} = old) do
+    # Look for the next and previous dates that are the closest to 'now',
+    # as measured by Date.diff.
     d = Date.diff(now, entry.date)
     cond do
       d > 0 and -d > min_diff_prev ->

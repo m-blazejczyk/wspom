@@ -74,9 +74,14 @@ defmodule Wspom.Database do
       entries |> Enum.find(&entry_to_tag?/1)
     end)
   end
-
   defp entry_to_tag?(entry) do
     MapSet.size(Map.get(entry, :tags)) == 0
+  end
+
+  def get_entry(id) do
+    Agent.get(__MODULE__, fn {entries, _, _, _} ->
+      entries |> Enum.find(fn entry -> entry.id == id end)
+    end)
   end
 
   def all_entries() do

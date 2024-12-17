@@ -2,15 +2,6 @@ defmodule Wspom.Context do
   alias Wspom.Database
   alias Wspom.Entry
 
-  @doc """
-  Returns the list of entries.
-
-  ## Examples
-
-      iex> list_entries()
-      [%Entry{}, ...]
-
-  """
   def list_entries do
     Database.all_entries()
   end
@@ -29,8 +20,16 @@ defmodule Wspom.Context do
       ** (Ecto.NoResultsError)
 
   """
-  def get_entry!(_id) do
-    %Entry{}
+  def get_entry!(id) when is_binary(id) do
+    get_entry!(String.to_integer(id))
+  end
+  def get_entry!(id) when is_integer(id) do
+    case entry = Database.get_entry(id) do
+      %Entry{} ->
+        entry
+      _ ->
+        raise Ecto.NoResultsError, message: "No entry with id #{id}"
+    end
   end
 
   @doc """
@@ -46,12 +45,6 @@ defmodule Wspom.Context do
 
   """
   def create_entry(_attrs \\ %{}) do
-    # VERY IMPORTANT:
-    # Entries MUST be sorted by date.
-    # This means that when entries are added, they must be added
-    # in the right location in the list.
-    # Otherwise, some functions in the Filter module won't work well.
-
     # %Entry{}
     # |> Entry.changeset(attrs)
     # |> Repo.insert()

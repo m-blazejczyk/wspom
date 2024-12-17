@@ -23,8 +23,8 @@ defmodule WspomWeb.Router do
     live "/entries/new", EntryLive.Index, :new
     live "/entries/:id/edit", EntryLive.Index, :edit
 
-    live "/entries/:id", EntryLive.Show, :show
-    live "/entries/:id/show/edit", EntryLive.Show, :edit
+    # live "/entries/:id", EntryLive.Show, :show
+    # live "/entries/:id/show/edit", EntryLive.Show, :edit
   end
 
   # Enable LiveDashboard in development

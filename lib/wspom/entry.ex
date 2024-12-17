@@ -10,6 +10,8 @@ defmodule Wspom.Entry do
     importance: :string, fuzzy: :integer, needs_review: :boolean, tags: :string}
 
   def changeset(entry, attrs) do
+    # IO.inspect(entry, label: "ENTRY")
+    # IO.inspect(attrs, label: "ATTRS")
     {entry, @types}
     |> cast(attrs, [:description, :title, :year, :month, :day, :weekday, :date,
       :importance, :fuzzy, :needs_review, :tags])

@@ -93,7 +93,7 @@
             </div>
             <div id={"short-#{entry.id}"}>
               <%= for paragraph <- String.slice(entry.description, 0, 260) |> String.split("\n") do %>
-                <p><%= paragraph %><span class="invisible last:visible">…</span></p>
+                <p><%= paragraph %></p>
               <% end %>
               <button class="float-right ml-2 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300"
                 phx-click={JS.toggle(to: "#short-#{entry.id}") |> JS.toggle(to: "#full-#{entry.id}")}>

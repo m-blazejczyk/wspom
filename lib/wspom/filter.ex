@@ -73,6 +73,13 @@ defmodule Wspom.Filter do
     "???"
   end
 
+  def current_link(%Wspom.Filter{which: :day, day: day, month: month}) do
+    "/entries?filter=day&day=#{day}&month=#{month}"
+  end
+  def current_link(%Wspom.Filter{which: :year, day: day, month: month, year: year}) do
+    "/entries?filter=year&day=#{day}&month=#{month}&year=#{year}"
+  end
+
   def prev_link(%Wspom.Filter{which: :day, prev_date: prev_date}) do
     "/entries?filter=day&day=#{prev_date.day}&month=#{prev_date.month}"
   end

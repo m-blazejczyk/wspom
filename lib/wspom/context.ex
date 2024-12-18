@@ -82,10 +82,10 @@ defmodule Wspom.Context do
   def update_entry(entry, attrs) do
     entry
     |> Entry.changeset(attrs)
-    |> IO.inspect(label: "CHANGESET BEFORE")
-    |> Database.update_entry()
-    |> IO.inspect(label: "RETURN VALUE")
-  end
+    |> Entry.update_entry()
+    |> Database.replace_entry_and_save()
+    # TODO: Update the tags and cascades
+end
 
   @doc """
   Deletes a entry.

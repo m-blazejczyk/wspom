@@ -67,6 +67,59 @@ defmodule Wspom.Entry do
     end
   end
 
+  @doc """
+  Updates an entry if the changeset is valid.
+  Returns {:ok, %Entry{}} or {:error, %Ecto.Changeset{}}.
+  Notes:
+   - changeset.data contains the original entry (type: %Entry{})
+   - changeset.changes contains a map containing the changes,
+     e.g. %{day: 5, tags: "michal rodzice rodzina"}
+  """
+  def update_entry(%Ecto.Changeset{valid?: false} = cs) do
+    {:error, cs}
+  end
+  def update_entry(%Ecto.Changeset{data: entry, changes: changes} = changeset) do
+    # Go over all changes and update the entry for each of them - or throw an error
+    case Enum.reduce(changes, {:continue, entry}, &update_field/2) do
+      {:error, {field, error}} ->
+        {:error, changeset |> Ecto.Changeset.add_error(field, error)}
+      {:continue, new_entry} ->
+        case Date.new(new_entry.year, new_entry.month, new_entry.day) do
+          {:ok, new_date} ->
+            new_entry = %Wspom.Entry{new_entry | date: new_date, weekday: Timex.weekday(new_date)}
+            {:ok, new_entry}
+          {:error, _} ->
+            {:error, changeset |> Ecto.Changeset.add_error(:day, "invalid date")}
+        end
+    end
+  end
+
+  # Used by Enum.reduce() to go over a map.
+  # The first argument is a tuple with {field_name, new_value}.
+  # The second argument is the accumulator - one of:
+  # {:continue, %Entry{}}
+  # {:error, message} (where 'message' is a string)
+  # Returns the new accumulator.
+  defp update_field(_, {:error, _} = error) do
+    # Once an error was encountered, ignore all subsequent changes
+    error
+  end
+  defp update_field({field_name, _field_value}, {:continue, %Wspom.Entry{} = _entry})
+    when field_name == :weekday or field_name == :date do
+    {:error, {field_name, "Not allowed to set #{field_name} directly"}}
+  end
+  defp update_field({field_name, _field_value}, {:continue, %Wspom.Entry{} = _entry})
+    when field_name == :importance do
+    {:error, {field_name, "#{field_name}: not implemented"}}
+  end
+  defp update_field({:tags, field_value}, {:continue, %Wspom.Entry{} = entry}) do
+    new_tags = MapSet.new(String.split(field_value, " "))
+    {:continue, entry |> Map.put(:tags, new_tags)}
+  end
+  defp update_field({field_name, field_value}, {:continue, %Wspom.Entry{} = entry}) do
+    {:continue, entry |> Map.put(field_name, field_value)}
+  end
+
   @spec compare_years(%Wspom.Entry{}, %Wspom.Entry{}) :: boolean()
   def compare_years(e1, e2), do: e1.year <= e2.year
 

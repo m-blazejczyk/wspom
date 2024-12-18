@@ -7,12 +7,6 @@
   </:actions>
 </.header>
 
-<div id="testrrr">Test Item</div>
-
-<button phx-click={JS.toggle(to: "#testrrr")}>
-  Toggle item!
-</button>
-
 <div id="stream_container" phx-update="stream" class="relative flex flex-col justify-center overflow-hidden bg-gray-50 py-2 gap-4">
   <div
     :for={ {dom_id, entry} <- @streams.entries }

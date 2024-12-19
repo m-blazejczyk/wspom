@@ -80,10 +80,14 @@ defmodule Wspom.Context do
 
   """
   def update_entry(entry, attrs) do
-    entry
+    case entry
     |> Entry.changeset(attrs)
-    |> Entry.update_entry()
-    |> Database.replace_entry_and_save()
+    |> Entry.update_entry() do
+      {:error, _changeset} = err ->
+        err
+      {:ok, entry} ->
+        {:ok, Database.replace_entry_and_save(entry)}
+    end
     # TODO: Update the tags and cascades
 end
 

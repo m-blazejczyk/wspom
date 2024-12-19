@@ -25,12 +25,18 @@ defmodule WspomWeb.EntryLive.FormComponent do
       >
         <.input field={@form[:title]} type="text" label="Title" />
         <.input field={@form[:tags]} type="text" label="Tags" />
+        <div class="flex gap-2">
+          <.input field={@form[:fuzzy]} type="number" label="Fuzzy" />
+          <div class="content-center">
+            <.input field={@form[:needs_review]} type="checkbox" label="Needs review" />
+          </div>
+        </div>
         <.input field={@form[:description]} type="textarea" label="Description" />
-        <.input field={@form[:year]} type="number" label="Year" />
-        <.input field={@form[:month]} type="number" label="Month" />
-        <.input field={@form[:day]} type="number" label="Day" />
-        <.input field={@form[:fuzzy]} type="number" label="Fuzzy" />
-        <.input field={@form[:needs_review]} type="checkbox" label="Needs review" />
+        <div class="flex gap-2 ">
+          <.input field={@form[:year]} type="number" label="Year" />
+          <.input field={@form[:month]} type="number" label="Month" />
+          <.input field={@form[:day]} type="number" label="Day" />
+        </div>
         <:actions>
           <.button phx-disable-with="Saving…">Save</.button>
         </:actions>

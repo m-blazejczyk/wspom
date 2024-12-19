@@ -9,8 +9,8 @@ defmodule Wspom.Filter do
   #Allowed values of 'which': :day, :year and :tag.
   defstruct [:which, :day, :month, :year, :tag, :prev_date, :next_date]
 
-  @spec init_day_from_date(DateTime.t()) :: %Wspom.Filter{}
-  defp init_day_from_date(dt) do
+  @spec init_day_filter_from_date(DateTime.t()) :: %Wspom.Filter{}
+  defp init_day_filter_from_date(dt) do
     next_date = dt |> Timex.shift(days: 1)
     prev_date = dt |> Timex.shift(days: -1)
 
@@ -23,13 +23,18 @@ defmodule Wspom.Filter do
   # This function is only called on the initial page load.
   @spec default() :: %Wspom.Filter{}
   def default() do
-    init_day_from_date(Timex.now("America/Montreal"))
+    init_day_filter_from_date(Timex.now("America/Montreal"))
+  end
+
+  @spec from_entry(%Wspom.Entry{}) :: %Wspom.Filter{}
+  def from_entry(entry) do
+    init_day_filter_from_date(entry.date)
   end
 
   @spec from_params(%{}, [%Wspom.Entry{}]) :: %Wspom.Filter{}
   def from_params(%{"filter" => "day", "day" => day, "month" => month}, _entries) do
     # The year can be anything in this case but let's pick a leap year
-    init_day_from_date(Timex.to_date({2024, String.to_integer(month), String.to_integer(day)}))
+    init_day_filter_from_date(Timex.to_date({2024, String.to_integer(month), String.to_integer(day)}))
   end
   def from_params(%{"filter" => "year", "day" => day, "month" => month, "year" => year}, entries) do
     year_int = String.to_integer(year)
@@ -97,12 +102,12 @@ defmodule Wspom.Filter do
   def switch_to_day_link(%Wspom.Filter{which: :year, day: day, month: month}) do
     "/entries?filter=day&day=#{day}&month=#{month}"
   end
-  def switch_to_day_link(_), do: ""
+  def switch_to_day_link(%Wspom.Filter{}), do: ""
 
   def switch_to_year_link(%Wspom.Filter{which: :day, day: day, month: month}, year) do
     "/entries?filter=year&day=#{day}&month=#{month}&year=#{year}"
   end
-  def switch_to_year_link(_, _), do: ""
+  def switch_to_year_link(%Wspom.Filter{}, _), do: ""
 
   @spec filter(%Wspom.Filter{}, list(%Wspom.Entry{})) :: list(%Wspom.Entry{})
   def filter(%Wspom.Filter{which: :day, day: day, month: month}, entries) do

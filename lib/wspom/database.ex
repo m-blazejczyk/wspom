@@ -96,6 +96,10 @@ defmodule Wspom.Database do
     Agent.get(__MODULE__, fn {_, _, cascades, _} -> cascades end)
   end
 
+  def all_tags_and_cascades() do
+    Agent.get(__MODULE__, fn {_, tags, cascades, _} -> {tags, cascades} end)
+  end
+
   def get_state() do
     Agent.get(__MODULE__, fn data -> data end)
   end

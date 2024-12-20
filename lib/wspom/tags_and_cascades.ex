@@ -43,7 +43,7 @@ defmodule Wspom.TnC do
   # and initializes the accumulator properly
   # It also applies known cascades - if the tag name is the name of a cascade,
   # the tags forming the cascade will be added to the set of tags
-  @spec apply_cascades([String.t()]) :: {:error, String.t()} | {:ok, %{}}
+  @spec apply_cascades([String.t()], %{}) :: {:error, String.t()} | {:ok, %{}}
   defp apply_cascades(tags, existing_cascades) do
     tags
     |> Enum.reduce(%{tags: MapSet.new()}, fn tag, acc ->

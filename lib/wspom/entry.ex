@@ -108,9 +108,8 @@ defmodule Wspom.Entry do
     when field_name == :weekday or field_name == :date do
     {:error, {field_name, "Not allowed to set #{field_name} directly"}}
   end
-  defp update_field({field_name, _field_value}, {:continue, %Wspom.Entry{} = _entry})
-    when field_name == :importance do
-    {:error, {field_name, "#{field_name}: not implemented"}}
+  defp update_field({:importance, _field_value}, {:continue, %Wspom.Entry{} = _entry}) do
+    {:error, {:importance, "Importance: not implemented"}}
   end
   defp update_field({:tags, field_value}, {:continue, %Wspom.Entry{} = entry}) do
     new_tags = MapSet.new(String.split(field_value, " "))

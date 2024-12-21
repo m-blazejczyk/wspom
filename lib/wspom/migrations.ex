@@ -165,6 +165,6 @@ defmodule Wspom.Migrations do
   end
 
   def add_production_flag(%{} = state) do
-    {state |> Map.put(:is_production, True), "Adding the is_production flag"}
+    {state |> Map.put(:is_production, true), "Adding the is_production flag"}
   end
 end

@@ -11,7 +11,6 @@ defmodule Wspom.Database do
   alias Wspom.Migrations
   alias Wspom.Entry
 
-  @prod_mode false
   @db_file "wspom.dat"
   @db_file_backup "wspom.bak.dat"
 
@@ -19,25 +18,21 @@ defmodule Wspom.Database do
     Logger.notice(s)
   end
 
-  def start_link(_) do
-    Agent.start_link(&init_entry_data/0, name: __MODULE__)
+  def start_link(args) do
+    is_production = args |> Keyword.get(:is_production)
+    Agent.start_link(fn -> init_entry_data(is_production) end, name: __MODULE__)
   end
 
-  defp init_entry_data() do
-    if @prod_mode do
+  defp init_entry_data(is_production) do
+    if is_production do
       log_notice("### PRODUCTION MODE ###")
       load_db_file() |> maybe_migrate_and_save() |> summarize_db()
     else
-      if File.exists?(@db_file) do
-        log_notice("### TEST MODE: file loaded ###")
-        load_db_file() |> maybe_migrate_and_save() |> summarize_db()
-      else
-        entries = Enum.map(1..5, &generate_entry/1) ++
-          [%Entry{description: "One year ago", title: "Entry 6", id: 6,
-            year: 2023, month: 8, day: 26, weekday: 2}]
-        log_notice("### TEST MODE: #{length(entries)} entries generated ###")
-        {entries, MapSet.new(), %{}, 1}
-      end
+      entries = Enum.map(1..5, &generate_entry/1) ++
+        [%Entry{description: "One year ago", title: "Entry 6", id: 6,
+          year: 2023, month: 8, day: 26, weekday: 2}]
+      log_notice("### TEST MODE: #{length(entries)} entries generated ###")
+      {entries, MapSet.new(), %{}, 1}
     end
   end
 

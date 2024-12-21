@@ -1,10 +1,4 @@
 defmodule Wspom.Database do
-  # VERY IMPORTANT:
-  # Entries MUST be sorted by date.
-  # This means that when entries are added, they must be added
-  # in the right location in the list.
-  # Otherwise, some functions in the Filter module won't work well.
-
   use Agent
   use Timex
   require Logger

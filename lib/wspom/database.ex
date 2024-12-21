@@ -42,21 +42,45 @@ defmodule Wspom.Database do
   end
 
   defp load_db_file() do
-    # This will raise an exception in case of trouble, and that's great!
-    {[_ | _], %MapSet{}, %{}, _} = File.read!(@db_file) |> :erlang.binary_to_term
+    File.read!(@db_file) |> :erlang.binary_to_term
   end
 
-  defp maybe_migrate_and_save({_, _, _, current} = state) do
-    {new_entries, new_tags, new_cascades, new_version} = Migrations.migrate(state)
-    if new_version > current do
-      save({new_entries, new_tags, new_cascades, new_version})
-    else
-      state
+  defp maybe_migrate_and_save({_, _, _, current_version} = state) do
+    case Migrations.migrate(state) do
+      {_new_entries, _new_tags, _new_cascades, new_version} = new_state ->
+        if new_version > current_version do
+          save(new_state)
+        else
+          state
+        end
+      %{version: new_version} = new_state ->
+        if new_version > current_version do
+          save(new_state)
+        else
+          state
+        end
+    end
+  end
+  defp maybe_migrate_and_save(%{version: current_version} = state) do
+    case Migrations.migrate(state) do
+      %{version: new_version} = new_state ->
+        if new_version > current_version do
+          save(new_state)
+        else
+          state
+        end
     end
   end
 
   defp summarize_db({entries, tags, cascades, current} = state) do
     log_notice("### Database version #{current} ###")
+    log_notice("### #{length(entries)} entries ###")
+    log_notice("### #{MapSet.size(tags)} tags ###")
+    log_notice("### #{map_size(cascades)} cascades ###")
+    state
+  end
+  defp summarize_db(%{entries: entries, tags: tags, cascades: cascades, version: version} = state) do
+    log_notice("### Database version #{version} ###")
     log_notice("### #{length(entries)} entries ###")
     log_notice("### #{MapSet.size(tags)} tags ###")
     log_notice("### #{map_size(cascades)} cascades ###")
@@ -69,8 +93,21 @@ defmodule Wspom.Database do
       weekday: Enum.random(1..7)}
   end
 
+  defp save(state) do
+    # Rename the current database file to serve as a backup.
+    # This will overwrite an existing, previous backup.
+    File.rename(@db_file, @db_file_backup)
+
+    # Save.
+    File.write! "wspom.dat", :erlang.term_to_binary(state)
+    log_notice("Database saved!")
+
+    # Return the state.
+    state
+  end
+
   def get_next_entry_to_tag() do
-    Agent.get(__MODULE__, fn {entries, _, _, _} ->
+    Agent.get(__MODULE__, fn %{entries: entries} ->
       entries |> Enum.find(&entry_to_tag?/1)
     end)
   end
@@ -79,37 +116,25 @@ defmodule Wspom.Database do
   end
 
   def get_entry(id) do
-    Agent.get(__MODULE__, fn {entries, _, _, _} ->
+    Agent.get(__MODULE__, fn %{entries: entries} ->
       entries |> Enum.find(fn entry -> entry.id == id end)
     end)
   end
 
   def all_entries() do
-    Agent.get(__MODULE__, fn {entries, _, _, _} -> entries end)
+    Agent.get(__MODULE__, fn %{entries: entries} -> entries end)
   end
 
   def all_tags() do
-    Agent.get(__MODULE__, fn {_, tags, _, _} -> tags end)
+    Agent.get(__MODULE__, fn %{tags: tags} -> tags end)
   end
 
   def all_cascades() do
-    Agent.get(__MODULE__, fn {_, _, cascades, _} -> cascades end)
+    Agent.get(__MODULE__, fn %{cascades: cascades} -> cascades end)
   end
 
   def all_tags_and_cascades() do
-    Agent.get(__MODULE__, fn {_, tags, cascades, _} -> {tags, cascades} end)
-  end
-
-  def get_state() do
-    Agent.get(__MODULE__, fn data -> data end)
-  end
-
-  def set_state(data) do
-    Agent.update(__MODULE__, fn _ -> data end)
-  end
-
-  def migrate() do
-    Agent.update(__MODULE__, fn data -> Wspom.Migrations.migrate(data) |> save() end)
+    Agent.get(__MODULE__, fn %{tags: tags, cascades: cascades} -> {tags, cascades} end)
   end
 
   def save() do
@@ -119,11 +144,8 @@ defmodule Wspom.Database do
   def replace_entry_and_save(%Entry{} = entry) do
     log_notice("Saving modified entry…")
 
-    Agent.update(__MODULE__, fn {entries, tags, cascades, version} ->
-      {entries |> find_and_replace([], entry),
-        tags,
-        cascades,
-        version}
+    Agent.update(__MODULE__, fn %{entries: entries} = state ->
+      %{state | entries: entries |> find_and_replace([], entry)}
       |> save()
     end)
 
@@ -147,6 +169,9 @@ defmodule Wspom.Database do
       find_and_replace(rest, [head | acc], entry)
     end
   end
+
+  # All the functions below have been copied from older code.
+  # They are not used at the moment and may not work as intended.
 
   def tag_entry_and_save(data) do
     log_notice("Saving entered data…")
@@ -240,17 +265,4 @@ defmodule Wspom.Database do
     |> Map.delete(cascade_name)
   end
   defp remove_cascade(cascades, _), do: cascades
-
-  defp save(state) do
-    # Rename the current database file to serve as a backup.
-    # This will overwrite an existing, previous backup.
-    File.rename(@db_file, @db_file_backup)
-
-    # Save.
-    File.write! "wspom.dat", :erlang.term_to_binary(state)
-    log_notice("Saved!")
-
-    # Return the state.
-    state
-  end
 end

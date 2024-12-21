@@ -12,8 +12,7 @@ defmodule Wspom.Database do
     Logger.notice(s)
   end
 
-  def start_link(args) do
-    is_production = args |> Keyword.get(:is_production)
+  def start_link([is_production: is_production]) do
     Agent.start_link(fn -> init_entry_data(is_production) end, name: __MODULE__)
   end
 

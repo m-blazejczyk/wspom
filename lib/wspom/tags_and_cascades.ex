@@ -60,4 +60,6 @@ defmodule Wspom.TnC do
     Map.update!(acc, :tags, &(MapSet.put(&1, tag)))
   end
 
+  def test(), do: 55
+
 end

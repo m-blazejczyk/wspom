@@ -8,7 +8,7 @@ defmodule Wspom.Application do
     children = [
       WspomWeb.Telemetry,
       {Phoenix.PubSub, name: Wspom.PubSub},
-      {Wspom.Database, is_production: true},
+      {Wspom.Database, is_production: (Mix.env() != :test)},
       # Start to serve requests, typically the last entry
       WspomWeb.Endpoint
     ]

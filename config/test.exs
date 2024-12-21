@@ -17,8 +17,8 @@ config :wspom, WspomWeb.Endpoint,
   secret_key_base: "isPjXve5bDdshLMZfPfVwrAsvJkfuSqFyZ8YRW1p4Wkd9V5jtTWlXaMDsEVruxkL",
   server: false
 
-# Print only warnings and errors during test
-config :logger, level: :warning
+# Print all logs during test
+config :logger, :console, format: "[$level] $message\n", level: :info
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime

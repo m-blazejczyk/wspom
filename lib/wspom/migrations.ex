@@ -10,7 +10,8 @@ defmodule Wspom.Migrations do
              {6, &Wspom.Migrations.fix_nil_descriptions/1},
              {7, &Wspom.Migrations.sort_entries/1},
              {8, &Wspom.Migrations.add_dates/1},
-             {9, &Wspom.Migrations.convert_to_map/1}]
+             {9, &Wspom.Migrations.convert_to_map/1},
+             {10, &Wspom.Migrations.add_production_flag/1}]
 
   @spec migrate(any()) :: any()
   def migrate(state) do
@@ -161,5 +162,9 @@ defmodule Wspom.Migrations do
 
   def convert_to_map({entries, tags, cascades}) do
     {%{entries: entries, tags: tags, cascades: cascades}, "Converting state to map"}
+  end
+
+  def add_production_flag(%{} = state) do
+    {state |> Map.put(:is_production, True), "Adding the is_production flag"}
   end
 end

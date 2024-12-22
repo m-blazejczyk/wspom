@@ -29,7 +29,7 @@ defmodule Wspom.TnC do
   @spec tags_from_string(String.t()) :: {:error, String.t()} | {:ok, %{}}
   def tags_from_string(input) do
     # Grab existing tags & cascades from the database
-    {tags_db, cascades_db} = Database.all_tags_and_cascades()
+    {_tags_db, cascades_db} = Database.all_tags_and_cascades()
 
     input
     |> String.split(" ", trim: true)
@@ -45,21 +45,21 @@ defmodule Wspom.TnC do
   # the tags forming the cascade will be added to the set of tags
   @spec apply_cascades([String.t()], %{}) :: {:error, String.t()} | {:ok, %{}}
   defp apply_cascades(tags, existing_cascades) do
-    tags
-    |> Enum.reduce(%{tags: MapSet.new()}, fn tag, acc ->
-      cascade = existing_cascades |> Map.get(tag)
-      if cascade != nil do
-        {:ok, cascade |> Enum.reduce(acc, &add_tag/2)}
-      else
-        {:ok, add_tag(tag, acc)}
-      end
-    end)
+    {
+      :ok,
+      tags
+      |> Enum.reduce(%{tags: MapSet.new()}, fn tag, acc ->
+        cascade = existing_cascades |> Map.get(tag)
+        if cascade != nil do
+          cascade |> Enum.reduce(acc, &add_tag/2)
+        else
+          add_tag(tag, acc)
+        end
+      end)
+    }
   end
 
   defp add_tag(tag, %{tags: tags} = acc) do
-    Map.update!(acc, :tags, &(MapSet.put(&1, tag)))
+    %{acc | tags: tags |> MapSet.put(tag)}
   end
-
-  def test(), do: 55
-
 end

@@ -25,6 +25,13 @@ defmodule Wspom.Migrations do
     new_state
   end
 
+  def current_version() do
+    {v, _} = @versions
+    |> Enum.max_by(fn {v, _} -> v end)
+
+    v
+  end
+
   defp maybe_migrate({migration_version, _}, {_, _, _, current_version} = state)
   when current_version >= migration_version do
     state

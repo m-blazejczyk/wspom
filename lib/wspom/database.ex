@@ -21,11 +21,14 @@ defmodule Wspom.Database do
       log_notice("### PRODUCTION MODE ###")
       load_db_file() |> maybe_migrate_and_save() |> summarize_db()
     else
-      entries = Enum.map(1..5, &generate_entry/1) ++
-        [%Entry{description: "One year ago", title: "Entry 6", id: 6,
-          year: 2023, month: 8, day: 26, weekday: 2}]
+      entries = Enum.map(1..5, &generate_entry/1)
       log_notice("### TEST MODE: #{length(entries)} entries generated ###")
-      {entries, MapSet.new(), %{}, 1}
+      %{
+        entries: entries,
+        tags: MapSet.new(["t1", "t2", "c", "t3"]),
+        cascades: %{"c" => ["t1", "t2", "c"]},
+        version: Migrations.current_version()
+      }
     end
   end
 
@@ -76,9 +79,11 @@ defmodule Wspom.Database do
   end
 
   defp generate_entry(id) do
-    %Entry{description: "This is the description", title: "Entry #{id}", id: id,
-      year: Enum.random(2011..2022), month: Enum.random(1..12), day: Enum.random(1..28),
-      weekday: Enum.random(1..7)}
+    now = DateTime.utc_now() |> Timex.shift(days: -(id - 1))
+
+    %Entry{description: "This is the description of entry #{id}", title: "Entry #{id}",
+      id: id, year: now.year, month: now.month, day: now.day,
+      weekday: now |> Timex.weekday(), date: now |> DateTime.to_date()}
   end
 
   defp save(state) do

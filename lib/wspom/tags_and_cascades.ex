@@ -124,12 +124,19 @@ defmodule Wspom.TnC do
 
   defp build_summary({:error, _} = err), do: err
   defp build_summary({:ok, %{cascade_defs: cascades, known_tags: known_tags, unknown_tags: unknown_tags} = acc}) do
+
+    known_tags_str = known_tags |> Enum.sort() |> Enum.join(", ")
+    unknown_tags_str = unknown_tags |> Enum.sort() |> Enum.join(", ")
+    cascades_str = cascades |> Map.keys() |> Enum.sort() |> Enum.join(", ")
+
     {:ok, acc |> Map.put(:summary,
       "Applied #{MapSet.size(known_tags) + MapSet.size(unknown_tags)} tags.\n"
-      <> "Known tags: #{known_tags |> Enum.sort() |> Enum.join(", ")}\n"
-      <> "New tags: #{unknown_tags |> Enum.sort() |> Enum.join(", ")}\n"
-      <> "New cascades: #{cascades |> Map.keys() |> Enum.sort() |> Enum.join(", ")}")}
+      <> "Known tags: #{string_or_none(known_tags_str)}\n"
+      <> "New tags: #{string_or_none(unknown_tags_str)}\n"
+      <> "New cascades: #{string_or_none(cascades_str)}")}
   end
+
+  defp string_or_none(str), do: (if String.length(str) > 0, do: str, else: "none")
 
   defp clean_up({:error, _} = err), do: err
   defp clean_up({:ok, %{} = acc}) do

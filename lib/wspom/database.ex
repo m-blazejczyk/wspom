@@ -77,6 +77,10 @@ defmodule Wspom.Database do
     log_notice("### #{length(entries)} entries ###")
     log_notice("### #{MapSet.size(tags)} tags ###")
     log_notice("### #{map_size(cascades)} cascades ###")
+
+    IO.inspect(tags |> Enum.filter(fn k -> k |> String.starts_with?("t") end), label: "TAGS LOADED")
+    IO.inspect(cascades |> Enum.filter(fn {k, _} -> k |> String.starts_with?("t") end), label: "CASCADES LOADED")
+
     state
   end
 

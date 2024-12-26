@@ -11,8 +11,6 @@ defmodule Wspom.Entry do
     importance: :string, fuzzy: :integer, needs_review: :boolean, tags: :string}
 
   def changeset(entry, attrs) do
-    # IO.inspect(entry, label: "ENTRY")
-    # IO.inspect(attrs, label: "ATTRS")
     {entry, @types}
     |> cast(attrs, [:description, :title, :year, :month, :day, :weekday, :date,
       :importance, :fuzzy, :needs_review, :tags])
@@ -81,7 +79,7 @@ defmodule Wspom.Entry do
   end
   def update_entry(%Ecto.Changeset{data: entry, changes: changes} = changeset) do
     # Go over all changes and update the entry for each of them - or throw an error
-    case Enum.reduce(changes, {:continue, entry}, &update_field/2) do
+    case Enum.reduce(changes, {:continue, entry, %{}}, &update_field/2) do
       {:error, {field, error}} ->
         {:error, changeset |> Ecto.Changeset.add_error(field, error)}
       {:continue, new_entry, tags_info} ->

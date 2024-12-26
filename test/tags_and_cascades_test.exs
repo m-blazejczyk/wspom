@@ -63,6 +63,7 @@ defmodule TagsAndCascadesTest do
   test "Summaries" do
     {:ok, %{summary: summary}} = TnC.tags_from_string("c t4 g>h>i g>k>l")
     assert is_binary(summary)
+    IO.puts("\n")
     IO.puts(summary)
   end
 end

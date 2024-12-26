@@ -1,4 +1,5 @@
 defmodule Wspom.Entry do
+  alias Wspom.TnC
   import Ecto.Changeset
 
   defstruct [:id, :description, :title, :year, :month, :day, :weekday, :date,
@@ -112,8 +113,17 @@ defmodule Wspom.Entry do
     {:error, {:importance, "Importance: not implemented"}}
   end
   defp update_field({:tags, field_value}, {:continue, %Wspom.Entry{} = entry}) do
-    new_tags = MapSet.new(String.split(field_value, " "))
-    {:continue, entry |> Map.put(:tags, new_tags)}
+    case TnC.tags_from_string(field_value) do
+      {:error, error} ->
+        {:error, {:tags, error}}
+      {:ok, %{tags_applied: tags} = tags_info} ->
+        {:continue, entry
+        |> Map.put(:tags, tags)
+        # This is unusual.
+        # `tags_info` will contain additional data collected by TnC.tags_from_string().
+        # It's a temporary field that will be deleted before this Entry is saved to the DB.
+        |> Map.put(:tags_info, tags_info |> Map.delete(:existing_tags) |> Map.delete(:existing_cascades))}
+    end
   end
   defp update_field({field_name, field_value}, {:continue, %Wspom.Entry{} = entry}) do
     {:continue, entry |> Map.put(field_name, field_value)}

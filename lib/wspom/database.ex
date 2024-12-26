@@ -138,8 +138,18 @@ defmodule Wspom.Database do
   def replace_entry_and_save(%Entry{} = entry) do
     log_notice("Saving modified entry…")
 
-    Agent.update(__MODULE__, fn %{entries: entries} = state ->
-      %{state | entries: entries |> find_and_replace([], entry)}
+    Agent.update(__MODULE__, fn %{entries: entries, tags: tags, cascades: cascades} = state ->
+      # `tags_info` is a temporary field in the Entry, added by Entry.update_field().
+      # It contains data collected by TnC.tags_from_string().
+      %{cascade_defs: cascade_defs, unknown_tags: unknown_tags} =
+        entry |> Map.get(:tags_info)
+
+      entry_to_save = entry |> Map.delete(:tags_info)
+
+      %{state |
+        entries: entries |> find_and_replace([], entry_to_save),
+        tags: tags |> MapSet.union(unknown_tags),
+        cascades: cascades |> Map.merge(cascade_defs)}
       |> save()
     end)
 
@@ -164,19 +174,9 @@ defmodule Wspom.Database do
     end
   end
 
+  # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   # All the functions below have been copied from older code.
   # They are not used at the moment and may not work as intended.
-
-  def tag_entry_and_save(data) do
-    log_notice("Saving entered data…")
-    Agent.update(__MODULE__, fn {entries, tags, cascades, version} ->
-      {entries |> tag_entries(data),
-        tags |> add_tags(data),
-        cascades |> add_cascades(data),
-        version}
-      |> save()
-    end)
-  end
 
   def modify_tags_cascades_and_save(data) do
     log_notice("Making requested changes to tags and/or cascades…")
@@ -188,38 +188,6 @@ defmodule Wspom.Database do
       |> save()
     end)
   end
-
-  defp tag_entries([], _), do: []
-  defp tag_entries([entry | rest], nil) do
-    [entry | tag_entries(rest, nil)]
-  end
-  defp tag_entries([entry | rest], data) do
-    if entry_to_tag?(entry) do
-      # Update entry with data and continue.
-      # Pass 'nil' as 'data' to indicate that the item has been updated.#
-      [entry |> tag_entry(data) | tag_entries(rest, nil)]
-    else
-      [entry | tag_entries(rest, data)]
-    end
-  end
-
-  defp tag_entry(entry, data) do
-    %{entry |
-      fuzzy: data |> Map.get(:fuzzy, entry.fuzzy),
-      importance: data |> Map.get(:importance, entry.importance),
-      needs_review: data |> Map.get(:needs_review, entry.needs_review),
-      tags: MapSet.union(entry.tags, data |> Map.get(:tags, MapSet.new()))}
-  end
-
-  defp add_tags(tags, %{tags_unknown: new_tags}) do
-    MapSet.union(tags, MapSet.new(new_tags))
-  end
-  defp add_tags(tags, _), do: tags
-
-  defp add_cascades(cascades, %{cascades_unknown: new_cascades}) do
-    Map.merge(cascades, Map.new(new_cascades))
-  end
-  defp add_cascades(cascades, _), do: cascades
 
   defp rename_tag_in_entries(entries, %{rename_tag: _} = data) do
     entries

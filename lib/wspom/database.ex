@@ -27,7 +27,8 @@ defmodule Wspom.Database do
         entries: entries,
         tags: MapSet.new(["t1", "t2", "c", "t3"]),
         cascades: %{"c" => ["t1", "t2", "c"]},
-        version: Migrations.current_version()
+        version: Migrations.current_version(),
+        is_production: false,
       }
     end
   end

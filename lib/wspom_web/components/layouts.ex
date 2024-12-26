@@ -1,5 +1,5 @@
 defmodule WspomWeb.Layouts do
   use WspomWeb, :html
 
-  embed_templates "layouts/*"
+  embed_templates "*"
 end

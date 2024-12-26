@@ -84,11 +84,12 @@ defmodule Wspom.Entry do
     case Enum.reduce(changes, {:continue, entry}, &update_field/2) do
       {:error, {field, error}} ->
         {:error, changeset |> Ecto.Changeset.add_error(field, error)}
-      {:continue, new_entry} ->
+      {:continue, new_entry, tags_info} ->
+        # The date has to be checked as the final step
         case Date.new(new_entry.year, new_entry.month, new_entry.day) do
           {:ok, new_date} ->
             new_entry = %Wspom.Entry{new_entry | date: new_date, weekday: Timex.weekday(new_date)}
-            {:ok, new_entry}
+            {:ok, new_entry, tags_info}
           {:error, _} ->
             {:error, changeset |> Ecto.Changeset.add_error(:day, "invalid date")}
         end
@@ -98,35 +99,32 @@ defmodule Wspom.Entry do
   # Used by Enum.reduce() to go over a map.
   # The first argument is a tuple with {field_name, new_value}.
   # The second argument is the accumulator - one of:
-  # {:continue, %Entry{}}
+  # {:continue, %Entry{}, %{}}
   # {:error, message} (where 'message' is a string)
   # Returns the new accumulator.
   defp update_field(_, {:error, _} = error) do
     # Once an error was encountered, ignore all subsequent changes
     error
   end
-  defp update_field({field_name, _field_value}, {:continue, %Wspom.Entry{} = _entry})
+  defp update_field({field_name, _field_value}, {:continue, %Wspom.Entry{}, _tags_info})
     when field_name == :weekday or field_name == :date do
     {:error, {field_name, "Not allowed to set #{field_name} directly"}}
   end
-  defp update_field({:importance, _field_value}, {:continue, %Wspom.Entry{} = _entry}) do
+  defp update_field({:importance, _field_value}, {:continue, %Wspom.Entry{}, _tags_info}) do
     {:error, {:importance, "Importance: not implemented"}}
   end
-  defp update_field({:tags, field_value}, {:continue, %Wspom.Entry{} = entry}) do
+  defp update_field({:tags, field_value}, {:continue, %Wspom.Entry{} = entry, _tags_info}) do
     case TnC.tags_from_string(field_value) do
       {:error, error} ->
         {:error, {:tags, error}}
       {:ok, %{tags_applied: tags} = tags_info} ->
-        {:continue, entry
-        |> Map.put(:tags, tags)
-        # This is unusual.
-        # `tags_info` will contain additional data collected by TnC.tags_from_string().
-        # It's a temporary field that will be deleted before this Entry is saved to the DB.
-        |> Map.put(:tags_info, tags_info |> Map.delete(:existing_tags) |> Map.delete(:existing_cascades))}
+        {:continue,
+        entry |> Map.put(:tags, tags),
+        tags_info}
     end
   end
-  defp update_field({field_name, field_value}, {:continue, %Wspom.Entry{} = entry}) do
-    {:continue, entry |> Map.put(field_name, field_value)}
+  defp update_field({field_name, field_value}, {:continue, %Wspom.Entry{} = entry, tags_info}) do
+    {:continue, entry |> Map.put(field_name, field_value), tags_info}
   end
 
   @spec compare_years(%Wspom.Entry{}, %Wspom.Entry{}) :: boolean()

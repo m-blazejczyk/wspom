@@ -43,6 +43,8 @@ defmodule Wspom.TnC do
     |> detect_known_tags()
     # Build a summary
     |> build_summary()
+    # Clean up
+    |> clean_up()
   end
 
   # This function creates a MapSet of tags from the given list of strings.
@@ -127,5 +129,11 @@ defmodule Wspom.TnC do
       <> "Known tags: #{known_tags |> Enum.sort() |> Enum.join(", ")}\n"
       <> "New tags: #{unknown_tags |> Enum.sort() |> Enum.join(", ")}\n"
       <> "New cascades: #{cascades |> Map.keys() |> Enum.sort() |> Enum.join(", ")}")}
+  end
+
+  defp clean_up({:error, _} = err), do: err
+  defp clean_up({:ok, %{} = acc}) do
+    # This information is not needed anymore
+    {:ok, acc |> Map.delete(:existing_tags) |> Map.delete(:existing_cascades)}
   end
 end

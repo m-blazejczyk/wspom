@@ -85,10 +85,12 @@ defmodule Wspom.Context do
     |> Entry.update_entry() do
       {:error, _changeset} = err ->
         err
-      {:ok, entry} ->
-        {:ok, Database.replace_entry_and_save(entry)}
+      {:ok, updated_entry, tags_info} ->
+        # Note: `tags_info` is not a part of the Entry struct;
+        # it was added by Entry.update_entry() and it won't be saved.
+        summary = tags_info |> Map.get(:summary)
+        {:ok, Database.replace_entry_and_save(updated_entry, tags_info), summary}
     end
-    # TODO: Update the tags and cascades
 end
 
   @doc """

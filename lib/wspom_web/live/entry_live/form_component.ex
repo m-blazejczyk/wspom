@@ -67,12 +67,12 @@ defmodule WspomWeb.EntryLive.FormComponent do
 
   defp save_entry(socket, :edit, entry_params) do
     case Context.update_entry(socket.assigns.entry, entry_params) do
-      {:ok, entry} ->
+      {:ok, entry, summary} ->
         notify_parent({:saved, entry})
 
         {:noreply,
          socket
-         |> put_flash(:info, "Entry updated successfully")
+         |> put_flash(:info, "Entry updated successfully\n" <> summary)
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->

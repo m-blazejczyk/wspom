@@ -62,8 +62,11 @@ defmodule TagsAndCascadesTest do
 
   test "Summaries" do
     {:ok, %{summary: summary}} = TnC.tags_from_string("c t4 g>h>i g>k>l")
-    assert is_binary(summary)
-    IO.puts("\n")
-    IO.puts(summary)
+    assert summary <> "\n" == """
+    Applied 9 tags.
+    Known tags: c, t1, t2
+    New tags: g, h, i, k, l, t4
+    New cascades: i, l
+    """
   end
 end

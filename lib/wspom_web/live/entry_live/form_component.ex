@@ -72,7 +72,7 @@ defmodule WspomWeb.EntryLive.FormComponent do
 
         {:noreply,
          socket
-         |> put_flash(:info, "Entry updated successfully\n" <> summary)
+         |> put_flash(:info, break_lines("Entry updated successfully!\n" <> summary))
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -93,6 +93,15 @@ defmodule WspomWeb.EntryLive.FormComponent do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
     end
+  end
+
+  def break_lines(str) do
+    assigns = %{str: str}
+    ~H"""
+    <%= for line <- @str |> String.split("\n") do %>
+      <br><%= line %>
+    <% end %>
+    """
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})

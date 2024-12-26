@@ -88,7 +88,7 @@ defmodule Wspom.Context do
       {:ok, updated_entry, tags_info} ->
         # Note: `tags_info` is not a part of the Entry struct;
         # it was added by Entry.update_entry() and it won't be saved.
-        summary = tags_info |> Map.get(:summary)
+        summary = tags_info |> Map.get(:summary, "")
         saved_entry = Database.replace_entry_and_save(updated_entry, tags_info)
         {:ok, saved_entry, summary}
     end

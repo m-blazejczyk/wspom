@@ -140,18 +140,26 @@ defmodule Wspom.Database do
     Agent.update(__MODULE__, fn data -> save(data) end)
   end
 
-  def replace_entry_and_save(%Entry{} = entry, %{} = tags_info) do
+  # This variant will be called when tags have been modified
+  def replace_entry_and_save(%Entry{} = entry, %{cascade_defs: cascade_defs, unknown_tags: unknown_tags}) do
     log_notice("Saving modified entry…")
 
     Agent.update(__MODULE__, fn %{entries: entries, tags: tags, cascades: cascades} = state ->
-      # `tags_info` is a temporary field in the Entry, added by Entry.update_field().
-      # It contains data collected by TnC.tags_from_string().
-      %{cascade_defs: cascade_defs, unknown_tags: unknown_tags} = tags_info
-
       %{state |
         entries: entries |> find_and_replace([], entry),
         tags: tags |> MapSet.union(unknown_tags),
         cascades: cascades |> Map.merge(cascade_defs)}
+      |> save()
+    end)
+
+    entry
+  end
+  # This variant will be called when tags have NOT been modified
+  def replace_entry_and_save(%Entry{} = entry, %{}) do
+    log_notice("Saving modified entry…")
+
+    Agent.update(__MODULE__, fn %{entries: entries} = state ->
+      %{state | entries: entries |> find_and_replace([], entry)}
       |> save()
     end)
 

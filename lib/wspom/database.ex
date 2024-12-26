@@ -22,7 +22,6 @@ defmodule Wspom.Database do
       load_db_file() |> maybe_migrate_and_save() |> summarize_db()
     else
       entries = Enum.map(1..5, &generate_entry/1)
-      log_notice("### TEST MODE: #{length(entries)} entries generated ###")
       %{
         entries: entries,
         tags: MapSet.new(["t1", "t2", "c", "t3"]),
@@ -30,6 +29,7 @@ defmodule Wspom.Database do
         version: Migrations.current_version(),
         is_production: false,
       }
+      |> summarize_db()
     end
   end
 
@@ -71,8 +71,9 @@ defmodule Wspom.Database do
     log_notice("### #{map_size(cascades)} cascades ###")
     state
   end
-  defp summarize_db(%{entries: entries, tags: tags, cascades: cascades, version: version} = state) do
+  defp summarize_db(%{entries: entries, tags: tags, cascades: cascades, version: version, is_production: production?} = state) do
     log_notice("### Database version #{version} ###")
+    log_notice("### #{if production?, do: "PRODUCTION", else: "TEST"} ###")
     log_notice("### #{length(entries)} entries ###")
     log_notice("### #{MapSet.size(tags)} tags ###")
     log_notice("### #{map_size(cascades)} cascades ###")

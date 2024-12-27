@@ -4,6 +4,8 @@ defmodule Wspom.Filter do
 
   alias Wspom.Entry
 
+  use Phoenix.VerifiedRoutes, endpoint: WspomWeb.Endpoint, router: WspomWeb.Router
+
   # In addition to the "current" state of the filter, we also have to
   # store the "Next" and "Previous" so that it can be used to generate links.
   #Allowed values of 'which': :day, :year and :tag.
@@ -45,7 +47,7 @@ defmodule Wspom.Filter do
 
     {_now, {_min_diff_prev, prev_date}, {_min_diff_next, next_date}} =
       entries
-      |> Enum.reduce({now, {-400, nil}, {400, nil}}, &find_next_prev_by_year/2)
+      |> Enum.reduce({now, {-100000, nil}, {100000, nil}}, &find_next_prev_by_year/2)
 
     # Note: if there are no records before or after the date specified by PARAMS,
     # prev_date or next_date will remain nil - which is exactly what we want!
@@ -79,33 +81,39 @@ defmodule Wspom.Filter do
   end
 
   def current_link(%Wspom.Filter{which: :day, day: day, month: month}) do
-    "/entries?filter=day&day=#{day}&month=#{month}"
+    ~p"/entries?filter=day&day=#{day}&month=#{month}"
   end
   def current_link(%Wspom.Filter{which: :year, day: day, month: month, year: year}) do
-    "/entries?filter=year&day=#{day}&month=#{month}&year=#{year}"
+    ~p"/entries?filter=year&day=#{day}&month=#{month}&year=#{year}"
   end
 
+  def prev_link(%Wspom.Filter{prev_date: nil}) do
+    ""
+  end
   def prev_link(%Wspom.Filter{which: :day, prev_date: prev_date}) do
-    "/entries?filter=day&day=#{prev_date.day}&month=#{prev_date.month}"
+    ~p"/entries?filter=day&day=#{prev_date.day}&month=#{prev_date.month}"
   end
   def prev_link(%Wspom.Filter{which: :year, prev_date: prev_date}) do
-    "/entries?filter=year&day=#{prev_date.day}&month=#{prev_date.month}&year=#{prev_date.year}"
+    ~p"/entries?filter=year&day=#{prev_date.day}&month=#{prev_date.month}&year=#{prev_date.year}"
   end
 
+  def next_link(%Wspom.Filter{next_date: nil}) do
+    ""
+  end
   def next_link(%Wspom.Filter{which: :day, next_date: next_date}) do
-    "/entries?filter=day&day=#{next_date.day}&month=#{next_date.month}"
+    ~p"/entries?filter=day&day=#{next_date.day}&month=#{next_date.month}"
   end
   def next_link(%Wspom.Filter{which: :year, next_date: next_date}) do
-    "/entries?filter=year&day=#{next_date.day}&month=#{next_date.month}&year=#{next_date.year}"
+    ~p"/entries?filter=year&day=#{next_date.day}&month=#{next_date.month}&year=#{next_date.year}"
   end
 
   def switch_to_day_link(%Wspom.Filter{which: :year, day: day, month: month}) do
-    "/entries?filter=day&day=#{day}&month=#{month}"
+    ~p"/entries?filter=day&day=#{day}&month=#{month}"
   end
   def switch_to_day_link(%Wspom.Filter{}), do: ""
 
   def switch_to_year_link(%Wspom.Filter{which: :day, day: day, month: month}, year) do
-    "/entries?filter=year&day=#{day}&month=#{month}&year=#{year}"
+    ~p"/entries?filter=year&day=#{day}&month=#{month}&year=#{year}"
   end
   def switch_to_year_link(%Wspom.Filter{}, _), do: ""
 

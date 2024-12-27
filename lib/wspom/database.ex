@@ -77,10 +77,6 @@ defmodule Wspom.Database do
     log_notice("### #{length(entries)} entries ###")
     log_notice("### #{MapSet.size(tags)} tags ###")
     log_notice("### #{map_size(cascades)} cascades ###")
-
-    IO.inspect(tags |> Enum.filter(fn k -> k |> String.starts_with?("t") end), label: "TAGS LOADED")
-    IO.inspect(cascades |> Enum.filter(fn {k, _} -> k |> String.starts_with?("t") end), label: "CASCADES LOADED")
-
     state
   end
 
@@ -107,11 +103,17 @@ defmodule Wspom.Database do
 
   def get_next_entry_to_tag() do
     Agent.get(__MODULE__, fn %{entries: entries} ->
-      entries |> Enum.find(&entry_to_tag?/1)
+      entries |> Enum.reduce(nil, &entry_to_tag/2)
     end)
   end
-  defp entry_to_tag?(entry) do
-    MapSet.size(Map.get(entry, :tags)) == 0
+  defp entry_to_tag(entry, nil), do: entry
+  defp entry_to_tag(entry, earliest_entry) do
+    # Date.compare() returns :gt if first date is later than the second and :lt for vice versa.
+    if MapSet.size(entry.tags) == 0 and Date.compare(entry.date, earliest_entry.date) == :lt do
+      entry
+    else
+      earliest_entry
+    end
   end
 
   def get_entry(id) do

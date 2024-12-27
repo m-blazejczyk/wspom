@@ -33,6 +33,17 @@ defmodule Wspom.Context do
   end
 
   @doc """
+  Gets the next entry that needs to be tagged.
+
+  ## Examples
+
+      iex> get_next_entry_to_tag()
+      %Entry{}
+
+  """
+  def get_next_entry_to_tag(), do: Database.get_next_entry_to_tag()
+
+  @doc """
   Creates a entry.
 
   ## Examples

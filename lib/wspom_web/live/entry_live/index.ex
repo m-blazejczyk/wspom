@@ -44,7 +44,7 @@ defmodule WspomWeb.EntryLive.Index do
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
-    entry = Context.get_entry!(id)
+    entry = Context.get_entry!(id) |> IO.inspect(label: "EDITING ENTRY")
     socket
     |> assign(:page_title, "Edit Entry")
     |> assign(:entry, entry)
@@ -75,6 +75,10 @@ defmodule WspomWeb.EntryLive.Index do
 
     # {:noreply, stream_delete(socket, :entries, entry)}
     {:noreply, socket}
+  end
+  def handle_event("tag-next", _, socket) do
+    entry = Context.get_next_entry_to_tag()
+    {:noreply, push_patch(socket, to: ~p"/entries?filter=year&day=#{entry.day}&month=#{entry.month}&year=#{entry.year}")}
   end
 
   defp assign_if_not_exists(socket, key, value) do

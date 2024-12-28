@@ -1,4 +1,4 @@
-defmodule WspomWeb.EntryLive.Index do
+defmodule WspomWeb.Live.EntryView do
   use WspomWeb, :live_view
 
   alias Wspom.Context

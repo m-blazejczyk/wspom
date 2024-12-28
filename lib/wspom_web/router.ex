@@ -19,9 +19,9 @@ defmodule WspomWeb.Router do
 
     get "/", PageController, :home
 
-    live "/entries", EntryLive.Index, :index
-    live "/entries/new", EntryLive.Index, :new
-    live "/entries/:id/edit", EntryLive.Index, :edit
+    live "/entries", Live.EntryView, :index
+    live "/entries/new", Live.EntryView, :new
+    live "/entries/:id/edit", Live.EntryView, :edit
   end
 
   # Enable LiveDashboard in development

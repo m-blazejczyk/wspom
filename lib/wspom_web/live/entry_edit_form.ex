@@ -1,4 +1,4 @@
-defmodule WspomWeb.EntryLive.FormComponent do
+defmodule WspomWeb.Live.EntryEditForm do
   use WspomWeb, :live_component
 
   alias Wspom.Context

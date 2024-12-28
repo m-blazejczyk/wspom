@@ -44,6 +44,19 @@ defmodule Wspom.Context do
   def get_next_entry_to_tag(), do: Database.get_next_entry_to_tag()
 
   @doc """
+  Retrieves the set of all tags and the map of all cascades.
+
+  ## Example
+
+      iex> get_tags_and_cascades()
+      {MapSet, %{"name" => MapSet}}
+
+  """
+  def get_tags_and_cascades() do
+    Database.all_tags_and_cascades()
+  end
+
+  @doc """
   Creates a entry.
 
   ## Examples

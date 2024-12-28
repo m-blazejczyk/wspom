@@ -12,6 +12,8 @@ defmodule WspomWeb.EntryLive.Index do
       |> stream(:entries, [])
       |> assign(:filter, nil)
       |> assign(:entry, nil)
+      |> assign(:tags, nil)
+      |> assign(:cascades, nil)
     }
   end
 
@@ -23,9 +25,11 @@ defmodule WspomWeb.EntryLive.Index do
   defp build_socket_for_index(socket, filter, entries) do
     socket
     |> assign(:page_title, filter |> Filter.toTitle())
-    |> assign(:entry, nil)
     |> assign(:filter, filter)
     |> stream(:entries, filter |> Filter.filter(entries), reset: true)
+    |> assign(:entry, nil)
+    |> assign(:tags, nil)
+    |> assign(:cascades, nil)
   end
 
   defp apply_action(socket, :index, %{"filter" => _which, "day" => _day, "month" => _month} = params) do
@@ -45,6 +49,7 @@ defmodule WspomWeb.EntryLive.Index do
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     entry = Context.get_entry!(id) |> IO.inspect(label: "EDITING ENTRY")
+    {tags, cascades} = Context.get_tags_and_cascades()
     socket
     |> assign(:page_title, "Edit Entry")
     |> assign(:entry, entry)
@@ -54,12 +59,16 @@ defmodule WspomWeb.EntryLive.Index do
     # However, when by some chance, the initial page that the user navigates to is Edit
     # then there is no :filter in the assigns and the modal cannot be initialized properly.
     |> assign_if_not_exists(:filter, Filter.from_entry(entry))
+    # We're passing tags and cascades "as is"; they will be converted to a more suitable
+    # format later on - in form_component.ex.
+    |> assign(:tags, tags)
+    |> assign(:cascades, cascades)
   end
 
   defp apply_action(socket, :new, _params) do
     socket
-    |> assign(:page_title, "New Entry")
-    |> assign(:entry, %Entry{})
+    # |> assign(:page_title, "New Entry")
+    # |> assign(:entry, %Entry{})
   end
 
   @impl true

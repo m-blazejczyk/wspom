@@ -10,10 +10,16 @@ defmodule WspomWeb.EntryLive.FormComponent do
 
   @impl true
   def render(assigns) do
+    # Note: this code can only use the assigns that have been explicitly passed
+    # to the <.live_component> tag in index.html.heex. This code has no access
+    # to the assigns from the LiveView.
     ~H"""
     <div>
       <.header>
         <%= @title %>
+        <:actions>
+          <.button phx-disable-with="Saving…">Save</.button>
+        </:actions>
       </.header>
 
       <.simple_form
@@ -24,7 +30,17 @@ defmodule WspomWeb.EntryLive.FormComponent do
         phx-submit="save"
       >
         <.input field={@form[:title]} type="text" label="Title" />
-        <.input field={@form[:tags]} type="text" label="Tags" />
+        <div class="flex gap-2 ">
+          <div class="flex-auto">
+            <.input field={@form[:tags]} type="text" label="Tags"/>
+          </div>
+          <.button type="button" class="flex-none" phx-click={JS.toggle(to: "#all-tags")}>
+            T
+          </.button>
+          <.button type="button" class="flex-none" phx-click={JS.toggle(to: "#all-cascades")}>
+            C
+          </.button>
+        </div>
         <div class="flex gap-2">
           <.input field={@form[:fuzzy]} type="number" label="Fuzzy" />
           <div class="content-center">
@@ -37,12 +53,51 @@ defmodule WspomWeb.EntryLive.FormComponent do
           <.input field={@form[:month]} type="number" label="Month" />
           <.input field={@form[:day]} type="number" label="Day" />
         </div>
-        <:actions>
-          <.button phx-disable-with="Saving…">Save</.button>
-        </:actions>
+        <div id="all-tags" class="hidden">
+          <h1 class="text-lg font-semibold leading-8 text-zinc-800" phx-click={JS.toggle(to: "#all-tags")}>
+            Tags
+          </h1>
+          <div class="flex flex-wrap">
+            <%= for tag <- prepare_tags(@tags) do %>
+              <div class="mx-5 my-2 w-20 text-gray-500"><%= tag %></div>
+            <% end %>
+          </div>
+        </div>
+        <div id="all-cascades" class="hidden">
+          <h1 class="text-lg font-semibold leading-8 text-zinc-800" phx-click={JS.toggle(to: "#all-cascades")}>
+            Cascades
+          </h1>
+          <div class="flex flex-wrap">
+            <%= for {name, tags} <- prepare_cascades(@cascades) do %>
+              <div class="mx-5 my-2 text-gray-500">
+                <b><%= name %></b>
+                <%= for tag <- tags do %>
+                  + <%= tag %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
       </.simple_form>
     </div>
     """
+  end
+
+  defp prepare_tags(raw_tags) do
+    # I checked - render() is only called once, not on every change to the form.
+    # So it should be safe to only process the tags and cascades here, as opposed
+    # to someplace more upstream. (I want to avoid this code getting called more
+    # than once).
+    raw_tags |> MapSet.to_list() |> Enum.sort()
+  end
+
+  defp prepare_cascades(%{} = raw_cascades) do
+    raw_cascades
+    |> Enum.map(fn {name, tags} ->
+      {name, tags |> MapSet.delete(name) |> MapSet.to_list()} end)
+    # "The given function should compare two arguments, and return true if the
+    # first argument precedes or is in the same place as the second one".
+    |> Enum.sort(fn {name1, _}, {name2, _} -> name1 < name2 end)
   end
 
   @impl true

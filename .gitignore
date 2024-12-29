@@ -39,6 +39,7 @@ npm-debug.log
 *.db
 *.db-*
 *.dat
+*.json
 
 # mix LOCK file
 mix.lock

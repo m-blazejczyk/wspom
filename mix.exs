@@ -50,7 +50,8 @@ defmodule Wspom.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:plug_cowboy, "~> 2.5"},
       {:tzdata, "~> 1.1"},
-      {:timex, "~> 3.7"}
+      {:timex, "~> 3.7"},
+      {:poison, "~> 6.0"},
     ]
   end
 

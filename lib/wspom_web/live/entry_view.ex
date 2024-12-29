@@ -72,8 +72,7 @@ defmodule WspomWeb.Live.EntryView do
   end
 
   @impl true
-  def handle_info({WspomWeb.EntryLive.FormComponent, {:saved, entry}}, socket) do
-    IO.puts("INSIDE handle_info(:saved)")
+  def handle_info({WspomWeb.Live.EntryEditForm, {:saved, entry}}, socket) do
     {:noreply, stream_insert(socket, :entries, entry)}
   end
 

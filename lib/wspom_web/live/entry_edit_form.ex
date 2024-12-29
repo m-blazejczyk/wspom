@@ -15,13 +15,6 @@ defmodule WspomWeb.Live.EntryEditForm do
     # to the assigns from the LiveView.
     ~H"""
     <div>
-      <.header>
-        <%= @title %>
-        <:actions>
-          <.button phx-disable-with="Saving…">Save</.button>
-        </:actions>
-      </.header>
-
       <.simple_form
         for={@form}
         id="entry-form"
@@ -29,6 +22,13 @@ defmodule WspomWeb.Live.EntryEditForm do
         phx-change="validate"
         phx-submit="save"
       >
+        <.header>
+          <%= @title %>
+          <:actions>
+            <.button phx-disable-with="Saving…">Save</.button>
+          </:actions>
+        </.header>
+
         <.input field={@form[:title]} type="text" label="Title" />
         <div class="flex gap-2 ">
           <div class="flex-auto">
@@ -47,7 +47,7 @@ defmodule WspomWeb.Live.EntryEditForm do
             <.input field={@form[:needs_review]} type="checkbox" label="Needs review" />
           </div>
         </div>
-        <.input field={@form[:description]} type="textarea" label="Description" />
+        <.input field={@form[:description]} type="textarea" rows="20" label="Description" />
         <div class="flex gap-2 ">
           <.input field={@form[:year]} type="number" label="Year" />
           <.input field={@form[:month]} type="number" label="Month" />

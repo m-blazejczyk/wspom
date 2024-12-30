@@ -47,7 +47,8 @@ defmodule WspomWeb.Live.EntryEditForm do
             <.input field={@form[:needs_review]} type="checkbox" label="Needs review" />
           </div>
         </div>
-        <.input field={@form[:description]} type="textarea" rows="20" label="Description" />
+        <.input field={@form[:description]} type="textarea"
+          rows={scale_description_box(@form[:description])} label="Description" />
         <div class="flex gap-2 ">
           <.input field={@form[:year]} type="number" label="Year" />
           <.input field={@form[:month]} type="number" label="Month" />
@@ -99,6 +100,8 @@ defmodule WspomWeb.Live.EntryEditForm do
     # first argument precedes or is in the same place as the second one".
     |> Enum.sort(fn {name1, _}, {name2, _} -> name1 < name2 end)
   end
+
+  defp scale_description_box(description), do: (description.value |> String.length()) / 80
 
   @impl true
   def update(%{entry: entry} = assigns, socket) do

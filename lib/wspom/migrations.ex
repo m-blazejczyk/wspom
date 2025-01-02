@@ -11,7 +11,8 @@ defmodule Wspom.Migrations do
              {7, &Wspom.Migrations.sort_entries/1},
              {8, &Wspom.Migrations.add_dates/1},
              {9, &Wspom.Migrations.convert_to_map/1},
-             {10, &Wspom.Migrations.add_production_flag/1}]
+             {10, &Wspom.Migrations.add_production_flag/1},
+             {11, &Wspom.Migrations.split_databases/1}]
 
   @spec migrate(any()) :: any()
   def migrate(state) do
@@ -54,14 +55,32 @@ defmodule Wspom.Migrations do
     state
   end
   defp maybe_migrate({migration_version, fun}, %{version: current_version} = state)
-  when current_version < migration_version do
+  when current_version < migration_version and migration_version < 11 do
     {new_db, descr} = fun.(state)
     Logger.notice("Migrated the database to version #{migration_version}: #{descr}")
     %{new_db | version: migration_version}
   end
+  defp maybe_migrate({migration_version, fun}, %{version: current_version} = state)
+  when current_version < migration_version and migration_version >= 11 do
+    {{new_entries, new_tags}, descr} = fun.(state)
+    Logger.notice("Migrated the database to version #{migration_version}: #{descr}")
+    {%{new_entries | version: migration_version}, %{new_tags | version: migration_version}}
+  end
+  defp maybe_migrate({migration_version, _}, {%{version: current_version}, %{}} = state)
+  when current_version >= migration_version do
+    state
+  end
+  defp maybe_migrate({migration_version, fun}, {%{version: current_version}, %{}} = state)
+  when current_version < migration_version do
+    {{entries_db, tags_db}, descr} = fun.(state)
+    Logger.notice("Migrated the database to version #{migration_version}: #{descr}")
+    {%{entries_db | version: migration_version}, %{tags_db | version: migration_version}}
+  end
 
   defp get_version({_entries, _tags, _cascades, version}), do: version
   defp get_version(%{version: version}), do: version
+  defp get_version({%{version: entries_version}, %{version: tags_version}})
+    when entries_version == tags_version, do: entries_version
 
   def add_index({entries, tags, cascades}) do
     new_entries = entries |> Enum.with_index(fn entry, index ->
@@ -173,5 +192,13 @@ defmodule Wspom.Migrations do
 
   def add_production_flag(%{} = state) do
     {state |> Map.put(:is_production, true), "Adding the is_production flag"}
+  end
+
+  def split_databases(%{entries: entries, tags: tags, cascades: cascades, version: version, is_production: is_prod}) do
+    {
+      {%{entries: entries, version: version, is_production: is_prod},
+        %{tags: tags, cascades: cascades, version: version, is_production: is_prod}},
+      "Splitting the database in two parts"
+    }
   end
 end

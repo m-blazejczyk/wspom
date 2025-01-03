@@ -3,22 +3,25 @@ defmodule Wspom.Scripts do
   @doc """
   The code in this module should be executed from inside an iex session (iex -S mix)
 
-  Example:
-  Wspom.Scripts.entries_from_json("wspom2023.json")
+  Examples:
+  Wspom.Scripts.create_empty_entries_db("wspom2023.dat")
+  entries = Wspom.Scripts.entries_from_json("wspom2023.json")
+  Wspom.Database.append_entries_and_save(entries)
   """
 
   def entries_from_json(filename) do
-    {:ok, json} = Wspom.Scripts.read_json(filename)
-    raw_entry = hd(json)
-    entry_from_json(raw_entry)
+    # We expect `json` to be a list of maps
+    {:ok, json} = read_json(filename)
+
+    json |> Enum.map(&(entry_from_json(&1)))
   end
 
-  def read_json(filename) do
+  defp read_json(filename) do
     with {:ok, body} <- File.read(filename),
          {:ok, json} <- Poison.decode(body), do: {:ok, json}
   end
 
-  def entry_from_json(%{} = entry) do
+  defp entry_from_json(%{} = entry) do
     [from, to] = entry["dateRange"]
     {:ok, dt_from, _} = DateTime.from_iso8601(from)
     {:ok, dt_to, _} = DateTime.from_iso8601(to)
@@ -42,4 +45,16 @@ defmodule Wspom.Scripts do
     }
   end
 
+  def create_empty_entries_db(filename) do
+    if File.exists?(filename) do
+      IO.puts("File #{filename} already exists; skipping")
+    else
+      File.write!(filename, :erlang.term_to_binary(%{
+        entries: [],
+        version: Wspom.Migrations.current_version(),
+        is_production: true,
+      }))
+      IO.puts("File #{filename} created")
+    end
+  end
 end

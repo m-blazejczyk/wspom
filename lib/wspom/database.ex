@@ -150,7 +150,7 @@ defmodule Wspom.Database do
 
   # This variant will be called when tags have been modified
   def replace_entry_and_save(%Entry{} = entry, %{cascade_defs: cascade_defs, unknown_tags: unknown_tags}) do
-    log_notice("Saving modified entry…")
+    log_notice("Saving modified entry and tags / cascades…")
 
     Agent.update(__MODULE__,
       fn {%{entries: entries} = entries_state,
@@ -187,6 +187,34 @@ defmodule Wspom.Database do
       end)
 
     entry
+  end
+
+  # In addition to adding the entries, this function will also assign ids to them
+  # if necessary.
+  def append_entries_and_save(entries) do
+    log_notice("Appending #{length(entries)} entries and saving the database…")
+
+    Agent.update(__MODULE__,
+      fn {%{entries: db_entries} = entries_state, %{} = tags_state} ->
+        max_id = db_entries |> Enum.reduce(0, fn entry, max_id ->
+          if entry.id > max_id, do: entry.id, else: max_id end)
+
+        {entries_with_ids, _} = entries
+        |> Enum.map_reduce(max_id + 1, fn entry, next_id ->
+          if entry.id == nil do
+            {%Wspom.Entry{entry | id: next_id}, next_id + 1}
+          else
+            {entry, next_id}
+          end
+        end)
+
+        new_entries_state =
+          %{entries_state | entries: db_entries ++ entries_with_ids}
+          |> save_one_file(@db_file, @db_file_backup)
+        {new_entries_state, tags_state}
+      end)
+
+    :ok
   end
 
   defp find_and_replace([], acc, _), do: acc

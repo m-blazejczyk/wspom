@@ -1,0 +1,987 @@
+<!-- <WspomWeb.Layouts.root> lib/wspom_web/components/root.html.heex:1 (wspom) --><!DOCTYPE html>
+<html lang="en" class="[scrollbar-gutter:stable]">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="OloUEQ9sDh0XTzEJJCobSEJ6HwwAfAd7PbNEMAV-Szx8GXV9492SJ0FM">
+    <!-- @caller lib/wspom_web/components/root.html.heex:7 (wspom) --><!-- <Phoenix.Component.live_title> lib/phoenix_component.ex:2009 (phoenix_live_view) --><title data-suffix=" · Wspom">
+Jan 3
+     · Wspom</title><!-- </Phoenix.Component.live_title> -->
+    <link phx-track-static rel="stylesheet" href="/assets/app.css">
+    <script defer phx-track-static type="text/javascript" src="/assets/app.js">
+    </script>
+  </head>
+  <body class="bg-white antialiased">
+<div id="phx-GBdf_Rate3TqyAhG" data-phx-main data-phx-session="SFMyNTY.g2gDaAJhBXQAAAAIZAACaWRtAAAAFHBoeC1HQmRmX1JhdGUzVHF5QWhHZAAMbGl2ZV9zZXNzaW9uaAJkAAdkZWZhdWx0bggAomEj_6R1FRhkAApwYXJlbnRfcGlkZAADbmlsZAAIcm9vdF9waWRkAANuaWxkAAlyb290X3ZpZXdkAB5FbGl4aXIuV3Nwb21XZWIuTGl2ZS5FbnRyeVZpZXdkAAZyb3V0ZXJkABZFbGl4aXIuV3Nwb21XZWIuUm91dGVyZAAHc2Vzc2lvbnQAAAAAZAAEdmlld2QAHkVsaXhpci5Xc3BvbVdlYi5MaXZlLkVudHJ5Vmlld24GAJy8YS-UAWIAAVGA.S7jjqy_lbWZ2asopoElg_OjnIZSX1wqbVBixGBZGR9M" data-phx-static="SFMyNTY.g2gDaAJhBXQAAAADZAAKYXNzaWduX25ld2wAAAABZAAHc3RyZWFtc2pkAAVmbGFzaHQAAAAAZAACaWRtAAAAFHBoeC1HQmRmX1JhdGUzVHF5QWhHbgYAnbxhL5QBYgABUYA.b78Z2Y2kmLp6gCMUrdPLSo6vFtLEZi2QC8Sn7OZqH28"><!-- <WspomWeb.Layouts.app> lib/wspom_web/components/app.html.heex:1 (wspom) --><nav class="sticky z-50 top-0 px-4 sm:px-6 lg:px-8 bg-slate-200">
+  <div class="flex items-center border-b border-zinc-100 py-3 text-sm">
+    <div class="flex flex-none w-80 gap-4">
+      <a href="/">
+        <img src="/images/uppercase-square-w.svg" width="45">
+      </a>
+      <p class="px-2 text-xs leading-2">
+        wsp 0.2.0
+        <br>
+        ph 1.7.14
+        <br>
+        elx 1.16.3
+      </p>
+    </div>
+    <div class="flex flex-grow justify-center content-center">
+      <!-- The filter won't be set when editing an item -->
+
+      <!-- @caller lib/wspom_web/components/app.html.heex:18 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2717 (phoenix_live_view) --><a href="/entries?filter=day&amp;day=2&amp;month=1" data-phx-link="patch" data-phx-link-state="push">
+        <button class="py-1 px-2 my-0 mr-2 text-center rounded-lg text-gray-700 bg-gray-200 border border-gray-700 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300">
+          <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12l4-4m-4 4 4 4"></path>
+          </svg>
+        </button>
+      </a><!-- </Phoenix.Component.link> -->
+      <div class="content-center">
+        <svg class="w-4 h-4 text-orange-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M18.796 4H5.204a1 1 0 0 0-.753 1.659l5.302 6.058a1 1 0 0 1 .247.659v4.874a.5.5 0 0 0 .2.4l3 2.25a.5.5 0 0 0 .8-.4v-7.124a1 1 0 0 1 .247-.659l5.302-6.059c.566-.646.106-1.658-.753-1.658Z"></path>
+        </svg>
+      </div>
+      <div class="content-center rounded-lg bg-orange-400 py-1 px-2 my-0 mr-2 font-sans text-xs uppercase leading-none text-gray-800 font-bold">
+Jan 3
+      </div>
+      <!-- @caller lib/wspom_web/components/app.html.heex:33 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2717 (phoenix_live_view) --><a href="/entries?filter=day&amp;day=4&amp;month=1" data-phx-link="patch" data-phx-link-state="push">
+        <button class="py-1 px-2 my-0 mr-2 text-center rounded-lg text-gray-700 bg-gray-200 border border-gray-700 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300">
+          <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 12H5m14 0-4 4m4-4-4-4"></path>
+          </svg>
+        </button>
+      </a><!-- </Phoenix.Component.link> -->
+
+    </div>
+    <div class="flex flex-none w-80 gap-4 justify-end">
+      <!-- @caller lib/wspom_web/components/app.html.heex:43 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2743 (phoenix_live_view) --><a href="#" phx-click="tag-next">
+        <!-- @caller lib/wspom_web/components/app.html.heex:44 (wspom) --><!-- <WspomWeb.CoreComponents.button> lib/wspom_web/components/core_components.ex:230 (wspom) --><button class="phx-submit-loading:opacity-75 rounded-lg bg-zinc-900 hover:bg-zinc-700 py-2 px-3 text-sm font-semibold leading-6 text-white active:text-white/80 bg-blue-700 hover:bg-blue-500">
+  Tag Next
+</button><!-- </WspomWeb.CoreComponents.button> -->
+      </a><!-- </Phoenix.Component.link> -->
+      <!-- @caller lib/wspom_web/components/app.html.heex:46 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2717 (phoenix_live_view) --><a href="/entries/new" data-phx-link="patch" data-phx-link-state="push">
+        <!-- @caller lib/wspom_web/components/app.html.heex:47 (wspom) --><!-- <WspomWeb.CoreComponents.button> lib/wspom_web/components/core_components.ex:230 (wspom) --><button class="phx-submit-loading:opacity-75 rounded-lg bg-zinc-900 hover:bg-zinc-700 py-2 px-3 text-sm font-semibold leading-6 text-white active:text-white/80 ">
+  New Entry
+</button><!-- </WspomWeb.CoreComponents.button> -->
+      </a><!-- </Phoenix.Component.link> -->
+    </div>
+  </div>
+</nav>
+<main class="px-4 py-4 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-3xl">
+    <!-- @caller lib/wspom_web/components/app.html.heex:54 (wspom) --><!-- <WspomWeb.CoreComponents.flash_group> lib/wspom_web/components/core_components.ex:148 (wspom) --><div id="flash-group">
+  <!-- @caller lib/wspom_web/components/core_components.ex:150 (wspom) --><!-- <WspomWeb.CoreComponents.flash> lib/wspom_web/components/core_components.ex:111 (wspom) --><!-- </WspomWeb.CoreComponents.flash> -->
+  <!-- @caller lib/wspom_web/components/core_components.ex:151 (wspom) --><!-- <WspomWeb.CoreComponents.flash> lib/wspom_web/components/core_components.ex:111 (wspom) --><!-- </WspomWeb.CoreComponents.flash> -->
+  <!-- @caller lib/wspom_web/components/core_components.ex:152 (wspom) --><!-- <WspomWeb.CoreComponents.flash> lib/wspom_web/components/core_components.ex:111 (wspom) --><div id="client-error" phx-click="[[&quot;push&quot;,{&quot;event&quot;:&quot;lv:clear-flash&quot;,&quot;value&quot;:{&quot;key&quot;:&quot;error&quot;}}],[&quot;hide&quot;,{&quot;time&quot;:200,&quot;to&quot;:&quot;#client-error&quot;,&quot;transition&quot;:[[&quot;transition-all&quot;,&quot;transform&quot;,&quot;ease-in&quot;,&quot;duration-200&quot;],[&quot;opacity-100&quot;,&quot;translate-y-0&quot;,&quot;sm:scale-100&quot;],[&quot;opacity-0&quot;,&quot;translate-y-4&quot;,&quot;sm:translate-y-0&quot;,&quot;sm:scale-95&quot;]]}]]" role="alert" class="fixed top-2 right-2 mr-2 w-80 sm:w-96 z-50 rounded-lg p-3 ring-1 bg-rose-50 text-rose-900 shadow-md ring-rose-500 fill-rose-900" hidden phx-connected="[[&quot;hide&quot;,{&quot;time&quot;:200,&quot;to&quot;:&quot;#client-error&quot;,&quot;transition&quot;:[[&quot;transition-all&quot;,&quot;transform&quot;,&quot;ease-in&quot;,&quot;duration-200&quot;],[&quot;opacity-100&quot;,&quot;translate-y-0&quot;,&quot;sm:scale-100&quot;],[&quot;opacity-0&quot;,&quot;translate-y-4&quot;,&quot;sm:translate-y-0&quot;,&quot;sm:scale-95&quot;]]}]]" phx-disconnected="[[&quot;show&quot;,{&quot;to&quot;:&quot;.phx-client-error #client-error&quot;,&quot;transition&quot;:[[&quot;transition-all&quot;,&quot;transform&quot;,&quot;ease-out&quot;,&quot;duration-300&quot;],[&quot;opacity-0&quot;,&quot;translate-y-4&quot;,&quot;sm:translate-y-0&quot;,&quot;sm:scale-95&quot;],[&quot;opacity-100&quot;,&quot;translate-y-0&quot;,&quot;sm:scale-100&quot;]]}]]">
+  <p class="flex items-center gap-1.5 text-sm font-semibold leading-6">
+    
+    <!-- @caller lib/wspom_web/components/core_components.ex:126 (wspom) --><!-- <WspomWeb.CoreComponents.icon> lib/wspom_web/components/core_components.ex:596 (wspom) --><span class="hero-exclamation-circle-mini h-4 w-4"></span><!-- </WspomWeb.CoreComponents.icon> -->
+    The server is offline
+  </p>
+  <p class="mt-2 text-sm leading-5">
+    Check your internet connection or the status of the server…
+    <!-- @caller lib/wspom_web/components/core_components.ex:161 (wspom) --><!-- <WspomWeb.CoreComponents.icon> lib/wspom_web/components/core_components.ex:596 (wspom) --><span class="hero-arrow-path ml-1 h-3 w-3 animate-spin"></span><!-- </WspomWeb.CoreComponents.icon> -->
+  </p>
+  <button type="button" class="group absolute top-1 right-1 p-2" aria-label="close">
+    <!-- @caller lib/wspom_web/components/core_components.ex:131 (wspom) --><!-- <WspomWeb.CoreComponents.icon> lib/wspom_web/components/core_components.ex:596 (wspom) --><span class="hero-x-mark-solid h-5 w-5 opacity-40 group-hover:opacity-70"></span><!-- </WspomWeb.CoreComponents.icon> -->
+  </button>
+</div><!-- </WspomWeb.CoreComponents.flash> -->
+
+  <!-- @caller lib/wspom_web/components/core_components.ex:164 (wspom) --><!-- <WspomWeb.CoreComponents.flash> lib/wspom_web/components/core_components.ex:111 (wspom) --><div id="server-error" phx-click="[[&quot;push&quot;,{&quot;event&quot;:&quot;lv:clear-flash&quot;,&quot;value&quot;:{&quot;key&quot;:&quot;error&quot;}}],[&quot;hide&quot;,{&quot;time&quot;:200,&quot;to&quot;:&quot;#server-error&quot;,&quot;transition&quot;:[[&quot;transition-all&quot;,&quot;transform&quot;,&quot;ease-in&quot;,&quot;duration-200&quot;],[&quot;opacity-100&quot;,&quot;translate-y-0&quot;,&quot;sm:scale-100&quot;],[&quot;opacity-0&quot;,&quot;translate-y-4&quot;,&quot;sm:translate-y-0&quot;,&quot;sm:scale-95&quot;]]}]]" role="alert" class="fixed top-2 right-2 mr-2 w-80 sm:w-96 z-50 rounded-lg p-3 ring-1 bg-rose-50 text-rose-900 shadow-md ring-rose-500 fill-rose-900" hidden phx-connected="[[&quot;hide&quot;,{&quot;time&quot;:200,&quot;to&quot;:&quot;#server-error&quot;,&quot;transition&quot;:[[&quot;transition-all&quot;,&quot;transform&quot;,&quot;ease-in&quot;,&quot;duration-200&quot;],[&quot;opacity-100&quot;,&quot;translate-y-0&quot;,&quot;sm:scale-100&quot;],[&quot;opacity-0&quot;,&quot;translate-y-4&quot;,&quot;sm:translate-y-0&quot;,&quot;sm:scale-95&quot;]]}]]" phx-disconnected="[[&quot;show&quot;,{&quot;to&quot;:&quot;.phx-server-error #server-error&quot;,&quot;transition&quot;:[[&quot;transition-all&quot;,&quot;transform&quot;,&quot;ease-out&quot;,&quot;duration-300&quot;],[&quot;opacity-0&quot;,&quot;translate-y-4&quot;,&quot;sm:translate-y-0&quot;,&quot;sm:scale-95&quot;],[&quot;opacity-100&quot;,&quot;translate-y-0&quot;,&quot;sm:scale-100&quot;]]}]]">
+  <p class="flex items-center gap-1.5 text-sm font-semibold leading-6">
+    
+    <!-- @caller lib/wspom_web/components/core_components.ex:126 (wspom) --><!-- <WspomWeb.CoreComponents.icon> lib/wspom_web/components/core_components.ex:596 (wspom) --><span class="hero-exclamation-circle-mini h-4 w-4"></span><!-- </WspomWeb.CoreComponents.icon> -->
+    Something went wrong!
+  </p>
+  <p class="mt-2 text-sm leading-5">
+    Hang in there while we get back on track
+    <!-- @caller lib/wspom_web/components/core_components.ex:173 (wspom) --><!-- <WspomWeb.CoreComponents.icon> lib/wspom_web/components/core_components.ex:596 (wspom) --><span class="hero-arrow-path ml-1 h-3 w-3 animate-spin"></span><!-- </WspomWeb.CoreComponents.icon> -->
+  </p>
+  <button type="button" class="group absolute top-1 right-1 p-2" aria-label="close">
+    <!-- @caller lib/wspom_web/components/core_components.ex:131 (wspom) --><!-- <WspomWeb.CoreComponents.icon> lib/wspom_web/components/core_components.ex:596 (wspom) --><span class="hero-x-mark-solid h-5 w-5 opacity-40 group-hover:opacity-70"></span><!-- </WspomWeb.CoreComponents.icon> -->
+  </button>
+</div><!-- </WspomWeb.CoreComponents.flash> -->
+</div><!-- </WspomWeb.CoreComponents.flash_group> -->
+<!-- <WspomWeb.Live.EntryView.render> lib/wspom_web/live/entry_view.html.heex:1 (wspom) --><div id="stream_container" phx-update="stream" class="relative flex flex-col justify-center overflow-hidden bg-gray-50 py-2 gap-4">
+  <div id="entries-558" class="relative bg-white mx-2 px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-lg sm:px-4">
+    <div class="divide-y divide-gray-300/50">
+      <div>
+        <div>
+
+              <!-- @caller lib/wspom_web/live/entry_view.html.heex:11 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2717 (phoenix_live_view) --><a href="/entries?filter=year&amp;day=3&amp;month=1&amp;year=2013" data-phx-link="patch" data-phx-link-state="push">
+                  <button class="py-1 px-2 my-0 font-sans text-xs font-bold text-center rounded-lg text-gray-700 bg-gray-200 border border-gray-700 hover:bg-transparent focus:ring-4 focus:outline-none focus:ring-blue-300">
+2013
+                </button>
+              </a><!-- </Phoenix.Component.link> -->
+
+          <span class="text-gray-900 font-bold text-xl mb-2 ml-3">
+robot do podlewania - research
+          </span>
+          <button class="ml-2 text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right" phx-click="[[&quot;push&quot;,{&quot;event&quot;:&quot;delete&quot;,&quot;value&quot;:{&quot;id&quot;:558}}],[&quot;hide&quot;,{&quot;time&quot;:200,&quot;to&quot;:&quot;#558&quot;,&quot;transition&quot;:[[&quot;transition-all&quot;,&quot;transform&quot;,&quot;ease-in&quot;,&quot;duration-200&quot;],[&quot;opacity-100&quot;,&quot;translate-y-0&quot;,&quot;sm:scale-100&quot;],[&quot;opacity-0&quot;,&quot;translate-y-4&quot;,&quot;sm:translate-y-0&quot;,&quot;sm:scale-95&quot;]]}]]" data-confirm="Are you sure?">
+            <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"></path>
+            </svg>
+            <span class="sr-only">Delete entry</span>
+          </button>
+          <button class="ml-2 text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
+            <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M14 4v3a1 1 0 0 1-1 1h-3m4 10v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2m11-3v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H18a1 1 0 0 1 1 1Z"></path>
+            </svg>
+            <span class="sr-only">Clone entry</span>
+          </button>
+          <!-- @caller lib/wspom_web/live/entry_view.html.heex:40 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2717 (phoenix_live_view) --><a href="/entries/558/edit" data-phx-link="patch" data-phx-link-state="push">
+            <button class="text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
+              <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28"></path>
+              </svg>
+              <span class="sr-only">Edit entry</span>
+            </button>
+          </a><!-- </Phoenix.Component.link> -->
+        </div>
+        <div>
+          <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-gray-200 py-1 px-2 my-2 font-sans text-xs leading-none text-gray-800">
+            <b class="uppercase">Thursday</b>
+          </div>
+
+
+
+        </div>
+
+          <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-red-500 py-1 px-2 mt-1 mb-2 font-sans text-xs uppercase leading-none text-red-200 font-bold">
+            No tags!
+          </div>
+
+      </div>
+      <div class="py-3">
+        <div class="text-gray-600">
+
+            <div id="full-558" class="hidden">
+
+                <p>Początek roku - spokojny. W pracy wczoraj nie było nikogo poza Michelem, Abdelem i Isabelle. W ogóle słabo mi się dojeżdżało - ok. 1:15 w każdą stronę... I dodatkowo jest spory mróz. Ania ma teraz też względny spokój.</p>
+
+                <p>  </p>
+
+                <p>W pracy mam trochę wolnego czasu (po zrobieniu wszystkich rzeczy zaległych). Dziś np. researchowałem, jak zbudować robota, który by podlewał grządki. Byłoby to do zrobienia, ale łatwiej byłoby zrobić robota, który jest stacjonarny (i przenosi się do z miejsca na miejsce), który ma zbiornik z wodą i automatyczny wysięgnik, który podlewa w różnych miejscach.</p>
+
+              <button class="float-right ml-2 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300" phx-click="[[&quot;toggle&quot;,{&quot;to&quot;:&quot;#full-558&quot;}],[&quot;toggle&quot;,{&quot;to&quot;:&quot;#short-558&quot;}]]">
+                Show less
+              </button>
+            </div>
+            <div id="short-558">
+
+                <p>Początek roku - spokojny. W pracy wczoraj nie było nikogo poza Michelem, Abdelem i Isabelle. W ogóle słabo mi się dojeżdżało - ok. 1:15 w każdą stronę... I dodatkowo jest spory mróz. Ania ma teraz też względny spokój.</p>
+
+                <p>  </p>
+
+                <p>W pracy mam trochę wolnego czasu (po zr</p>
+
+              <button class="float-right ml-2 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300" phx-click="[[&quot;toggle&quot;,{&quot;to&quot;:&quot;#short-558&quot;}],[&quot;toggle&quot;,{&quot;to&quot;:&quot;#full-558&quot;}]]">
+                Show more
+              </button>
+            </div>
+
+        </div>
+      </div>
+    </div>
+  </div><div id="entries-1148" class="relative bg-white mx-2 px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-lg sm:px-4">
+    <div class="divide-y divide-gray-300/50">
+      <div>
+        <div>
+
+              <!-- @caller lib/wspom_web/live/entry_view.html.heex:11 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2717 (phoenix_live_view) --><a href="/entries?filter=year&amp;day=3&amp;month=1&amp;year=2015" data-phx-link="patch" data-phx-link-state="push">
+                  <button class="py-1 px-2 my-0 font-sans text-xs font-bold text-center rounded-lg text-gray-700 bg-gray-200 border border-gray-700 hover:bg-transparent focus:ring-4 focus:outline-none focus:ring-blue-300">
+2015
+                </button>
+              </a><!-- </Phoenix.Component.link> -->
+
+          <span class="text-gray-900 font-bold text-xl mb-2 ml-3">
+ból pleców
+          </span>
+          <button class="ml-2 text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right" phx-click="[[&quot;push&quot;,{&quot;event&quot;:&quot;delete&quot;,&quot;value&quot;:{&quot;id&quot;:1148}}],[&quot;hide&quot;,{&quot;time&quot;:200,&quot;to&quot;:&quot;#1148&quot;,&quot;transition&quot;:[[&quot;transition-all&quot;,&quot;transform&quot;,&quot;ease-in&quot;,&quot;duration-200&quot;],[&quot;opacity-100&quot;,&quot;translate-y-0&quot;,&quot;sm:scale-100&quot;],[&quot;opacity-0&quot;,&quot;translate-y-4&quot;,&quot;sm:translate-y-0&quot;,&quot;sm:scale-95&quot;]]}]]" data-confirm="Are you sure?">
+            <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"></path>
+            </svg>
+            <span class="sr-only">Delete entry</span>
+          </button>
+          <button class="ml-2 text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
+            <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M14 4v3a1 1 0 0 1-1 1h-3m4 10v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2m11-3v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H18a1 1 0 0 1 1 1Z"></path>
+            </svg>
+            <span class="sr-only">Clone entry</span>
+          </button>
+          <!-- @caller lib/wspom_web/live/entry_view.html.heex:40 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2717 (phoenix_live_view) --><a href="/entries/1148/edit" data-phx-link="patch" data-phx-link-state="push">
+            <button class="text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
+              <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28"></path>
+              </svg>
+              <span class="sr-only">Edit entry</span>
+            </button>
+          </a><!-- </Phoenix.Component.link> -->
+        </div>
+        <div>
+          <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-gray-200 py-1 px-2 my-2 font-sans text-xs leading-none text-gray-800">
+            <b class="uppercase">Saturday</b>
+          </div>
+
+
+
+        </div>
+
+          <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-red-500 py-1 px-2 mt-1 mb-2 font-sans text-xs uppercase leading-none text-red-200 font-bold">
+            No tags!
+          </div>
+
+      </div>
+      <div class="py-3">
+        <div class="text-gray-600">
+
+            <div id="full-1148" class="hidden">
+
+                <p>Ania czuła się dość podle. Ja też praktycznie nic nie ruszyłem, tym bardziej, że rano podczas karmienia kotów na zewnątrz coś mi piardło w krzyżu i strasznie bolało, ledwo mogłem usiąść ani wstać. Pojechałem mimo to po chleb i to było strasznie bolesne. Potem wziąłem proszek i mi powoli przeszło i nawet lepiej się czułem, niż ostatnio (plecy zaczęły mnie boleć z tydzień wcześniej), co dowodzi, że to korzonki (naderwany mięsień nie przestałby tak od razu boleć).</p>
+
+              <button class="float-right ml-2 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300" phx-click="[[&quot;toggle&quot;,{&quot;to&quot;:&quot;#full-1148&quot;}],[&quot;toggle&quot;,{&quot;to&quot;:&quot;#short-1148&quot;}]]">
+                Show less
+              </button>
+            </div>
+            <div id="short-1148">
+
+                <p>Ania czuła się dość podle. Ja też praktycznie nic nie ruszyłem, tym bardziej, że rano podczas karmienia kotów na zewnątrz coś mi piardło w krzyżu i strasznie bolało, ledwo mogłem usiąść ani wstać. Pojechałem mimo to po chleb i to było strasznie bolesne. Potem </p>
+
+              <button class="float-right ml-2 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300" phx-click="[[&quot;toggle&quot;,{&quot;to&quot;:&quot;#short-1148&quot;}],[&quot;toggle&quot;,{&quot;to&quot;:&quot;#full-1148&quot;}]]">
+                Show more
+              </button>
+            </div>
+
+        </div>
+      </div>
+    </div>
+  </div><div id="entries-1508" class="relative bg-white mx-2 px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-lg sm:px-4">
+    <div class="divide-y divide-gray-300/50">
+      <div>
+        <div>
+
+              <!-- @caller lib/wspom_web/live/entry_view.html.heex:11 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2717 (phoenix_live_view) --><a href="/entries?filter=year&amp;day=3&amp;month=1&amp;year=2016" data-phx-link="patch" data-phx-link-state="push">
+                  <button class="py-1 px-2 my-0 font-sans text-xs font-bold text-center rounded-lg text-gray-700 bg-gray-200 border border-gray-700 hover:bg-transparent focus:ring-4 focus:outline-none focus:ring-blue-300">
+2016
+                </button>
+              </a><!-- </Phoenix.Component.link> -->
+
+          <span class="text-gray-900 font-bold text-xl mb-2 ml-3">
+u Conner i Bena
+          </span>
+          <button class="ml-2 text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right" phx-click="[[&quot;push&quot;,{&quot;event&quot;:&quot;delete&quot;,&quot;value&quot;:{&quot;id&quot;:1508}}],[&quot;hide&quot;,{&quot;time&quot;:200,&quot;to&quot;:&quot;#1508&quot;,&quot;transition&quot;:[[&quot;transition-all&quot;,&quot;transform&quot;,&quot;ease-in&quot;,&quot;duration-200&quot;],[&quot;opacity-100&quot;,&quot;translate-y-0&quot;,&quot;sm:scale-100&quot;],[&quot;opacity-0&quot;,&quot;translate-y-4&quot;,&quot;sm:translate-y-0&quot;,&quot;sm:scale-95&quot;]]}]]" data-confirm="Are you sure?">
+            <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"></path>
+            </svg>
+            <span class="sr-only">Delete entry</span>
+          </button>
+          <button class="ml-2 text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
+            <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M14 4v3a1 1 0 0 1-1 1h-3m4 10v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2m11-3v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H18a1 1 0 0 1 1 1Z"></path>
+            </svg>
+            <span class="sr-only">Clone entry</span>
+          </button>
+          <!-- @caller lib/wspom_web/live/entry_view.html.heex:40 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2717 (phoenix_live_view) --><a href="/entries/1508/edit" data-phx-link="patch" data-phx-link-state="push">
+            <button class="text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
+              <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28"></path>
+              </svg>
+              <span class="sr-only">Edit entry</span>
+            </button>
+          </a><!-- </Phoenix.Component.link> -->
+        </div>
+        <div>
+          <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-gray-200 py-1 px-2 my-2 font-sans text-xs leading-none text-gray-800">
+            <b class="uppercase">Sunday</b>
+          </div>
+
+
+
+        </div>
+
+          <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-red-500 py-1 px-2 mt-1 mb-2 font-sans text-xs uppercase leading-none text-red-200 font-bold">
+            No tags!
+          </div>
+
+      </div>
+      <div class="py-3">
+        <div class="text-gray-600">
+
+
+              <p>Wieczorem zaprosili nas do siebie Conner i Ben. Zjedliśmy kolację (Ben zrobił zupę), popiliśmy digestiwy (mają bardzo duży wybór dobrych trunków), posłuchaliśmy winyli (mają nowy adapter - taki sam, jak nasz), pogadaliśmy. Super wieczór.</p>
+
+
+        </div>
+      </div>
+    </div>
+  </div><div id="entries-1509" class="relative bg-white mx-2 px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-lg sm:px-4">
+    <div class="divide-y divide-gray-300/50">
+      <div>
+        <div>
+
+              <!-- @caller lib/wspom_web/live/entry_view.html.heex:11 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2717 (phoenix_live_view) --><a href="/entries?filter=year&amp;day=3&amp;month=1&amp;year=2016" data-phx-link="patch" data-phx-link-state="push">
+                  <button class="py-1 px-2 my-0 font-sans text-xs font-bold text-center rounded-lg text-gray-700 bg-gray-200 border border-gray-700 hover:bg-transparent focus:ring-4 focus:outline-none focus:ring-blue-300">
+2016
+                </button>
+              </a><!-- </Phoenix.Component.link> -->
+
+          <span class="text-gray-900 font-bold text-xl mb-2 ml-3">
+odnawiamy dupleks na ewaluację
+          </span>
+          <button class="ml-2 text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right" phx-click="[[&quot;push&quot;,{&quot;event&quot;:&quot;delete&quot;,&quot;value&quot;:{&quot;id&quot;:1509}}],[&quot;hide&quot;,{&quot;time&quot;:200,&quot;to&quot;:&quot;#1509&quot;,&quot;transition&quot;:[[&quot;transition-all&quot;,&quot;transform&quot;,&quot;ease-in&quot;,&quot;duration-200&quot;],[&quot;opacity-100&quot;,&quot;translate-y-0&quot;,&quot;sm:scale-100&quot;],[&quot;opacity-0&quot;,&quot;translate-y-4&quot;,&quot;sm:translate-y-0&quot;,&quot;sm:scale-95&quot;]]}]]" data-confirm="Are you sure?">
+            <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"></path>
+            </svg>
+            <span class="sr-only">Delete entry</span>
+          </button>
+          <button class="ml-2 text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
+            <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M14 4v3a1 1 0 0 1-1 1h-3m4 10v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2m11-3v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H18a1 1 0 0 1 1 1Z"></path>
+            </svg>
+            <span class="sr-only">Clone entry</span>
+          </button>
+          <!-- @caller lib/wspom_web/live/entry_view.html.heex:40 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2717 (phoenix_live_view) --><a href="/entries/1509/edit" data-phx-link="patch" data-phx-link-state="push">
+            <button class="text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
+              <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28"></path>
+              </svg>
+              <span class="sr-only">Edit entry</span>
+            </button>
+          </a><!-- </Phoenix.Component.link> -->
+        </div>
+        <div>
+          <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-gray-200 py-1 px-2 my-2 font-sans text-xs leading-none text-gray-800">
+            <b class="uppercase">Sunday</b>
+          </div>
+
+
+
+        </div>
+
+          <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-red-500 py-1 px-2 mt-1 mb-2 font-sans text-xs uppercase leading-none text-red-200 font-bold">
+            No tags!
+          </div>
+
+      </div>
+      <div class="py-3">
+        <div class="text-gray-600">
+
+            <div id="full-1509" class="hidden">
+
+                <p>Dzisiaj wzięliśmy się - wreszcie! - za szykowanie chałupy na wizytę ewaluatora za trzy dni. Ania odnawia przedsionek (malowanie, przewieszenie wieszaków na przeciwległą stronę), ja wziąłem się za wymianę drzwi od łazienki (drzwi do przedsionka są niestety za szerokie o 3/4 cala, więc to trzeba będzie spokojnie zrobić, mając cały weekend). Poszło nam całkiem dobrze - Ania bardzo zadowolona z pracy.</p>
+
+              <button class="float-right ml-2 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300" phx-click="[[&quot;toggle&quot;,{&quot;to&quot;:&quot;#full-1509&quot;}],[&quot;toggle&quot;,{&quot;to&quot;:&quot;#short-1509&quot;}]]">
+                Show less
+              </button>
+            </div>
+            <div id="short-1509">
+
+                <p>Dzisiaj wzięliśmy się - wreszcie! - za szykowanie chałupy na wizytę ewaluatora za trzy dni. Ania odnawia przedsionek (malowanie, przewieszenie wieszaków na przeciwległą stronę), ja wziąłem się za wymianę drzwi od łazienki (drzwi do przedsionka są niestety za s</p>
+
+              <button class="float-right ml-2 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300" phx-click="[[&quot;toggle&quot;,{&quot;to&quot;:&quot;#short-1509&quot;}],[&quot;toggle&quot;,{&quot;to&quot;:&quot;#full-1509&quot;}]]">
+                Show more
+              </button>
+            </div>
+
+        </div>
+      </div>
+    </div>
+  </div><div id="entries-1926" class="relative bg-white mx-2 px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-lg sm:px-4">
+    <div class="divide-y divide-gray-300/50">
+      <div>
+        <div>
+
+              <!-- @caller lib/wspom_web/live/entry_view.html.heex:11 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2717 (phoenix_live_view) --><a href="/entries?filter=year&amp;day=3&amp;month=1&amp;year=2017" data-phx-link="patch" data-phx-link-state="push">
+                  <button class="py-1 px-2 my-0 font-sans text-xs font-bold text-center rounded-lg text-gray-700 bg-gray-200 border border-gray-700 hover:bg-transparent focus:ring-4 focus:outline-none focus:ring-blue-300">
+2017
+                </button>
+              </a><!-- </Phoenix.Component.link> -->
+
+          <span class="text-gray-900 font-bold text-xl mb-2 ml-3">
+koty wyłażą z pralni
+          </span>
+          <button class="ml-2 text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right" phx-click="[[&quot;push&quot;,{&quot;event&quot;:&quot;delete&quot;,&quot;value&quot;:{&quot;id&quot;:1926}}],[&quot;hide&quot;,{&quot;time&quot;:200,&quot;to&quot;:&quot;#1926&quot;,&quot;transition&quot;:[[&quot;transition-all&quot;,&quot;transform&quot;,&quot;ease-in&quot;,&quot;duration-200&quot;],[&quot;opacity-100&quot;,&quot;translate-y-0&quot;,&quot;sm:scale-100&quot;],[&quot;opacity-0&quot;,&quot;translate-y-4&quot;,&quot;sm:translate-y-0&quot;,&quot;sm:scale-95&quot;]]}]]" data-confirm="Are you sure?">
+            <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"></path>
+            </svg>
+            <span class="sr-only">Delete entry</span>
+          </button>
+          <button class="ml-2 text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
+            <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M14 4v3a1 1 0 0 1-1 1h-3m4 10v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2m11-3v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H18a1 1 0 0 1 1 1Z"></path>
+            </svg>
+            <span class="sr-only">Clone entry</span>
+          </button>
+          <!-- @caller lib/wspom_web/live/entry_view.html.heex:40 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2717 (phoenix_live_view) --><a href="/entries/1926/edit" data-phx-link="patch" data-phx-link-state="push">
+            <button class="text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
+              <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28"></path>
+              </svg>
+              <span class="sr-only">Edit entry</span>
+            </button>
+          </a><!-- </Phoenix.Component.link> -->
+        </div>
+        <div>
+          <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-gray-200 py-1 px-2 my-2 font-sans text-xs leading-none text-gray-800">
+            <b class="uppercase">Tuesday</b>
+          </div>
+
+
+
+        </div>
+
+          <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-red-500 py-1 px-2 mt-1 mb-2 font-sans text-xs uppercase leading-none text-red-200 font-bold">
+            No tags!
+          </div>
+
+      </div>
+      <div class="py-3">
+        <div class="text-gray-600">
+
+            <div id="full-1926" class="hidden">
+
+                <p>Po powrocie z pracy o&lt;span&gt;kazuje się&lt;/span&gt;&lt;span&gt;, że kotki wydostały się z pralni (tam była szczelina zastawiona rurą od suszarki i ta rura się przewróciła). Więc zasłoniłem dziurę i dodatkowo zamontowałem w końcu ten dżinks we framudze, żeby można było zamykać drzwi (do tej pory zastawialiśmy je pudełkiem z workami na śmieci z jednej strony, a od środka – zawiązywałem klamkę sznurkiem; totalna prowizorka). Zajęło to faktycznie tylko ok. 20 minut. Ania ma rację, że ja czasem bez sensu odkładam niektóre rzeczy i mam je niepokończone miesiącami.&lt;/span&gt;</p>
+
+              <button class="float-right ml-2 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300" phx-click="[[&quot;toggle&quot;,{&quot;to&quot;:&quot;#full-1926&quot;}],[&quot;toggle&quot;,{&quot;to&quot;:&quot;#short-1926&quot;}]]">
+                Show less
+              </button>
+            </div>
+            <div id="short-1926">
+
+                <p>Po powrocie z pracy o&lt;span&gt;kazuje się&lt;/span&gt;&lt;span&gt;, że kotki wydostały się z pralni (tam była szczelina zastawiona rurą od suszarki i ta rura się przewróciła). Więc zasłoniłem dziurę i dodatkowo zamontowałem w końcu ten dżinks we framudze, żeby można było zamy</p>
+
+              <button class="float-right ml-2 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300" phx-click="[[&quot;toggle&quot;,{&quot;to&quot;:&quot;#short-1926&quot;}],[&quot;toggle&quot;,{&quot;to&quot;:&quot;#full-1926&quot;}]]">
+                Show more
+              </button>
+            </div>
+
+        </div>
+      </div>
+    </div>
+  </div><div id="entries-1927" class="relative bg-white mx-2 px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-lg sm:px-4">
+    <div class="divide-y divide-gray-300/50">
+      <div>
+        <div>
+
+              <!-- @caller lib/wspom_web/live/entry_view.html.heex:11 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2717 (phoenix_live_view) --><a href="/entries?filter=year&amp;day=3&amp;month=1&amp;year=2017" data-phx-link="patch" data-phx-link-state="push">
+                  <button class="py-1 px-2 my-0 font-sans text-xs font-bold text-center rounded-lg text-gray-700 bg-gray-200 border border-gray-700 hover:bg-transparent focus:ring-4 focus:outline-none focus:ring-blue-300">
+2017
+                </button>
+              </a><!-- </Phoenix.Component.link> -->
+
+          <span class="text-gray-900 font-bold text-xl mb-2 ml-3">
+Dawson - mieszkanie LoriAnn
+          </span>
+          <button class="ml-2 text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right" phx-click="[[&quot;push&quot;,{&quot;event&quot;:&quot;delete&quot;,&quot;value&quot;:{&quot;id&quot;:1927}}],[&quot;hide&quot;,{&quot;time&quot;:200,&quot;to&quot;:&quot;#1927&quot;,&quot;transition&quot;:[[&quot;transition-all&quot;,&quot;transform&quot;,&quot;ease-in&quot;,&quot;duration-200&quot;],[&quot;opacity-100&quot;,&quot;translate-y-0&quot;,&quot;sm:scale-100&quot;],[&quot;opacity-0&quot;,&quot;translate-y-4&quot;,&quot;sm:translate-y-0&quot;,&quot;sm:scale-95&quot;]]}]]" data-confirm="Are you sure?">
+            <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"></path>
+            </svg>
+            <span class="sr-only">Delete entry</span>
+          </button>
+          <button class="ml-2 text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
+            <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M14 4v3a1 1 0 0 1-1 1h-3m4 10v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2m11-3v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H18a1 1 0 0 1 1 1Z"></path>
+            </svg>
+            <span class="sr-only">Clone entry</span>
+          </button>
+          <!-- @caller lib/wspom_web/live/entry_view.html.heex:40 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2717 (phoenix_live_view) --><a href="/entries/1927/edit" data-phx-link="patch" data-phx-link-state="push">
+            <button class="text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
+              <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28"></path>
+              </svg>
+              <span class="sr-only">Edit entry</span>
+            </button>
+          </a><!-- </Phoenix.Component.link> -->
+        </div>
+        <div>
+          <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-gray-200 py-1 px-2 my-2 font-sans text-xs leading-none text-gray-800">
+            <b class="uppercase">Tuesday</b>
+          </div>
+
+
+
+        </div>
+
+          <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-red-500 py-1 px-2 mt-1 mb-2 font-sans text-xs uppercase leading-none text-red-200 font-bold">
+            No tags!
+          </div>
+
+      </div>
+      <div class="py-3">
+        <div class="text-gray-600">
+
+            <div id="full-1927" class="hidden">
+
+                <p>U Ani w pracy też ciekawie. Lori-Ann chcą usunąć z jej aktualnego mieszkania (wynajmuje w Westmouncie od lat i płaci niewiele). Ma się odwołać do Regie, ale i tak będzie musiała się wynieść, najwyżej to przeciągnie. Jej facet jej zaproponował mieszkanie z nim, ale ona nie chce, bo nie podoba się jej jego mieszkanie (i nie lubi jego syna). Ona naprawdę jest rozpieszczona.</p>
+
+              <button class="float-right ml-2 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300" phx-click="[[&quot;toggle&quot;,{&quot;to&quot;:&quot;#full-1927&quot;}],[&quot;toggle&quot;,{&quot;to&quot;:&quot;#short-1927&quot;}]]">
+                Show less
+              </button>
+            </div>
+            <div id="short-1927">
+
+                <p>U Ani w pracy też ciekawie. Lori-Ann chcą usunąć z jej aktualnego mieszkania (wynajmuje w Westmouncie od lat i płaci niewiele). Ma się odwołać do Regie, ale i tak będzie musiała się wynieść, najwyżej to przeciągnie. Jej facet jej zaproponował mieszkanie z nim,</p>
+
+              <button class="float-right ml-2 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300" phx-click="[[&quot;toggle&quot;,{&quot;to&quot;:&quot;#short-1927&quot;}],[&quot;toggle&quot;,{&quot;to&quot;:&quot;#full-1927&quot;}]]">
+                Show more
+              </button>
+            </div>
+
+        </div>
+      </div>
+    </div>
+  </div><div id="entries-2275" class="relative bg-white mx-2 px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-lg sm:px-4">
+    <div class="divide-y divide-gray-300/50">
+      <div>
+        <div>
+
+              <!-- @caller lib/wspom_web/live/entry_view.html.heex:11 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2717 (phoenix_live_view) --><a href="/entries?filter=year&amp;day=3&amp;month=1&amp;year=2018" data-phx-link="patch" data-phx-link-state="push">
+                  <button class="py-1 px-2 my-0 font-sans text-xs font-bold text-center rounded-lg text-gray-700 bg-gray-200 border border-gray-700 hover:bg-transparent focus:ring-4 focus:outline-none focus:ring-blue-300">
+2018
+                </button>
+              </a><!-- </Phoenix.Component.link> -->
+
+          <span class="text-gray-900 font-bold text-xl mb-2 ml-3">
+magnesy
+          </span>
+          <button class="ml-2 text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right" phx-click="[[&quot;push&quot;,{&quot;event&quot;:&quot;delete&quot;,&quot;value&quot;:{&quot;id&quot;:2275}}],[&quot;hide&quot;,{&quot;time&quot;:200,&quot;to&quot;:&quot;#2275&quot;,&quot;transition&quot;:[[&quot;transition-all&quot;,&quot;transform&quot;,&quot;ease-in&quot;,&quot;duration-200&quot;],[&quot;opacity-100&quot;,&quot;translate-y-0&quot;,&quot;sm:scale-100&quot;],[&quot;opacity-0&quot;,&quot;translate-y-4&quot;,&quot;sm:translate-y-0&quot;,&quot;sm:scale-95&quot;]]}]]" data-confirm="Are you sure?">
+            <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"></path>
+            </svg>
+            <span class="sr-only">Delete entry</span>
+          </button>
+          <button class="ml-2 text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
+            <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M14 4v3a1 1 0 0 1-1 1h-3m4 10v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2m11-3v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H18a1 1 0 0 1 1 1Z"></path>
+            </svg>
+            <span class="sr-only">Clone entry</span>
+          </button>
+          <!-- @caller lib/wspom_web/live/entry_view.html.heex:40 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2717 (phoenix_live_view) --><a href="/entries/2275/edit" data-phx-link="patch" data-phx-link-state="push">
+            <button class="text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
+              <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28"></path>
+              </svg>
+              <span class="sr-only">Edit entry</span>
+            </button>
+          </a><!-- </Phoenix.Component.link> -->
+        </div>
+        <div>
+          <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-gray-200 py-1 px-2 my-2 font-sans text-xs leading-none text-gray-800">
+            <b class="uppercase">Wednesday</b>
+          </div>
+
+
+
+        </div>
+
+          <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-red-500 py-1 px-2 mt-1 mb-2 font-sans text-xs uppercase leading-none text-red-200 font-bold">
+            No tags!
+          </div>
+
+      </div>
+      <div class="py-3">
+        <div class="text-gray-600">
+
+            <div id="full-2275" class="hidden">
+
+                <p>Do sklepu z magnesami w St-Henri. Kupuję dwa silne magnesy z haczykami, bo zgubiłem te małe, których przez lata używałem do szukania śrub w ścianach, a słabe magnesy się nie nadają. A teraz będę ich potrzebował, bo muszę zamocować te zasłonki, które Ania robiła całe święta.</p>
+
+              <button class="float-right ml-2 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300" phx-click="[[&quot;toggle&quot;,{&quot;to&quot;:&quot;#full-2275&quot;}],[&quot;toggle&quot;,{&quot;to&quot;:&quot;#short-2275&quot;}]]">
+                Show less
+              </button>
+            </div>
+            <div id="short-2275">
+
+                <p>Do sklepu z magnesami w St-Henri. Kupuję dwa silne magnesy z haczykami, bo zgubiłem te małe, których przez lata używałem do szukania śrub w ścianach, a słabe magnesy się nie nadają. A teraz będę ich potrzebował, bo muszę zamocować te zasłonki, które Ania robił</p>
+
+              <button class="float-right ml-2 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300" phx-click="[[&quot;toggle&quot;,{&quot;to&quot;:&quot;#short-2275&quot;}],[&quot;toggle&quot;,{&quot;to&quot;:&quot;#full-2275&quot;}]]">
+                Show more
+              </button>
+            </div>
+
+        </div>
+      </div>
+    </div>
+  </div><div id="entries-2587" class="relative bg-white mx-2 px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-lg sm:px-4">
+    <div class="divide-y divide-gray-300/50">
+      <div>
+        <div>
+
+              <!-- @caller lib/wspom_web/live/entry_view.html.heex:11 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2717 (phoenix_live_view) --><a href="/entries?filter=year&amp;day=3&amp;month=1&amp;year=2019" data-phx-link="patch" data-phx-link-state="push">
+                  <button class="py-1 px-2 my-0 font-sans text-xs font-bold text-center rounded-lg text-gray-700 bg-gray-200 border border-gray-700 hover:bg-transparent focus:ring-4 focus:outline-none focus:ring-blue-300">
+2019
+                </button>
+              </a><!-- </Phoenix.Component.link> -->
+
+          <span class="text-gray-900 font-bold text-xl mb-2 ml-3">
+SAP - rozważania, pomysły
+          </span>
+          <button class="ml-2 text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right" phx-click="[[&quot;push&quot;,{&quot;event&quot;:&quot;delete&quot;,&quot;value&quot;:{&quot;id&quot;:2587}}],[&quot;hide&quot;,{&quot;time&quot;:200,&quot;to&quot;:&quot;#2587&quot;,&quot;transition&quot;:[[&quot;transition-all&quot;,&quot;transform&quot;,&quot;ease-in&quot;,&quot;duration-200&quot;],[&quot;opacity-100&quot;,&quot;translate-y-0&quot;,&quot;sm:scale-100&quot;],[&quot;opacity-0&quot;,&quot;translate-y-4&quot;,&quot;sm:translate-y-0&quot;,&quot;sm:scale-95&quot;]]}]]" data-confirm="Are you sure?">
+            <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"></path>
+            </svg>
+            <span class="sr-only">Delete entry</span>
+          </button>
+          <button class="ml-2 text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
+            <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M14 4v3a1 1 0 0 1-1 1h-3m4 10v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2m11-3v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H18a1 1 0 0 1 1 1Z"></path>
+            </svg>
+            <span class="sr-only">Clone entry</span>
+          </button>
+          <!-- @caller lib/wspom_web/live/entry_view.html.heex:40 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2717 (phoenix_live_view) --><a href="/entries/2587/edit" data-phx-link="patch" data-phx-link-state="push">
+            <button class="text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
+              <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28"></path>
+              </svg>
+              <span class="sr-only">Edit entry</span>
+            </button>
+          </a><!-- </Phoenix.Component.link> -->
+        </div>
+        <div>
+          <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-gray-200 py-1 px-2 my-2 font-sans text-xs leading-none text-gray-800">
+            <b class="uppercase">Thursday</b>
+          </div>
+
+
+
+        </div>
+
+          <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-red-500 py-1 px-2 mt-1 mb-2 font-sans text-xs uppercase leading-none text-red-200 font-bold">
+            No tags!
+          </div>
+
+      </div>
+      <div class="py-3">
+        <div class="text-gray-600">
+
+            <div id="full-2587" class="hidden">
+
+                <p>Mam sporo nowych przemyśleń o mojej pracy. Przede wszystkim, widzę że Peter E. zostaje stopniowo ogołocony z wszystkiego, co będzie miało znaczenie w CCv2.  L1 Supportu już dawno nie ma, teraz też Miguel ze swoim Partner Management ma odejść do BOO do Candice, TAM-y mają znikać…</p>
+
+                <p></p>
+
+                <p>Wydaje mi się, że SAP wyciśnie nas jak cytryny w CCv1, a potem wywali cały nasz org na śmietnik. Wielu dobrych ludzi oczywiście znajdzie dobre role później, ale co będzie z takim ambitnym menedżerem jak ja? Ktoś go przygarie i da mu jakąś fikcyjną, durną robotę (wystarczy zobaczyć, jak potraktowali Olę Głuch). Bo przecież wszystkie sensowne role będą już dawno zajęte - to się odbywa od ponad roku i teraz się powoli kończy.</p>
+
+                <p></p>
+
+                <p>Jedno np. jest pewne i dziś nawet gadałem o tym z Mike’iem: Escalation Managers nie będą mieli większej roli w CCv2, bo to jest bardziej relacja jak Product Support i Product Teams w on-prem; EM nie ma „kontroli” nad niczym, a tak sami siebie definiujemy (choć nie zapisaliśmy tego w Escalation Framework).</p>
+
+                <p></p>
+
+                <p>Szukanie pracy na zewnątrz (na co się mimo wszystko wciąż w pełni nie zdecydowałem) ma też tę zaletę, że można sobie wybrać, że sytuacja jest jasna i można wypytywać w miarę „transparentnie” o różne rzeczy. Natomiast szukanie w SAP-ie, co kiedyś uważałem za ciekawą opcję, okazuje się nie działać według żadnych jasnych reguł, nie dawać żadnego wyboru (bo większość tych pozycji nie jest ogłaszanych) i opierać się na niejasnym manewrowaniu personalnym.</p>
+
+                <p></p>
+
+                <p>Wymyśliłem dla siebie potencjalną rolę, coś jak Global Service Quality Manager. Zajmować się full-time tymi wszystkimi inicjatywami, które mają na celu polepszyć jakość serwisu (PDS &amp; deployments; ticket handling; 24/7; SPC; Major Incidents; …). To byłoby też liaison z innymi zespołami. I można by uzasadnić, żeby w ramach tej roli była też mała grupa BI (Miłosz, Jonas), żeby zacząć w końcu mieć solidne dane operacyjne, bo nie ma co liczyć, żeby Riaz (ten nowy szef grupy BI od Candice) się zajął kiedyś potrzebami BI grupy Petera (nigdy nie wykazał tym zainteresowania - tylko tyle ich interesuje, co jest potrzebne Candice). To byłoby fajne i nawet wrzuciłem to wczoraj Sherifowi, pytając go (e-mailowo - wciąż jest na urlopie) o to, jak mam teraz robić z tymi inicjatywami, bo robi się ich coraz więcej (doszła nowa - SPC) i nie mam czasu się nimi porządnie zająć. Są dwa szkopuły: Andrew Gascogne, ta chamska niezguła, którą wykopali z szefa Project Managerów w Europie i dali stanowisko „Global Operations Manager”, co się w zasadzie pokrywa chyba teoretycznie, z moim pomysłem; oraz to, co napisałem wyżej - że nie wiem, czy warto w ogóle zostawać w orgu Petera. No ale może spróbuję pociągnąć ten temat, napiszę jakiś formalny „proposal”…</p>
+
+              <button class="float-right ml-2 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300" phx-click="[[&quot;toggle&quot;,{&quot;to&quot;:&quot;#full-2587&quot;}],[&quot;toggle&quot;,{&quot;to&quot;:&quot;#short-2587&quot;}]]">
+                Show less
+              </button>
+            </div>
+            <div id="short-2587">
+
+                <p>Mam sporo nowych przemyśleń o mojej pracy. Przede wszystkim, widzę że Peter E. zostaje stopniowo ogołocony z wszystkiego, co będzie miało znaczenie w CCv2.  L1 Supportu już dawno nie ma, teraz też Miguel ze swoim Partner Management ma odejść do BOO do Candice,</p>
+
+              <button class="float-right ml-2 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300" phx-click="[[&quot;toggle&quot;,{&quot;to&quot;:&quot;#short-2587&quot;}],[&quot;toggle&quot;,{&quot;to&quot;:&quot;#full-2587&quot;}]]">
+                Show more
+              </button>
+            </div>
+
+        </div>
+      </div>
+    </div>
+  </div><div id="entries-2973" class="relative bg-white mx-2 px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-lg sm:px-4">
+    <div class="divide-y divide-gray-300/50">
+      <div>
+        <div>
+
+              <!-- @caller lib/wspom_web/live/entry_view.html.heex:11 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2717 (phoenix_live_view) --><a href="/entries?filter=year&amp;day=3&amp;month=1&amp;year=2020" data-phx-link="patch" data-phx-link-state="push">
+                  <button class="py-1 px-2 my-0 font-sans text-xs font-bold text-center rounded-lg text-gray-700 bg-gray-200 border border-gray-700 hover:bg-transparent focus:ring-4 focus:outline-none focus:ring-blue-300">
+2020
+                </button>
+              </a><!-- </Phoenix.Component.link> -->
+
+          <span class="text-gray-900 font-bold text-xl mb-2 ml-3">
+Świątki - Kicia uśpiona
+          </span>
+          <button class="ml-2 text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right" phx-click="[[&quot;push&quot;,{&quot;event&quot;:&quot;delete&quot;,&quot;value&quot;:{&quot;id&quot;:2973}}],[&quot;hide&quot;,{&quot;time&quot;:200,&quot;to&quot;:&quot;#2973&quot;,&quot;transition&quot;:[[&quot;transition-all&quot;,&quot;transform&quot;,&quot;ease-in&quot;,&quot;duration-200&quot;],[&quot;opacity-100&quot;,&quot;translate-y-0&quot;,&quot;sm:scale-100&quot;],[&quot;opacity-0&quot;,&quot;translate-y-4&quot;,&quot;sm:translate-y-0&quot;,&quot;sm:scale-95&quot;]]}]]" data-confirm="Are you sure?">
+            <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"></path>
+            </svg>
+            <span class="sr-only">Delete entry</span>
+          </button>
+          <button class="ml-2 text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
+            <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M14 4v3a1 1 0 0 1-1 1h-3m4 10v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2m11-3v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H18a1 1 0 0 1 1 1Z"></path>
+            </svg>
+            <span class="sr-only">Clone entry</span>
+          </button>
+          <!-- @caller lib/wspom_web/live/entry_view.html.heex:40 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2717 (phoenix_live_view) --><a href="/entries/2973/edit" data-phx-link="patch" data-phx-link-state="push">
+            <button class="text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
+              <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28"></path>
+              </svg>
+              <span class="sr-only">Edit entry</span>
+            </button>
+          </a><!-- </Phoenix.Component.link> -->
+        </div>
+        <div>
+          <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-gray-200 py-1 px-2 my-2 font-sans text-xs leading-none text-gray-800">
+            <b class="uppercase">Friday</b>
+          </div>
+
+
+
+        </div>
+
+          <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-red-500 py-1 px-2 mt-1 mb-2 font-sans text-xs uppercase leading-none text-red-200 font-bold">
+            No tags!
+          </div>
+
+      </div>
+      <div class="py-3">
+        <div class="text-gray-600">
+
+            <div id="full-2973" class="hidden">
+
+                <p>Rozalia dziś uśpiła Kicię… Ten kot z nimi mieszkał od ~17 lat - przez całą naszą znajomość. Ale już w ostatnich tygodniach ledwo chodziła i się strasznie męczyła. Bałem się, że Rozalia się nie zdecyduje na taki krok, ale jednak. Dobrze, że zrobiła to, kiedy jest Marcin - ma wsparcie psychiczne.</p>
+
+                <p></p>
+
+                <p>[8 I] Po pracy zajechałem do Rozalii, bo zostawiłem byłem u niej auto. Jakoś się trzyma po stracie kota. Żeby uśmierzyć ból, planują jej kilka wyjazdów – najpierw do Meksyku z Kubą (!!!; Kuba się upiera na AirBnB, więc zapytam kumpla z pracy, czy to jest bezpieczna opcja w tym kraju), potem ma przyjechać Ula, a jeszcze później Rozalia poleci do Marcina. Kurde, ależ oni latają!</p>
+
+              <button class="float-right ml-2 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300" phx-click="[[&quot;toggle&quot;,{&quot;to&quot;:&quot;#full-2973&quot;}],[&quot;toggle&quot;,{&quot;to&quot;:&quot;#short-2973&quot;}]]">
+                Show less
+              </button>
+            </div>
+            <div id="short-2973">
+
+                <p>Rozalia dziś uśpiła Kicię… Ten kot z nimi mieszkał od ~17 lat - przez całą naszą znajomość. Ale już w ostatnich tygodniach ledwo chodziła i się strasznie męczyła. Bałem się, że Rozalia się nie zdecyduje na taki krok, ale jednak. Dobrze, że zrobiła to, kiedy je</p>
+
+              <button class="float-right ml-2 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300" phx-click="[[&quot;toggle&quot;,{&quot;to&quot;:&quot;#short-2973&quot;}],[&quot;toggle&quot;,{&quot;to&quot;:&quot;#full-2973&quot;}]]">
+                Show more
+              </button>
+            </div>
+
+        </div>
+      </div>
+    </div>
+  </div><div id="entries-2974" class="relative bg-white mx-2 px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-lg sm:px-4">
+    <div class="divide-y divide-gray-300/50">
+      <div>
+        <div>
+
+              <!-- @caller lib/wspom_web/live/entry_view.html.heex:11 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2717 (phoenix_live_view) --><a href="/entries?filter=year&amp;day=3&amp;month=1&amp;year=2020" data-phx-link="patch" data-phx-link-state="push">
+                  <button class="py-1 px-2 my-0 font-sans text-xs font-bold text-center rounded-lg text-gray-700 bg-gray-200 border border-gray-700 hover:bg-transparent focus:ring-4 focus:outline-none focus:ring-blue-300">
+2020
+                </button>
+              </a><!-- </Phoenix.Component.link> -->
+
+          <span class="text-gray-900 font-bold text-xl mb-2 ml-3">
+u Boba i Jen
+          </span>
+          <button class="ml-2 text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right" phx-click="[[&quot;push&quot;,{&quot;event&quot;:&quot;delete&quot;,&quot;value&quot;:{&quot;id&quot;:2974}}],[&quot;hide&quot;,{&quot;time&quot;:200,&quot;to&quot;:&quot;#2974&quot;,&quot;transition&quot;:[[&quot;transition-all&quot;,&quot;transform&quot;,&quot;ease-in&quot;,&quot;duration-200&quot;],[&quot;opacity-100&quot;,&quot;translate-y-0&quot;,&quot;sm:scale-100&quot;],[&quot;opacity-0&quot;,&quot;translate-y-4&quot;,&quot;sm:translate-y-0&quot;,&quot;sm:scale-95&quot;]]}]]" data-confirm="Are you sure?">
+            <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"></path>
+            </svg>
+            <span class="sr-only">Delete entry</span>
+          </button>
+          <button class="ml-2 text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
+            <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M14 4v3a1 1 0 0 1-1 1h-3m4 10v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2m11-3v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H18a1 1 0 0 1 1 1Z"></path>
+            </svg>
+            <span class="sr-only">Clone entry</span>
+          </button>
+          <!-- @caller lib/wspom_web/live/entry_view.html.heex:40 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2717 (phoenix_live_view) --><a href="/entries/2974/edit" data-phx-link="patch" data-phx-link-state="push">
+            <button class="text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
+              <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28"></path>
+              </svg>
+              <span class="sr-only">Edit entry</span>
+            </button>
+          </a><!-- </Phoenix.Component.link> -->
+        </div>
+        <div>
+          <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-gray-200 py-1 px-2 my-2 font-sans text-xs leading-none text-gray-800">
+            <b class="uppercase">Friday</b>
+          </div>
+
+
+
+        </div>
+
+          <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-red-500 py-1 px-2 mt-1 mb-2 font-sans text-xs uppercase leading-none text-red-200 font-bold">
+            No tags!
+          </div>
+
+      </div>
+      <div class="py-3">
+        <div class="text-gray-600">
+
+            <div id="full-2974" class="hidden">
+
+                <p>Po pracy jedziemy do Boba i Jen.  Od kilku miesięcy próbowali nas zaprosić, ale mieli dużo problemów z domem (wysiadło im ogrzewanie, potem - panel elektryczny, suszarka, …). W końcu się udało. Z nimi się rewelacyjnie spędza czas, nigdy się nie nudzimy. Mało tego - Bob i Gabrielle oglądali Wiedźmina, więc i o tym pogadaliśmy! Jen przygotowała „poke bowls” i strasznie nam smakowały.</p>
+
+                <p></p>
+
+                <p>O niektórych rzeczach nie gadaliśmy, np. o dzieciach (temat jest chyba niezbyt wygodny; Gabrielle sobie jakoś radzi, ale jest ewidentnie opóźniona w rozwoju i tak już pewnie zostanie – jest bardzo dziecinna; Julian jest dość sympatyczny i ewidentnie inteligentny; nie wiemy, jak mu idzie w życiu; poza tym, roztył się, trochę wygląda jak Kuba Świątek) oraz o książce Boba (mówił o Berlinie, że tam było super, ale nie wspominał o książce).</p>
+
+                <p></p>
+
+                <p>Poza tym gadaliśmy o starości (mama Jen jest w domu starców, mieli z nią niezłe przejścia) i o mojej nowej pracy i o Ani pracy itd.</p>
+
+              <button class="float-right ml-2 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300" phx-click="[[&quot;toggle&quot;,{&quot;to&quot;:&quot;#full-2974&quot;}],[&quot;toggle&quot;,{&quot;to&quot;:&quot;#short-2974&quot;}]]">
+                Show less
+              </button>
+            </div>
+            <div id="short-2974">
+
+                <p>Po pracy jedziemy do Boba i Jen.  Od kilku miesięcy próbowali nas zaprosić, ale mieli dużo problemów z domem (wysiadło im ogrzewanie, potem - panel elektryczny, suszarka, …). W końcu się udało. Z nimi się rewelacyjnie spędza czas, nigdy się nie nudzimy. Mało t</p>
+
+              <button class="float-right ml-2 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300" phx-click="[[&quot;toggle&quot;,{&quot;to&quot;:&quot;#short-2974&quot;}],[&quot;toggle&quot;,{&quot;to&quot;:&quot;#full-2974&quot;}]]">
+                Show more
+              </button>
+            </div>
+
+        </div>
+      </div>
+    </div>
+  </div><div id="entries-3302" class="relative bg-white mx-2 px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-lg sm:px-4">
+    <div class="divide-y divide-gray-300/50">
+      <div>
+        <div>
+
+              <!-- @caller lib/wspom_web/live/entry_view.html.heex:11 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2717 (phoenix_live_view) --><a href="/entries?filter=year&amp;day=3&amp;month=1&amp;year=2021" data-phx-link="patch" data-phx-link-state="push">
+                  <button class="py-1 px-2 my-0 font-sans text-xs font-bold text-center rounded-lg text-gray-700 bg-gray-200 border border-gray-700 hover:bg-transparent focus:ring-4 focus:outline-none focus:ring-blue-300">
+2021
+                </button>
+              </a><!-- </Phoenix.Component.link> -->
+
+          <span class="text-gray-900 font-bold text-xl mb-2 ml-3">
+Andrew - rodzice Heather
+          </span>
+          <button class="ml-2 text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right" phx-click="[[&quot;push&quot;,{&quot;event&quot;:&quot;delete&quot;,&quot;value&quot;:{&quot;id&quot;:3302}}],[&quot;hide&quot;,{&quot;time&quot;:200,&quot;to&quot;:&quot;#3302&quot;,&quot;transition&quot;:[[&quot;transition-all&quot;,&quot;transform&quot;,&quot;ease-in&quot;,&quot;duration-200&quot;],[&quot;opacity-100&quot;,&quot;translate-y-0&quot;,&quot;sm:scale-100&quot;],[&quot;opacity-0&quot;,&quot;translate-y-4&quot;,&quot;sm:translate-y-0&quot;,&quot;sm:scale-95&quot;]]}]]" data-confirm="Are you sure?">
+            <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"></path>
+            </svg>
+            <span class="sr-only">Delete entry</span>
+          </button>
+          <button class="ml-2 text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
+            <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M14 4v3a1 1 0 0 1-1 1h-3m4 10v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2m11-3v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H18a1 1 0 0 1 1 1Z"></path>
+            </svg>
+            <span class="sr-only">Clone entry</span>
+          </button>
+          <!-- @caller lib/wspom_web/live/entry_view.html.heex:40 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2717 (phoenix_live_view) --><a href="/entries/3302/edit" data-phx-link="patch" data-phx-link-state="push">
+            <button class="text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
+              <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28"></path>
+              </svg>
+              <span class="sr-only">Edit entry</span>
+            </button>
+          </a><!-- </Phoenix.Component.link> -->
+        </div>
+        <div>
+          <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-gray-200 py-1 px-2 my-2 font-sans text-xs leading-none text-gray-800">
+            <b class="uppercase">Sunday</b>
+          </div>
+
+
+
+        </div>
+
+          <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-red-500 py-1 px-2 mt-1 mb-2 font-sans text-xs uppercase leading-none text-red-200 font-bold">
+            No tags!
+          </div>
+
+      </div>
+      <div class="py-3">
+        <div class="text-gray-600">
+
+            <div id="full-3302" class="hidden">
+
+                <p>Gadaliśmy z Andrew – oni mieli ciężki grudzień, bo mama Heather ma już dość zaawansowanego Parkinsona i tata się przestał móc nią zajmować. Załatwiają jej hospicjum, ale generalnie oboje rodziców jest w mega-„denial” na cały ten temat; nigdy się nie przygotowali na tę chorobę, mimo że wiadomo o niej było od jakiegoś czasu. Smutne  :(</p>
+
+              <button class="float-right ml-2 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300" phx-click="[[&quot;toggle&quot;,{&quot;to&quot;:&quot;#full-3302&quot;}],[&quot;toggle&quot;,{&quot;to&quot;:&quot;#short-3302&quot;}]]">
+                Show less
+              </button>
+            </div>
+            <div id="short-3302">
+
+                <p>Gadaliśmy z Andrew – oni mieli ciężki grudzień, bo mama Heather ma już dość zaawansowanego Parkinsona i tata się przestał móc nią zajmować. Załatwiają jej hospicjum, ale generalnie oboje rodziców jest w mega-„denial” na cały ten temat; nigdy się nie przygotowa</p>
+
+              <button class="float-right ml-2 px-1 py-1 text-xs font-medium text-center rounded-lg text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300" phx-click="[[&quot;toggle&quot;,{&quot;to&quot;:&quot;#short-3302&quot;}],[&quot;toggle&quot;,{&quot;to&quot;:&quot;#full-3302&quot;}]]">
+                Show more
+              </button>
+            </div>
+
+        </div>
+      </div>
+    </div>
+  </div><div id="entries-3303" class="relative bg-white mx-2 px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-lg sm:px-4">
+    <div class="divide-y divide-gray-300/50">
+      <div>
+        <div>
+
+              <!-- @caller lib/wspom_web/live/entry_view.html.heex:11 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2717 (phoenix_live_view) --><a href="/entries?filter=year&amp;day=3&amp;month=1&amp;year=2021" data-phx-link="patch" data-phx-link-state="push">
+                  <button class="py-1 px-2 my-0 font-sans text-xs font-bold text-center rounded-lg text-gray-700 bg-gray-200 border border-gray-700 hover:bg-transparent focus:ring-4 focus:outline-none focus:ring-blue-300">
+2021
+                </button>
+              </a><!-- </Phoenix.Component.link> -->
+
+          <span class="text-gray-900 font-bold text-xl mb-2 ml-3">
+remont łazienki - start na serio
+          </span>
+          <button class="ml-2 text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right" phx-click="[[&quot;push&quot;,{&quot;event&quot;:&quot;delete&quot;,&quot;value&quot;:{&quot;id&quot;:3303}}],[&quot;hide&quot;,{&quot;time&quot;:200,&quot;to&quot;:&quot;#3303&quot;,&quot;transition&quot;:[[&quot;transition-all&quot;,&quot;transform&quot;,&quot;ease-in&quot;,&quot;duration-200&quot;],[&quot;opacity-100&quot;,&quot;translate-y-0&quot;,&quot;sm:scale-100&quot;],[&quot;opacity-0&quot;,&quot;translate-y-4&quot;,&quot;sm:translate-y-0&quot;,&quot;sm:scale-95&quot;]]}]]" data-confirm="Are you sure?">
+            <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"></path>
+            </svg>
+            <span class="sr-only">Delete entry</span>
+          </button>
+          <button class="ml-2 text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
+            <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M14 4v3a1 1 0 0 1-1 1h-3m4 10v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2m11-3v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7.87a1 1 0 0 1 .24-.65l2.46-2.87a1 1 0 0 1 .76-.35H18a1 1 0 0 1 1 1Z"></path>
+            </svg>
+            <span class="sr-only">Clone entry</span>
+          </button>
+          <!-- @caller lib/wspom_web/live/entry_view.html.heex:40 (wspom) --><!-- <Phoenix.Component.link> lib/phoenix_component.ex:2717 (phoenix_live_view) --><a href="/entries/3303/edit" data-phx-link="patch" data-phx-link-state="push">
+            <button class="text-gray-700 border border-gray-700 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center float-right">
+              <svg class="w-4 h-4 text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28"></path>
+              </svg>
+              <span class="sr-only">Edit entry</span>
+            </button>
+          </a><!-- </Phoenix.Component.link> -->
+        </div>
+        <div>
+          <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-gray-200 py-1 px-2 my-2 font-sans text-xs leading-none text-gray-800">
+            <b class="uppercase">Sunday</b>
+          </div>
+
+
+
+        </div>
+
+          <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-red-500 py-1 px-2 mt-1 mb-2 font-sans text-xs uppercase leading-none text-red-200 font-bold">
+            No tags!
+          </div>
+
+      </div>
+      <div class="py-3">
+        <div class="text-gray-600">
+
+
+              <p>Zdjęliśmy wszystko ze ściany w łazience, na której będzie robiona tapeta (łącznie z demontażem umywalki). Ania dała drugą warstwę „produktu” w szpary w listwach, a ja zrobiłem listwy w obu szafach wnękowych. Koty za płoty!</p>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- </WspomWeb.Live.EntryView.render> -->
+  </div>
+</main><!-- </WspomWeb.Layouts.app> --></div>
+  <iframe hidden height="0" width="0" src="/phoenix/live_reload/frame"></iframe></body>
+</html><!-- </WspomWeb.Layouts.root> -->

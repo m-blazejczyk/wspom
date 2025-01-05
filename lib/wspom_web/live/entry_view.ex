@@ -2,7 +2,6 @@ defmodule WspomWeb.Live.EntryView do
   use WspomWeb, :live_view
 
   alias Wspom.Context
-  alias Wspom.Entry
   alias Wspom.Filter
 
   @impl true

@@ -57,7 +57,7 @@ defmodule Wspom.Context do
   end
 
   @doc """
-  Creates a entry.
+  Creates an entry.
 
   ## Examples
 
@@ -90,7 +90,7 @@ defmodule Wspom.Context do
   end
 
   @doc """
-  Updates a entry.
+  Updates an entry and saves it in the database.
   The 'entry' argument is the original, unmodified entry (%Entry{}).
   The 'attrs' argument is a map containing all the values from the form.
 
@@ -119,7 +119,7 @@ defmodule Wspom.Context do
 end
 
   @doc """
-  Deletes a entry.
+  Deletes an entry.
 
   ## Examples
 
@@ -133,5 +133,23 @@ end
   def delete_entry(%Entry{}) do
     # Repo.delete(entry)
     {:ok, %Entry{}}
+  end
+
+  @doc """
+  Clones an entry and saves it in the entries database.
+
+  The cloned entry will not have any tags and fields `importance`, `fuzzy`
+  and `needs_review` will be reset to default values. The new entry will
+  also have a valid id.
+
+  ## Examples
+
+      iex> clone_entry(entry)
+      {:ok, %Entry{}}
+
+  """
+  def clone_entry(%Entry{} = entry) do
+    cloned_entry = Database.clone_entry_and_save(entry)
+    {:ok, cloned_entry}
   end
 end

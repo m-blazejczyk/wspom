@@ -1,5 +1,6 @@
 defmodule Wspom.Entry do
   alias Wspom.TnC
+  alias Wspom.Entry
   import Ecto.Changeset
 
   defstruct [:id, :description, :title, :year, :month, :day, :weekday, :date,
@@ -9,6 +10,11 @@ defmodule Wspom.Entry do
   @types %{description: :string, title: :string,
     year: :integer, month: :integer, day: :integer, weekday: :integer, date: :date,
     importance: :string, fuzzy: :integer, needs_review: :boolean, tags: :string}
+
+  def clone(entry, new_id) do
+    %Entry{entry |
+      id: new_id, importance: :normal, fuzzy: 0, needs_review: false, tags: MapSet.new()}
+  end
 
   def changeset(entry, attrs) do
     {entry, @types}
@@ -48,7 +54,7 @@ defmodule Wspom.Entry do
     end
   end
 
-  def to_editable_map(%Wspom.Entry{} = entry) do
+  def to_editable_map(%Entry{} = entry) do
     %{id: entry.id, description: entry.description, title: entry.title,
       year: entry.year, month: entry.month, day: entry.day,
       fuzzy: entry.fuzzy, needs_review: entry.needs_review,
@@ -86,7 +92,7 @@ defmodule Wspom.Entry do
         # The date has to be checked as the final step
         case Date.new(new_entry.year, new_entry.month, new_entry.day) do
           {:ok, new_date} ->
-            new_entry = %Wspom.Entry{new_entry | date: new_date, weekday: Timex.weekday(new_date)}
+            new_entry = %Entry{new_entry | date: new_date, weekday: Timex.weekday(new_date)}
             {:ok, new_entry, tags_info}
           {:error, _} ->
             {:error, changeset |> Ecto.Changeset.add_error(:day, "invalid date")}
@@ -104,14 +110,14 @@ defmodule Wspom.Entry do
     # Once an error was encountered, ignore all subsequent changes
     error
   end
-  defp update_field({field_name, _field_value}, {:continue, %Wspom.Entry{}, _tags_info})
+  defp update_field({field_name, _field_value}, {:continue, %Entry{}, _tags_info})
     when field_name == :weekday or field_name == :date do
     {:error, {field_name, "Not allowed to set #{field_name} directly"}}
   end
-  defp update_field({:importance, _field_value}, {:continue, %Wspom.Entry{}, _tags_info}) do
+  defp update_field({:importance, _field_value}, {:continue, %Entry{}, _tags_info}) do
     {:error, {:importance, "Importance: not implemented"}}
   end
-  defp update_field({:tags, field_value}, {:continue, %Wspom.Entry{} = entry, _tags_info}) do
+  defp update_field({:tags, field_value}, {:continue, %Entry{} = entry, _tags_info}) do
     case TnC.tags_from_string(field_value) do
       {:error, error} ->
         {:error, {:tags, error}}
@@ -121,14 +127,14 @@ defmodule Wspom.Entry do
         tags_info}
     end
   end
-  defp update_field({field_name, field_value}, {:continue, %Wspom.Entry{} = entry, tags_info}) do
+  defp update_field({field_name, field_value}, {:continue, %Entry{} = entry, tags_info}) do
     {:continue, entry |> Map.put(field_name, field_value), tags_info}
   end
 
-  @spec compare_years(%Wspom.Entry{}, %Wspom.Entry{}) :: boolean()
+  @spec compare_years(%Entry{}, %Entry{}) :: boolean()
   def compare_years(e1, e2), do: e1.year <= e2.year
 
-  @spec compare_dates(%Wspom.Entry{}, %Wspom.Entry{}) :: boolean()
+  @spec compare_dates(%Entry{}, %Entry{}) :: boolean()
   def compare_dates(e1, e2) do
     if e1.year != e2.year do
       e1.year <= e2.year

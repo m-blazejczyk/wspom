@@ -196,8 +196,7 @@ defmodule Wspom.Database do
 
     Agent.update(__MODULE__,
       fn {%{entries: db_entries} = entries_state, %{} = tags_state} ->
-        max_id = db_entries |> Enum.reduce(0, fn entry, max_id ->
-          if entry.id > max_id, do: entry.id, else: max_id end)
+        max_id = find_max_id(db_entries)
 
         {entries_with_ids, _} = entries
         |> Enum.map_reduce(max_id + 1, fn entry, next_id ->
@@ -217,6 +216,34 @@ defmodule Wspom.Database do
     :ok
   end
 
+  @doc """
+  Clones an entry and saves it in the entries database.
+
+  The cloned entry will not have any tags and fields `importance`, `fuzzy`
+  and `needs_review` will be reset to default values. The new entry will
+  also have a valid id.
+
+  ## Examples
+
+      iex> clone_entry_and_save(entry)
+      %Entry{}
+
+  """
+  def clone_entry_and_save(entry) do
+    log_notice("Cloning entry with id #{entry.id} and saving the database…")
+
+    Agent.get_and_update(__MODULE__,
+      fn {%{entries: db_entries} = entries_state, %{} = tags_state} ->
+        max_id = find_max_id(db_entries)
+        cloned_entry = Entry.clone(entry, max_id + 1)
+
+        new_entries_state =
+          %{entries_state | entries: [cloned_entry | db_entries]}
+          |> save_one_file(@db_file, @db_file_backup)
+        {cloned_entry, {new_entries_state, tags_state}}
+      end)
+  end
+
   defp find_and_replace([], acc, _), do: acc
   defp find_and_replace([head | rest], acc, nil) do
     # This variant will be called AFTER we found the entry to be replaced
@@ -233,6 +260,12 @@ defmodule Wspom.Database do
       # We haven't found it yet. Keep going!
       find_and_replace(rest, [head | acc], entry)
     end
+  end
+
+  defp find_max_id(entries) do
+    entries
+    |> Enum.reduce(0, fn entry, max_id ->
+      if entry.id > max_id, do: entry.id, else: max_id end)
   end
 
   # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

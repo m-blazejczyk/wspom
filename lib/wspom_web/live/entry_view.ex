@@ -83,6 +83,16 @@ defmodule WspomWeb.Live.EntryView do
     # {:noreply, stream_delete(socket, :entries, entry)}
     {:noreply, socket}
   end
+  def handle_event("clone", %{"id" => id}, socket) do
+    {:ok, cloned_entry} = Context.get_entry!(id)
+    |> Context.clone_entry()
+
+    {:noreply,
+    socket
+    # TODO: insert in the right position
+    |> stream_insert(:entries, cloned_entry, at: -1)
+    |> put_flash(:info, "Entry cloned.")}
+  end
   def handle_event("tag-next", _, socket) do
     entry = Context.get_next_entry_to_tag()
     {:noreply, push_patch(socket, to: ~p"/entries?filter=year&day=#{entry.day}&month=#{entry.month}&year=#{entry.year}")}

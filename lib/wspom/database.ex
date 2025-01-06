@@ -116,7 +116,13 @@ defmodule Wspom.Database do
       entries |> Enum.reduce(nil, &entry_to_tag/2)
     end)
   end
-  defp entry_to_tag(entry, nil), do: entry
+  defp entry_to_tag(entry, nil) do
+    if MapSet.size(entry.tags) == 0 do
+      entry
+    else
+      nil
+    end
+  end
   defp entry_to_tag(entry, earliest_entry) do
     # Date.compare() returns :gt if first date is later than the second and :lt for vice versa.
     if MapSet.size(entry.tags) == 0 and Date.compare(entry.date, earliest_entry.date) == :lt do

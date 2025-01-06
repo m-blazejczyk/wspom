@@ -148,50 +148,135 @@ defmodule Wspom.Database do
     Agent.get(__MODULE__, fn {%{}, %{tags: tags, cascades: cascades}} -> {tags, cascades} end)
   end
 
-  # This variant will be called when tags have been modified
-  def replace_entry_and_save(%Entry{} = entry, %{cascade_defs: cascade_defs, unknown_tags: unknown_tags}) do
-    log_notice("Saving modified entry and tags / cascades…")
-
-    Agent.update(__MODULE__,
+  # This function uses Agent.get_and_update() to modify the entries in the
+  # database and to save the entries db file. The tags database is modified
+  # according to information provided in arguments `cascade_defs` and `unknown_tags`.
+  # The tags database is saved if this information actually resulted in the
+  # tags database being altered.
+  #
+  # The actual modification is performed by the function provided as the last
+  # argument; this function takes the list of entries and the new entry, and it
+  # returns a tuple of {new_list_of_entries, the_entry}. The entry is returned
+  # in case it needed to be modified by the function.
+  defp save_entries_and_tags(%Entry{} = entry, cascade_defs, unknown_tags, update_fun) do
+    Agent.get_and_update(__MODULE__,
       fn {%{entries: entries} = entries_state,
         %{tags: tags, cascades: cascades} = tags_state} ->
 
-        new_entries_state =
-          %{entries_state | entries: entries |> find_and_replace([], entry)}
-
+        {new_entries, new_entry} = update_fun.(entries, entry)
+        new_entries_state = %{entries_state | entries: new_entries}
         new_tags = tags |> MapSet.union(unknown_tags)
         new_cascades = cascades |> Map.merge(cascade_defs)
 
         # There is no need to save the tags database if the tags and cascades didn't change
         if MapSet.size(new_tags) == MapSet.size(tags) and map_size(cascade_defs) == 0 do
           new_entries_state |> save_one_file(@db_file, @db_file_backup)
-          {new_entries_state, tags_state}
+          {new_entry, {new_entries_state, tags_state}}
         else
-          {new_entries_state, %{tags_state | tags: new_tags, cascades: new_cascades}}
+          new_state = {new_entries_state, %{tags_state | tags: new_tags, cascades: new_cascades}}
           |> save_all()
+          {new_entry, new_state}
         end
     end)
-
-    entry
   end
-  # This variant will be called when tags have NOT been modified
-  def replace_entry_and_save(%Entry{} = entry, %{}) do
-    log_notice("Saving only the modified entry…")
 
-    Agent.update(__MODULE__,
+  # This function uses Agent.get_and_update() to modify the entries in the
+  # database and to save the entries db file. The tags database is not modified.
+  #
+  # The actual modification is performed by the function provided as the second
+  # argument; this function takes the list of entries and the new entry, and it
+  # returns a tuple of {new_list_of_entries, the_entry}. The entry is returned
+  # in case it needed to be modified by the function.
+  defp modify_and_save_entries(%Entry{} = entry, update_fun) do
+    Agent.get_and_update(__MODULE__,
       fn {%{entries: entries} = entries_state, %{} = tags_state} ->
-        new_entries_state =
-          %{entries_state | entries: entries |> find_and_replace([], entry)}
-          |> save_one_file(@db_file, @db_file_backup)
-        {new_entries_state, tags_state}
-      end)
+        {new_entries, new_entry} = update_fun.(entries, entry)
+        new_entries_state = %{entries_state | entries: new_entries}
 
-    entry
+        new_entries_state |> save_one_file(@db_file, @db_file_backup)
+
+        {new_entry, {new_entries_state, tags_state}}
+      end)
   end
 
+  # The low-level function used to replace an entry in a list of entries.
+  #
+  # Returns a tuple containing the new list of entries and the original
+  # unmodified entry.
+  defp replace_entry(entries, entry) do
+    {entries |> find_and_replace([], entry), entry}
+  end
+
+  @doc """
+  The top-level function used to add a new entry to the database.
+  The second argument is a map containing details about modifications
+  to the tags and cascades that were requested by the user.
+  If the map is empty, it means that the entry has no tags or the user
+  only reused existing tags and cascades.
+
+  This function will modify the input entry: the id will be added.
+
+  The entry will be added and the entries database will be saved.
+  The tags database will only be saved if it's necessary.
+
+  ## Examples
+
+      iex> replace_entry_and_save(%Entry{} = entry, %{cascade_defs: cascade_defs, unknown_tags: unknown_tags})
+      %Entry{}
+
+      iex> replace_entry_and_save(%Entry{} = entry, %{})
+      %Entry{}
+  """
+  def replace_entry_and_save(%Entry{} = entry, %{cascade_defs: cascade_defs, unknown_tags: unknown_tags}) do
+    # This variant will be called when tags have been modified
+    log_notice("Saving the modified entry and tags / cascades…")
+    save_entries_and_tags(entry, cascade_defs, unknown_tags, &replace_entry/2)
+  end
+  def replace_entry_and_save(%Entry{} = entry, %{}) do
+    # This variant will be called when tags have NOT been modified
+    log_notice("Saving only the modified entry…")
+    modify_and_save_entries(entry, &replace_entry/2)
+  end
+
+  # The low-level function used to add a new entry to a list of entries
+  # and to set its id.
+  #
+  # Returns a tuple containing the new list of entries and the modified entry.
+  defp add_entry(entries, entry) do
+    max_id = find_max_id(entries)
+    new_entry = %Entry{entry | id: max_id + 1}
+    {[new_entry | entries], new_entry}
+  end
+
+  @doc """
+  The top-level function used to add a new entry to the database.
+  The second argument is a map containing details about modifications
+  to the tags and cascades that were requested by the user.
+  If the map is empty, it means that the entry has no tags or the user
+  only reused existing tags and cascades.
+
+  This function will modify the input entry: the id will be added.
+
+  The entry will be added and the entries database will be saved.
+  The tags database will only be saved if it's necessary.
+
+  ## Examples
+
+      iex> add_entry_and_save(%Entry{} = entry, %{cascade_defs: cascade_defs, unknown_tags: unknown_tags})
+      %Entry{}
+
+      iex> add_entry_and_save(%Entry{} = entry, %{})
+      %Entry{}
+  """
+  def add_entry_and_save(%Entry{} = entry, %{cascade_defs: cascade_defs, unknown_tags: unknown_tags}) do
+    # This variant will be called when tags have been provided
+    log_notice("Saving the added entry and tags / cascades…")
+    save_entries_and_tags(entry, cascade_defs, unknown_tags, &add_entry/2)
+  end
   def add_entry_and_save(%Entry{} = entry, %{}) do
-    log_notice("Saving newly created entry ‒ NOT IMPLEMENTED")
-    entry
+    # This variant will be called when tags have NOT been provided
+    log_notice("Saving only the added entry…")
+    modify_and_save_entries(entry, &add_entry/2)
   end
 
   # In addition to adding the entries, this function will also assign ids to them
@@ -206,7 +291,7 @@ defmodule Wspom.Database do
         {entries_with_ids, _} = entries
         |> Enum.map_reduce(max_id + 1, fn entry, next_id ->
           if entry.id == nil do
-            {%Wspom.Entry{entry | id: next_id}, next_id + 1}
+            {%Entry{entry | id: next_id}, next_id + 1}
           else
             {entry, next_id}
           end

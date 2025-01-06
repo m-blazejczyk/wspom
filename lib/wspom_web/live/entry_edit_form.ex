@@ -101,7 +101,9 @@ defmodule WspomWeb.Live.EntryEditForm do
     |> Enum.sort(fn {name1, _}, {name2, _} -> name1 < name2 end)
   end
 
-  defp scale_description_box(description), do: (description.value |> String.length()) / 80
+  defp scale_description_box(description) do
+    Enum.max([5, (description.value |> String.length()) / 80])
+  end
 
   @impl true
   def update(%{entry: entry} = assigns, socket) do
@@ -140,12 +142,12 @@ defmodule WspomWeb.Live.EntryEditForm do
 
   defp save_entry(socket, :new, entry_params) do
     case Context.create_entry(entry_params) do
-      {:ok, entry} ->
+      {:ok, entry, summary} ->
         notify_parent({:saved, entry})
 
         {:noreply,
          socket
-         |> put_flash(:info, "Entry created successfully")
+         |> put_flash(:info, break_lines("Entry created successfully!\n" <> summary))
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->

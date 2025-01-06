@@ -176,7 +176,7 @@ defmodule Wspom.Database do
   end
   # This variant will be called when tags have NOT been modified
   def replace_entry_and_save(%Entry{} = entry, %{}) do
-    log_notice("Saving modified entry…")
+    log_notice("Saving only the modified entry…")
 
     Agent.update(__MODULE__,
       fn {%{entries: entries} = entries_state, %{} = tags_state} ->
@@ -186,6 +186,11 @@ defmodule Wspom.Database do
         {new_entries_state, tags_state}
       end)
 
+    entry
+  end
+
+  def add_entry_and_save(%Entry{} = entry, %{}) do
+    log_notice("Saving newly created entry ‒ NOT IMPLEMENTED")
     entry
   end
 

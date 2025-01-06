@@ -11,6 +11,10 @@ defmodule Wspom.Entry do
     year: :integer, month: :integer, day: :integer, weekday: :integer, date: :date,
     importance: :string, fuzzy: :integer, needs_review: :boolean, tags: :string}
 
+  def new() do
+    %Entry{description: "", title: ""}
+  end
+
   def clone(entry, new_id) do
     %Entry{entry |
       id: new_id, importance: :normal, fuzzy: 0, needs_review: false, tags: MapSet.new()}
@@ -46,11 +50,15 @@ defmodule Wspom.Entry do
     new_year = Map.get(changeset.changes, :year, Map.get(changeset.data, :year))
     new_month = Map.get(changeset.changes, :month, Map.get(changeset.data, :month))
     new_day = Map.get(changeset.changes, :day, Map.get(changeset.data, :day))
-    case Date.new(new_year, new_month, new_day) do
-      {:ok, _} ->
-        changeset
-      {:error, _} ->
-        changeset |> Ecto.Changeset.add_error(:day, "invalid date")
+    if new_year != nil and new_month != nil and new_day != nil do
+      case Date.new(new_year, new_month, new_day) do
+        {:ok, _} ->
+          changeset
+        {:error, _} ->
+          changeset |> Ecto.Changeset.add_error(:day, "invalid date")
+      end
+    else
+      changeset |> Ecto.Changeset.add_error(:day, "empty date")
     end
   end
 

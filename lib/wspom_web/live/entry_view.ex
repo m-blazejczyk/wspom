@@ -1,6 +1,7 @@
 defmodule WspomWeb.Live.EntryView do
   use WspomWeb, :live_view
 
+  alias Wspom.Entry
   alias Wspom.Context
   alias Wspom.Filter
 
@@ -49,6 +50,7 @@ defmodule WspomWeb.Live.EntryView do
   defp apply_action(socket, :edit, %{"id" => id}) do
     entry = Context.get_entry!(id) |> IO.inspect(label: "EDITING ENTRY")
     {tags, cascades} = Context.get_tags_and_cascades()
+
     socket
     |> assign(:page_title, "Edit Entry")
     |> assign(:entry, entry)
@@ -65,9 +67,17 @@ defmodule WspomWeb.Live.EntryView do
   end
 
   defp apply_action(socket, :new, _params) do
+    {tags, cascades} = Context.get_tags_and_cascades()
     socket
-    # |> assign(:page_title, "New Entry")
-    # |> assign(:entry, %Entry{})
+    |> assign(:page_title, "New Entry")
+    |> assign(:entry, Entry.new())
+    # See comment in the :edit variant of this function, above.
+    |> assign_if_not_exists(:filter, Filter.default())
+    # We're passing tags and cascades "as is"; they will be converted to a more suitable
+    # format later on - in form_component.ex.
+    |> assign(:tags, tags)
+    |> assign(:cascades, cascades)
+    |> put_flash(:info, "TEST :+: TEST")
   end
 
   @impl true

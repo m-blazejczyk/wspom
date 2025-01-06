@@ -2,6 +2,15 @@ defmodule Wspom.Context do
   alias Wspom.Database
   alias Wspom.Entry
 
+  @doc """
+  Returns all entries from the database.
+
+  ## Examples
+
+      iex> list_entries()
+      [%Entry{}]
+
+  """
   def list_entries do
     Database.all_entries()
   end
@@ -33,7 +42,8 @@ defmodule Wspom.Context do
   end
 
   @doc """
-  Gets the next entry that needs to be tagged.
+  Gets the next entry that needs to be tagged, i.e. the earliest entry
+  that has no tags.
 
   ## Examples
 
@@ -41,7 +51,9 @@ defmodule Wspom.Context do
       %Entry{}
 
   """
-  def get_next_entry_to_tag(), do: Database.get_next_entry_to_tag()
+  def get_next_entry_to_tag do
+    Database.get_next_entry_to_tag()
+  end
 
   @doc """
   Retrieves the set of all tags and the map of all cascades.
@@ -54,25 +66,6 @@ defmodule Wspom.Context do
   """
   def get_tags_and_cascades() do
     Database.all_tags_and_cascades()
-  end
-
-  @doc """
-  Creates an entry.
-
-  ## Examples
-
-      iex> create_entry(%{field: value})
-      {:ok, %Entry{}}
-
-      iex> create_entry(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_entry(_attrs \\ %{}) do
-    # %Entry{}
-    # |> Entry.changeset(attrs)
-    # |> Repo.insert()
-    {:ok, %Entry{}}
   end
 
   @doc """
@@ -90,6 +83,34 @@ defmodule Wspom.Context do
   end
 
   @doc """
+  Creates an entry.
+
+  ## Examples
+
+      iex> create_entry(%{field: value})
+      {:ok, %Entry{}, tag_changes_summary}
+
+      iex> create_entry(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_entry(attrs \\ %{}) do
+    case Entry.new()
+    |> Entry.changeset(attrs)
+    |> Entry.update_entry() do
+      {:error, _changeset} = err ->
+        err
+      {:ok, updated_entry, tags_info} ->
+        # Note: `tags_info` is not a part of the Entry struct;
+        # it was added by Entry.update_entry() and it won't be saved.
+        # It is used to make changes to the tags database.
+        summary = tags_info |> Map.get(:summary, "")
+        saved_entry = Database.add_entry_and_save(updated_entry, tags_info)
+        {:ok, saved_entry, summary}
+    end
+  end
+
+  @doc """
   Updates an entry and saves it in the database.
   The 'entry' argument is the original, unmodified entry (%Entry{}).
   The 'attrs' argument is a map containing all the values from the form.
@@ -97,7 +118,7 @@ defmodule Wspom.Context do
   ## Examples
 
       iex> update_entry(entry, %{field: new_value})
-      {:ok, %Entry{}}
+      {:ok, %Entry{}, tag_changes_summary}
 
       iex> update_entry(entry, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
@@ -112,6 +133,7 @@ defmodule Wspom.Context do
       {:ok, updated_entry, tags_info} ->
         # Note: `tags_info` is not a part of the Entry struct;
         # it was added by Entry.update_entry() and it won't be saved.
+        # It is used to make changes to the tags database.
         summary = tags_info |> Map.get(:summary, "")
         saved_entry = Database.replace_entry_and_save(updated_entry, tags_info)
         {:ok, saved_entry, summary}

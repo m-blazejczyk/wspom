@@ -1,5 +1,7 @@
 defmodule Wspom.TnC do
+  alias Wspom.Entry
   alias Wspom.Database
+
   # This function is called when tags have been edited on the Edit Entry form.
   # Scenarios:
   # - Only TAGS are included. They will be added to the entry and, at a later time,
@@ -142,5 +144,67 @@ defmodule Wspom.TnC do
   defp clean_up({:ok, %{} = acc}) do
     # This information is not needed anymore
     {:ok, acc |> Map.delete(:existing_tags) |> Map.delete(:existing_cascades)}
+  end
+
+  @doc """
+  Returns the number of entries that are tagged with the given tag.
+
+  ## Examples
+
+      iex> count_entries_tagged_with([%Entry{}], "felek")
+      89
+  """
+  def count_entries_tagged_with(entries, tag) do
+    entries
+    |> Enum.reduce(0, fn entry, count ->
+      if entry.tags |> MapSet.member?(tag), do: count + 1, else: count
+    end)
+  end
+
+  @doc """
+  Deletes the given tag from the tags database and the entries database.
+
+  ## Examples
+
+      iex> delete_tag({%{}, %{}}, "some_tag")
+      {%{}, %{}}
+  """
+  def delete_tag({%{entries: entries} = entries_db, %{tags: tags, cascades: cascades} = tags_db}, tag) do
+    new_tags = tags |> MapSet.delete(tag)
+
+    new_cascades = cascades
+    |> Enum.map(fn {name, tagset} = item ->
+      if tagset |> MapSet.member?(tag) do
+        {name, tagset |> MapSet.delete(tag)}
+      else
+        item
+      end
+    end)
+    |> Map.new()
+    |> Map.delete(tag)
+
+    new_entries = entries
+    |> Enum.map(fn entry ->
+      if entry.tags |> MapSet.member?(tag) do
+        %Entry{entry | tags: entry.tags |> MapSet.delete(tag)}
+      else
+        entry
+      end
+    end)
+
+    {%{entries_db | entries: new_entries},
+      %{tags_db | tags: new_tags, cascades: new_cascades}}
+  end
+
+  @doc """
+  Deletes the cascade with the given name from the tags database.
+
+  ## Examples
+
+      iex> delete_cascade(%{cascades: cascades}, "some_cascade")
+      %{cascades: cascades}
+  """
+  def delete_cascade(%{cascades: cascades} = tags_db, cascade_name) do
+    %{tags_db | cascades: cascades |> Map.delete(cascade_name)}
   end
 end

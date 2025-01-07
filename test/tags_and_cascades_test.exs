@@ -2,6 +2,7 @@ defmodule TagsAndCascadesTest do
   use ExUnit.Case
 
   alias Wspom.TnC
+  alias Wspom.Entry
 
   test "Tags from string" do
     {:ok, %{tags_applied: tags_applied}} = TnC.tags_from_string("")
@@ -68,5 +69,51 @@ defmodule TagsAndCascadesTest do
     New tags: g, h, i, k, l, t4
     New cascades: i, l
     """
+  end
+
+  defp test_entries() do
+    [
+      %Entry{tags: MapSet.new(["a", "b"])},
+      %Entry{tags: MapSet.new(["b", "c"])},
+      %Entry{tags: MapSet.new(["d", "e"])},
+      %Entry{tags: MapSet.new(["b", "e", "f"])},
+      %Entry{tags: MapSet.new(["b"])},
+      %Entry{tags: MapSet.new([])},
+    ]
+  end
+
+  test "Counting tags" do
+    entries = test_entries()
+
+    assert entries |> TnC.count_entries_tagged_with("b") == 4
+    assert entries |> TnC.count_entries_tagged_with("e") == 2
+    assert entries |> TnC.count_entries_tagged_with("g") == 0
+  end
+
+  test "Deleting tags" do
+    entries_0 = test_entries()
+    state_0 = {
+      %{entries: entries_0},
+      %{tags: MapSet.new(["a", "b", "c", "d", "e", "f"]),
+        cascades: Map.new([{"c", MapSet.new(["c", "b"])}, {"b", MapSet.new(["a", "b", "g"])}])}
+    }
+
+    state_1 = state_0 |> TnC.delete_tag("b")
+    {%{entries: entries_1}, %{tags: tags_1, cascades: cascades_1}} = state_1
+
+    # Check the entries
+    assert not (entries_1 |> Enum.at(0) |> Map.get(:tags) |> MapSet.member?("b"))
+    assert not (entries_1 |> Enum.at(3) |> Map.get(:tags) |> MapSet.member?("b"))
+    assert entries_1 |> Enum.at(0) |> Map.get(:tags) |> MapSet.size() == 1
+    assert entries_1 |> Enum.at(3) |> Map.get(:tags) |> MapSet.size() == 2
+    assert entries_1 |> TnC.count_entries_tagged_with("b") == 0
+
+    # Check the tags
+    assert tags_1 |> MapSet.size() == 5
+    assert not (tags_1 |> MapSet.member?("b"))
+
+    # Check the cascades
+    assert cascades_1 |> map_size() == 1
+    assert cascades_1 |> Map.get("c") |> MapSet.size() == 1
   end
 end

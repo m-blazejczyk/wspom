@@ -1,5 +1,6 @@
 defmodule Wspom.Database do
   use Agent
+alias Wspom.TnC
   use Timex
   require Logger
   alias Wspom.Migrations
@@ -362,6 +363,59 @@ defmodule Wspom.Database do
     entries
     |> Enum.reduce(0, fn entry, max_id ->
       if entry.id > max_id, do: entry.id, else: max_id end)
+  end
+
+  @doc """
+  Returns the number of entries that are tagged with the given tag.
+
+  ## Examples
+
+      iex> count_entries_tagged_with("felek")
+      89
+  """
+  def count_entries_tagged_with(tag) do
+    Agent.get(__MODULE__, fn {%{entries: entries}, %{}} ->
+      entries |> TnC.count_entries_tagged_with(tag)
+    end)
+  end
+
+  @doc """
+  Deletes the given tag from the tags database and the entries database.
+  Then saves both databases.
+
+  ## Examples
+
+      iex> delete_tag_and_save("test_tag")
+      :ok
+  """
+  def delete_tag_and_save(tag) do
+    Agent.update(__MODULE__, fn state ->
+      state
+      |> TnC.delete_tag(tag)
+      |> save_all()
+    end)
+
+    :ok
+  end
+
+  @doc """
+  Deletes the cascade with the given name from the tags database.
+  Then saves the database.
+
+  ## Examples
+
+      iex> delete_cascade_and_save("test_cascade")
+      {:ok, "Cascade deleted"}
+  """
+  def delete_cascade_and_save(cascade_name) do
+    Agent.update(__MODULE__, fn {%{} = entries_db, %{} = tags_db} ->
+      {entries_db,
+        tags_db
+        |> TnC.delete_cascade(cascade_name)
+        |> save_one_file(@tags_file, @tags_file_backup)}
+    end)
+
+    :ok
   end
 
   # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

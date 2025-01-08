@@ -1,98 +1,11 @@
 <.flash_group flash={@flash} />
 <section class="p-4">
   <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-    <li>
-      <a href={~p"/entries"}
-        class="block h-full transition-all duration-200 bg-white border border-gray-200 rounded group hover:shadow-lg hover:border-gray-700 hover:ring-1 hover:ring-gray-700/5">
-        <div class="flex items-center p-6">
-          <div
-            class="flex items-center justify-center flex-shrink-0 w-16 h-16 transition-colors duration-200 rounded group-hover:bg-orange-100">
-            <!-- Source: flaticon.com -->
-            <img src={~p"/images/diary_64.png"} aria-label="Wspom" width="64" height="64"/>
-          </div>
-          <div class="flex-grow ml-6">
-            <h3
-              class="text-lg font-semibold text-gray-900 transition-colors duration-200 line-clamp-1 group-hover:text-orange-600">
-              Wspom
-            </h3>
-            <div class="inline-flex items-center mt-1">
-              <span class="text-gray-700 rounded">
-                4061 entries
-              </span>
-            </div>
-          </div>
-
-          <div class="flex-shrink-0 ml-4">
-            <svg class="w-5 h-5 text-gray-400 group-hover:text-orange-600 transition-colors duration-200"
-              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" aria-hidden="true" data-slot="icon">
-              <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"></path>
-            </svg>
-          </div>
-        </div>
-      </a>
-    </li>
-    <li>
-      <a href=""
-        class="block h-full transition-all duration-200 bg-white border border-gray-200 rounded group hover:shadow-lg hover:border-gray-700 hover:ring-1 hover:ring-gray-700/5">
-        <div class="flex items-center p-6">
-          <div
-            class="flex items-center justify-center flex-shrink-0 w-16 h-16 transition-colors duration-200 rounded group-hover:bg-orange-100">
-            <img src={~p"/images/scale_64.png"} aria-label="Weight" width="64" height="64"/>
-          </div>
-          <div class="flex-grow ml-6">
-            <h3
-              class="text-lg font-semibold text-gray-900 transition-colors duration-200 line-clamp-1 group-hover:text-orange-600">
-              Weight
-            </h3>
-
-            <div class="inline-flex items-center mt-1">
-              <span class="text-gray-700 rounded">
-                482 days
-              </span>
-            </div>
-          </div>
-
-          <div class="flex-shrink-0 ml-4">
-            <svg class="w-5 h-5 text-gray-400 group-hover:text-orange-600 transition-colors duration-200"
-              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" aria-hidden="true" data-slot="icon">
-              <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"></path>
-            </svg>
-          </div>
-        </div>
-      </a>
-    </li>
-    <li>
-      <a href=""
-        class="block h-full transition-all duration-200 bg-white border border-gray-200 rounded group hover:shadow-lg hover:border-gray-700 hover:ring-1 hover:ring-gray-700/5">
-        <div class="flex items-center p-6">
-          <div
-            class="flex items-center justify-center flex-shrink-0 w-16 h-16 transition-colors duration-200 rounded group-hover:bg-orange-100">
-            <img src={~p"/images/books_64.png"} aria-label="Books" width="64" height="64"/>
-          </div>
-          <div class="flex-grow ml-6">
-            <h3
-              class="text-lg font-semibold text-gray-900 transition-colors duration-200 line-clamp-1 group-hover:text-orange-600">
-              Books
-            </h3>
-
-            <div class="inline-flex items-center mt-1">
-              <span class="text-gray-700 rounded">
-                85 books
-              </span>
-            </div>
-          </div>
-
-          <div class="flex-shrink-0 ml-4">
-            <svg class="w-5 h-5 text-gray-400 group-hover:text-orange-600 transition-colors duration-200"
-              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" aria-hidden="true" data-slot="icon">
-              <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"></path>
-            </svg>
-          </div>
-        </div>
-      </a>
-    </li>
+    <WspomWeb.CardComponent.card href={~p"/entries"} img={~p"/images/diary_64.png"}
+      name="Wspom" info="4061 entries" label="Wspom" />
+    <WspomWeb.CardComponent.card href={~p"/weight"} img={~p"/images/scale_64.png"}
+      name="Weight" info="482 days" label="Weight" />
+    <WspomWeb.CardComponent.card href="" img={~p"/images/books_64.png"}
+      name="Books" info="85 books" label="Books" />
   </ul>
 </section>

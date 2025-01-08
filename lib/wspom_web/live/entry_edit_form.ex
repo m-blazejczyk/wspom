@@ -60,7 +60,9 @@ defmodule WspomWeb.Live.EntryEditForm do
           </h1>
           <div class="flex flex-wrap">
             <%= for tag <- prepare_tags(@tags) do %>
-              <div class="mx-5 my-2 w-20 text-gray-500"><%= tag %></div>
+              <.link patch={Wspom.Filter.switch_to_tag_link(@filter, @entry.year, tag)}>
+                <div class="mx-5 my-2 w-20 text-gray-500"><%= tag %></div>
+              </.link>
             <% end %>
           </div>
         </div>
@@ -71,9 +73,16 @@ defmodule WspomWeb.Live.EntryEditForm do
           <div class="flex flex-wrap">
             <%= for {name, tags} <- prepare_cascades(@cascades) do %>
               <div class="mx-5 my-2 text-gray-500">
-                <b><%= name %></b>
+                <b>
+                  <.link patch={Wspom.Filter.switch_to_tag_link(@filter, @entry.year, name)}>
+                    <%= name %>
+                  </.link>
+                </b>
                 <%= for tag <- tags do %>
-                  + <%= tag %>
+                  +
+                  <.link patch={Wspom.Filter.switch_to_tag_link(@filter, @entry.year, tag)}>
+                    <%= tag %>
+                  </.link>
                 <% end %>
               </div>
             <% end %>

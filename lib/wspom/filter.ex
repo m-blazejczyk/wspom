@@ -143,29 +143,17 @@ defmodule Wspom.Filter do
     ~p"/entries?filter=tag&tag=#{tag}&day=#{next_date.day}&month=#{next_date.month}&year=#{next_date.year}"
   end
 
-  def switch_to_day_link(%Wspom.Filter{which: :year, day: day, month: month}) do
+  def switch_to_day_link(%Wspom.Filter{day: day, month: month}) do
     ~p"/entries?filter=day&day=#{day}&month=#{month}"
   end
-  def switch_to_day_link(%Wspom.Filter{which: :tag, day: day, month: month}) do
-    ~p"/entries?filter=day&day=#{day}&month=#{month}"
-  end
-  def switch_to_day_link(%Wspom.Filter{}), do: ""
 
-  def switch_to_year_link(%Wspom.Filter{which: :day, day: day, month: month}, year) do
+  def switch_to_year_link(%Wspom.Filter{day: day, month: month}, year) do
     ~p"/entries?filter=year&day=#{day}&month=#{month}&year=#{year}"
   end
-  def switch_to_year_link(%Wspom.Filter{which: :tag, day: day, month: month}, year) do
-    ~p"/entries?filter=year&day=#{day}&month=#{month}&year=#{year}"
-  end
-  def switch_to_year_link(%Wspom.Filter{}, _), do: ""
 
-  def switch_to_tag_link(%Wspom.Filter{which: :day, day: day, month: month}, year, tag) do
+  def switch_to_tag_link(%Wspom.Filter{day: day, month: month}, year, tag) do
     ~p"/entries?filter=tag&tag=#{tag}&day=#{day}&month=#{month}&year=#{year}"
   end
-  def switch_to_tag_link(%Wspom.Filter{which: :year, day: day, month: month}, year, tag) do
-    ~p"/entries?filter=tag&tag=#{tag}&day=#{day}&month=#{month}&year=#{year}"
-  end
-  def switch_to_tag_link(%Wspom.Filter{}, _, _), do: ""
 
   @spec filter(%Wspom.Filter{}, list(%Wspom.Entry{})) :: list(%Wspom.Entry{})
   def filter(%Wspom.Filter{which: :day, day: day, month: month}, entries) do

@@ -1,9 +1,29 @@
 defmodule WspomWeb.Live.WeightView do
   use WspomWeb, :live_view
+  use Timex
+
+  require Phoenix.LiveView.HTMLEngine
 
   @impl true
   def mount(_params, _session, socket) do
     {:ok, socket, layout: {WspomWeb.Layouts, :data_app}}
+  end
+
+  @impl true
+  def render(%{live_action: :index} = assigns) do
+    Phoenix.LiveView.HTMLEngine.compile("lib/wspom_web/live/weight_index.html.heex")
+  end
+  def render(%{live_action: :add} = assigns) do
+    ~H"""
+    <.live_component
+      module={WspomWeb.Live.WeightEditForm}
+      id={:new}
+      title="Add a Weight Measurement"
+      action={@live_action}
+      data={%{weight: nil, date: Timex.now("America/Montreal")}}
+      patch={~p"/weight/data"}
+    />
+    """
   end
 
   @impl true
@@ -17,7 +37,7 @@ defmodule WspomWeb.Live.WeightView do
   defp apply_action(socket, :data, _) do
     socket
   end
-  defp apply_action(socket, :new, _) do
+  defp apply_action(socket, :add, _) do
     socket
   end
   defp apply_action(socket, :edit, %{"id" => _id}) do

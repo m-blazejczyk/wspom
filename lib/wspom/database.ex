@@ -1,10 +1,12 @@
 defmodule Wspom.Database do
   use Agent
-alias Wspom.TnC
   use Timex
+
   require Logger
+
   alias Wspom.Migrations
   alias Wspom.Entry
+  alias Wspom.TnC
 
   @db_file "wspom.dat"
   @db_file_backup "wspom.bak.dat"

@@ -43,7 +43,15 @@ defmodule WspomWeb.Live.WeightEditForm do
   end
 
   @impl true
+  def update(%{data: nil} = assigns, socket) do
+    # This variant is called when the "Add Weight" form is initialized
+    now = Timex.now("America/Montreal") |> DateTime.to_date() |> Date.to_string()
+    default_data = %{weight: nil, date: now}
+    update(assigns |> Map.replace(:data, default_data), socket)
+  end
   def update(%{data: data} = assigns, socket) do
+    # This variant is called in all other contexts.
+    # It expects a properly formed `:data` attribute in `assigns`.
     {:ok,
       socket
       |> assign(assigns)

@@ -20,7 +20,7 @@ defmodule WspomWeb.Live.WeightView do
       id={:new}
       title="Add a Weight Measurement"
       action={@live_action}
-      data={%{weight: nil, date: Timex.now("America/Montreal")}}
+      data={nil}
       patch={~p"/weight/data"}
     />
     """

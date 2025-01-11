@@ -19,8 +19,18 @@ defmodule WspomWeb.Live.WeightEditForm do
           <%= @title %>
         </.header>
 
-        <.input field={@form[:date]} type="text"
-          class_container="flex items-start flex-col justify-start"/>
+        <div class="flex gap-2 ">
+          <.button type="button" class="flex-none w-20" phx-click={JS.toggle(to: "#all-tags")}>
+            &lt;
+          </.button>
+          <div class="flex-auto">
+            <.input field={@form[:date]} type="text"
+              class_container="flex items-start flex-col justify-start"/>
+          </div>
+          <.button type="button" class="flex-none w-20" phx-click={JS.toggle(to: "#all-cascades")}>
+            &gt;
+          </.button>
+        </div>
 
         <.input field={@form[:weight]} type="number"
           class_container="flex items-start flex-col justify-start"/>
@@ -33,13 +43,23 @@ defmodule WspomWeb.Live.WeightEditForm do
     """
   end
 
+  defp validate_date(%Ecto.Changeset{} = changeset, field) do
+    with {:ok, date_str} <- changeset |> Ecto.Changeset.fetch_change(field),
+         {:error, _err} <- Date.from_iso8601(date_str) do
+      changeset |> Ecto.Changeset.add_error(:date, "invalid date")
+    else
+      _ -> changeset
+    end
+  end
+
   defp to_changeset(%{} = data, attrs \\ %{}) do
-    types = %{weight: :float, date: :date}
+    types = %{weight: :float, date: :string}
 
     {data, types}
     |> cast(attrs, [:weight, :date])
     |> validate_required([:weight, :date])
     |> validate_number(:weight, greater_than: 0, less_than: 100)
+    |> validate_date(:date)
   end
 
   @impl true

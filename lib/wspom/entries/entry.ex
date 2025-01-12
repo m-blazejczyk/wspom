@@ -1,5 +1,7 @@
+# This module cannot be renamed to Wspom.Entries.Entry without
+# jeopardizing the data stored in the production database.
 defmodule Wspom.Entry do
-  alias Wspom.TnC
+  alias Wspom.Entries.TnC
   alias Wspom.Entry
   import Ecto.Changeset
 

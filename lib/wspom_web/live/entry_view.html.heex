@@ -8,19 +8,19 @@
         <div>
           <%= case @filter.which do %>
             <% :day -> %>
-              <.link patch={Wspom.Filter.switch_to_year_link(@filter, entry.year)}>
+              <.link patch={Filter.switch_to_year_link(@filter, entry.year)}>
                 <button class="py-1 px-2 my-0 font-sans text-xs font-bold text-center rounded-lg text-gray-700 bg-gray-200 border border-gray-700 hover:bg-transparent focus:ring-4 focus:outline-none focus:ring-blue-300">
                   <%= entry.year %>
                 </button>
               </.link>
             <% :year -> %>
-              <.link patch={Wspom.Filter.switch_to_day_link(@filter)}>
+              <.link patch={Filter.switch_to_day_link(@filter)}>
                 <button class="py-1 px-2 my-0 font-sans text-xs uppercase font-bold text-center rounded-lg text-gray-700 bg-gray-200 border border-gray-700 hover:bg-transparent focus:ring-4 focus:outline-none focus:ring-blue-300">
                   <%= Timex.month_shortname(@filter.month) %> <%= @filter.day %>
                 </button>
               </.link>
             <% :tag -> %>
-              <.link patch={Wspom.Filter.switch_to_day_link(@filter)}>
+              <.link patch={Filter.switch_to_day_link(@filter)}>
                 <button class="py-1 px-2 my-0 font-sans text-xs uppercase font-bold text-center rounded-lg text-gray-700 bg-gray-200 border border-gray-700 hover:bg-transparent focus:ring-4 focus:outline-none focus:ring-blue-300">
                   <%= Timex.month_shortname(@filter.month) %> <%= @filter.day %>, <%= entry.year %>
                 </button>
@@ -77,7 +77,7 @@
         </div>
         <%= if MapSet.size(entry.tags) > 0 do %>
           <%= for tag <- entry.tags do %>
-            <.link patch={Wspom.Filter.switch_to_tag_link(@filter, entry.year, tag)}>
+            <.link patch={Filter.switch_to_tag_link(@filter, entry.year, tag)}>
               <button class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-green-500 py-1 px-2 mt-1 mb-2 font-sans text-xs uppercase leading-none text-gray-800 font-bold">
                 <%= tag %>
               </button>
@@ -124,14 +124,14 @@
 </div>
 
 <.modal :if={@live_action in [:new, :edit]} id="entry-modal" show
-  on_cancel={JS.patch(Wspom.Filter.current_link(@filter))}>
+  on_cancel={JS.patch(Filter.current_link(@filter))}>
   <.live_component
     module={WspomWeb.Live.EntryEditForm}
     id={@entry.id || :new}
     title={@page_title}
     action={@live_action}
     entry={@entry}
-    patch={Wspom.Filter.current_link(@filter)}
+    patch={Filter.current_link(@filter)}
     tags={@tags}
     cascades={@cascades}
     filter={@filter}

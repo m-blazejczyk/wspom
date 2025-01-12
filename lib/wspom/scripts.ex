@@ -51,7 +51,7 @@ defmodule Wspom.Scripts do
     else
       File.write!(filename, :erlang.term_to_binary(%{
         entries: [],
-        version: Wspom.Migrations.current_version(),
+        version: Wspom.Entries.Migrations.current_version(),
         is_production: true,
       }))
       IO.puts("File #{filename} created")

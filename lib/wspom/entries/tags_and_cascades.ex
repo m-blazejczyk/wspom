@@ -1,6 +1,6 @@
-defmodule Wspom.TnC do
+defmodule Wspom.Entries.TnC do
   alias Wspom.Entry
-  alias Wspom.Database
+  alias Wspom.Entries.Database
 
   # This function is called when tags have been edited on the Edit Entry form.
   # Scenarios:

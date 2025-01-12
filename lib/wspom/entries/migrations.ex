@@ -1,18 +1,19 @@
-defmodule Wspom.Migrations do
+defmodule Wspom.Entries.Migrations do
   alias Wspom.Entry
+  alias Wspom.Entries.Migrations
 
   require Logger
 
-  @versions [{2, &Wspom.Migrations.add_index/1},
-             {3, &Wspom.Migrations.convert_entry/1},
-             {4, &Wspom.Migrations.fix_weekdays/1},
-             {5, &Wspom.Migrations.fix_br/1},
-             {6, &Wspom.Migrations.fix_nil_descriptions/1},
-             {7, &Wspom.Migrations.sort_entries/1},
-             {8, &Wspom.Migrations.add_dates/1},
-             {9, &Wspom.Migrations.convert_to_map/1},
-             {10, &Wspom.Migrations.add_production_flag/1},
-             {11, &Wspom.Migrations.split_databases/1}]
+  @versions [{2, &Migrations.add_index/1},
+             {3, &Migrations.convert_entry/1},
+             {4, &Migrations.fix_weekdays/1},
+             {5, &Migrations.fix_br/1},
+             {6, &Migrations.fix_nil_descriptions/1},
+             {7, &Migrations.sort_entries/1},
+             {8, &Migrations.add_dates/1},
+             {9, &Migrations.convert_to_map/1},
+             {10, &Migrations.add_production_flag/1},
+             {11, &Migrations.split_databases/1}]
 
   @spec migrate(any()) :: any()
   def migrate(state) do

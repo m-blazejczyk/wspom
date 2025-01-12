@@ -1,5 +1,5 @@
-defmodule Wspom.Context do
-  alias Wspom.Database
+defmodule Wspom.Entries.Context do
+  alias Wspom.Entries.Database
   alias Wspom.Entry
 
   @doc """

@@ -2,8 +2,8 @@ defmodule WspomWeb.Live.EntryView do
   use WspomWeb, :live_view
 
   alias Wspom.Entry
-  alias Wspom.Context
-  alias Wspom.Filter
+  alias Wspom.Entries.Context
+  alias Wspom.Entries.Filter
 
   @impl true
   def mount(_params, _session, socket) do

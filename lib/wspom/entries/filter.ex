@@ -1,8 +1,9 @@
-defmodule Wspom.Filter do
+defmodule Wspom.Entries.Filter do
   alias Timex.DateTime
   use Timex
 
   alias Wspom.Entry
+  alias Wspom.Entries.Filter
 
   use Phoenix.VerifiedRoutes, endpoint: WspomWeb.Endpoint, router: WspomWeb.Router
 
@@ -11,29 +12,29 @@ defmodule Wspom.Filter do
   # Allowed values of 'which': :day, :year and :tag.
   defstruct [:which, :day, :month, :year, :tag, :prev_date, :next_date]
 
-  @spec init_day_filter_from_date(DateTime.t()) :: %Wspom.Filter{}
+  @spec init_day_filter_from_date(DateTime.t()) :: %Filter{}
   defp init_day_filter_from_date(dt) do
     next_date = dt |> Timex.shift(days: 1)
     prev_date = dt |> Timex.shift(days: -1)
 
-    %Wspom.Filter{
+    %Filter{
       which: :day,
       day: dt.day, month: dt.month,
       prev_date: prev_date, next_date: next_date}
   end
 
   # This function is only called on the initial page load.
-  @spec default() :: %Wspom.Filter{}
+  @spec default() :: %Filter{}
   def default() do
     init_day_filter_from_date(Timex.now("America/Montreal"))
   end
 
-  @spec from_entry(%Wspom.Entry{}) :: %Wspom.Filter{}
+  @spec from_entry(%Wspom.Entry{}) :: %Filter{}
   def from_entry(entry) do
     init_day_filter_from_date(entry.date)
   end
 
-  @spec from_params(%{}, [%Wspom.Entry{}]) :: %Wspom.Filter{}
+  @spec from_params(%{}, [%Wspom.Entry{}]) :: %Filter{}
   def from_params(%{"filter" => "day", "day" => day, "month" => month}, _entries) do
     # The year can be anything in this case but let's pick a leap year
     init_day_filter_from_date(Timex.to_date({2024, String.to_integer(month), String.to_integer(day)}))
@@ -51,7 +52,7 @@ defmodule Wspom.Filter do
 
     # Note: if there are no records before or after the date specified by PARAMS,
     # prev_date or next_date will remain nil - which is exactly what we want!
-    %Wspom.Filter{
+    %Filter{
       which: :year,
       day: day_int, month: month_int, year: year_int,
       prev_date: prev_date, next_date: next_date}
@@ -69,36 +70,36 @@ defmodule Wspom.Filter do
 
     # Note: if there are no records before or after the date specified by PARAMS,
     # prev_date or next_date will remain nil - which is exactly what we want!
-    %Wspom.Filter{
+    %Filter{
       which: :tag,
       day: day_int, month: month_int, year: year_int,
       tag: tag,
       prev_date: prev_date, next_date: next_date}
   end
 
-  @spec toString(%Wspom.Filter{}) :: String.t()
-  def toString(%Wspom.Filter{which: :day, day: day, month: month}) do
+  @spec toString(%Filter{}) :: String.t()
+  def toString(%Filter{which: :day, day: day, month: month}) do
     Timex.month_shortname(month) <> " " <> Integer.to_string(day)
   end
-  def toString(%Wspom.Filter{which: :year, year: year}) do
+  def toString(%Filter{which: :year, year: year}) do
     Integer.to_string(year)
   end
-  def toString(%Wspom.Filter{which: :tag, tag: tag}) do
+  def toString(%Filter{which: :tag, tag: tag}) do
     tag
   end
   def toString(_) do
     "Invalid filter"
   end
 
-  @spec toTitle(%Wspom.Filter{}) :: String.t()
-  def toTitle(%Wspom.Filter{which: :day, day: day, month: month}) do
+  @spec toTitle(%Filter{}) :: String.t()
+  def toTitle(%Filter{which: :day, day: day, month: month}) do
     Timex.month_shortname(month) <> " " <> Integer.to_string(day)
   end
-  def toTitle(%Wspom.Filter{which: :year, day: day, month: month, year: year}) do
+  def toTitle(%Filter{which: :year, day: day, month: month, year: year}) do
     Timex.month_shortname(month) <> " " <> Integer.to_string(day)
       <> ", " <> Integer.to_string(year)
   end
-  def toTitle(%Wspom.Filter{which: :tag, day: day, month: month, year: year, tag: tag}) do
+  def toTitle(%Filter{which: :tag, day: day, month: month, year: year, tag: tag}) do
     tag <> " - "
       <> Timex.month_shortname(month) <> " " <> Integer.to_string(day)
       <> ", " <> Integer.to_string(year)
@@ -107,67 +108,67 @@ defmodule Wspom.Filter do
     "???"
   end
 
-  def current_link(%Wspom.Filter{which: :day, day: day, month: month}) do
+  def current_link(%Filter{which: :day, day: day, month: month}) do
     ~p"/entries?filter=day&day=#{day}&month=#{month}"
   end
-  def current_link(%Wspom.Filter{which: :year, day: day, month: month, year: year}) do
+  def current_link(%Filter{which: :year, day: day, month: month, year: year}) do
     ~p"/entries?filter=year&day=#{day}&month=#{month}&year=#{year}"
   end
-  def current_link(%Wspom.Filter{which: :tag, day: day, month: month, year: year, tag: tag}) do
+  def current_link(%Filter{which: :tag, day: day, month: month, year: year, tag: tag}) do
     ~p"/entries?filter=tag&tag=#{tag}&day=#{day}&month=#{month}&year=#{year}"
   end
 
-  def prev_link(%Wspom.Filter{prev_date: nil}) do
+  def prev_link(%Filter{prev_date: nil}) do
     ""
   end
-  def prev_link(%Wspom.Filter{which: :day, prev_date: prev_date}) do
+  def prev_link(%Filter{which: :day, prev_date: prev_date}) do
     ~p"/entries?filter=day&day=#{prev_date.day}&month=#{prev_date.month}"
   end
-  def prev_link(%Wspom.Filter{which: :year, prev_date: prev_date}) do
+  def prev_link(%Filter{which: :year, prev_date: prev_date}) do
     ~p"/entries?filter=year&day=#{prev_date.day}&month=#{prev_date.month}&year=#{prev_date.year}"
   end
-  def prev_link(%Wspom.Filter{which: :tag, tag: tag, prev_date: prev_date}) do
+  def prev_link(%Filter{which: :tag, tag: tag, prev_date: prev_date}) do
     ~p"/entries?filter=tag&tag=#{tag}&day=#{prev_date.day}&month=#{prev_date.month}&year=#{prev_date.year}"
   end
 
-  def next_link(%Wspom.Filter{next_date: nil}) do
+  def next_link(%Filter{next_date: nil}) do
     ""
   end
-  def next_link(%Wspom.Filter{which: :day, next_date: next_date}) do
+  def next_link(%Filter{which: :day, next_date: next_date}) do
     ~p"/entries?filter=day&day=#{next_date.day}&month=#{next_date.month}"
   end
-  def next_link(%Wspom.Filter{which: :year, next_date: next_date}) do
+  def next_link(%Filter{which: :year, next_date: next_date}) do
     ~p"/entries?filter=year&day=#{next_date.day}&month=#{next_date.month}&year=#{next_date.year}"
   end
-  def next_link(%Wspom.Filter{which: :tag, tag: tag, next_date: next_date}) do
+  def next_link(%Filter{which: :tag, tag: tag, next_date: next_date}) do
     ~p"/entries?filter=tag&tag=#{tag}&day=#{next_date.day}&month=#{next_date.month}&year=#{next_date.year}"
   end
 
-  def switch_to_day_link(%Wspom.Filter{day: day, month: month}) do
+  def switch_to_day_link(%Filter{day: day, month: month}) do
     ~p"/entries?filter=day&day=#{day}&month=#{month}"
   end
 
-  def switch_to_year_link(%Wspom.Filter{day: day, month: month}, year) do
+  def switch_to_year_link(%Filter{day: day, month: month}, year) do
     ~p"/entries?filter=year&day=#{day}&month=#{month}&year=#{year}"
   end
 
-  def switch_to_tag_link(%Wspom.Filter{day: day, month: month}, year, tag) do
+  def switch_to_tag_link(%Filter{day: day, month: month}, year, tag) do
     ~p"/entries?filter=tag&tag=#{tag}&day=#{day}&month=#{month}&year=#{year}"
   end
 
-  @spec filter(%Wspom.Filter{}, list(%Wspom.Entry{})) :: list(%Wspom.Entry{})
-  def filter(%Wspom.Filter{which: :day, day: day, month: month}, entries) do
+  @spec filter(%Filter{}, list(%Wspom.Entry{})) :: list(%Wspom.Entry{})
+  def filter(%Filter{which: :day, day: day, month: month}, entries) do
     # Return entries for the given day across all years.
     entries
     |> Enum.filter(fn entry -> month == entry.month and day == entry.day end)
     |> Enum.sort(&Entry.compare_years/2)  # Sort by year.
   end
-  def filter(%Wspom.Filter{which: :year, day: day, month: month, year: year}, entries) do
+  def filter(%Filter{which: :year, day: day, month: month, year: year}, entries) do
     # Return entries for the given day on one specific year.
     entries
     |> Enum.filter(fn entry -> year == entry.year and month == entry.month and day == entry.day end)
   end
-  def filter(%Wspom.Filter{which: :tag, day: day, month: month, year: year, tag: tag}, entries) do
+  def filter(%Filter{which: :tag, day: day, month: month, year: year, tag: tag}, entries) do
     # Return entries for the given day on one specific year, and only the ones
     # tagged with a specific tag.
     entries

@@ -61,7 +61,7 @@ defmodule WspomWeb.Live.EntryEditForm do
           </h1>
           <div class="flex flex-wrap">
             <%= for tag <- prepare_tags(@tags) do %>
-              <.link patch={Filter.switch_to_tag_link(@filter, @entry.year, tag)}>
+              <.link patch={Filter.switch_to_tag_link(@filter, get_year(@entry), tag)}>
                 <div class="mx-5 my-2 w-20 text-gray-500"><%= tag %></div>
               </.link>
             <% end %>
@@ -75,13 +75,13 @@ defmodule WspomWeb.Live.EntryEditForm do
             <%= for {name, tags} <- prepare_cascades(@cascades) do %>
               <div class="mx-5 my-2 text-gray-500">
                 <b>
-                  <.link patch={Filter.switch_to_tag_link(@filter, @entry.year, name)}>
+                  <.link patch={Filter.switch_to_tag_link(@filter, get_year(@entry), name)}>
                     <%= name %>
                   </.link>
                 </b>
                 <%= for tag <- tags do %>
                   +
-                  <.link patch={Filter.switch_to_tag_link(@filter, @entry.year, tag)}>
+                  <.link patch={Filter.switch_to_tag_link(@filter, get_year(@entry), tag)}>
                     <%= tag %>
                   </.link>
                 <% end %>
@@ -113,6 +113,11 @@ defmodule WspomWeb.Live.EntryEditForm do
 
   defp scale_description_box(description) do
     Enum.max([5, (description.value |> String.length()) / 80])
+  end
+
+  defp get_year(entry) do
+    # When editing a new entry, the year is not set - default to the current year.
+    entry.year || Date.utc_today().year
   end
 
   @impl true

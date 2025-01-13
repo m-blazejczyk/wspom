@@ -77,7 +77,6 @@ defmodule WspomWeb.Live.EntryView do
     # format later on - in form_component.ex.
     |> assign(:tags, tags)
     |> assign(:cascades, cascades)
-    |> put_flash(:info, "TEST :+: TEST")
   end
 
   @impl true

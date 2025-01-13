@@ -3,12 +3,23 @@ defmodule Wspom.Application do
 
   use Application
 
+  require Logger
+
   @impl true
   def start(_type, _args) do
+
+    is_production = Mix.env() != :test
+    if is_production do
+      Logger.notice("### PRODUCTION MODE ###")
+    else
+      Logger.notice("### TEST MODE ###")
+    end
+
     children = [
       WspomWeb.Telemetry,
       {Phoenix.PubSub, name: Wspom.PubSub},
-      {Wspom.Entries.Database, is_production: (Mix.env() != :test)},
+      {Wspom.Entries.Database, is_production: is_production},
+      {Wspom.Weight.Database, is_production: is_production},
       # Start to serve requests, typically the last entry
       WspomWeb.Endpoint
     ]

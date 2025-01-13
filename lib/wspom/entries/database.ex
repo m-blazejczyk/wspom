@@ -4,6 +4,7 @@ defmodule Wspom.Entries.Database do
 
   require Logger
 
+  alias Wspom.DbBase
   alias Wspom.Entries.Migrations
   alias Wspom.Entries.TnC
   alias Wspom.Entry
@@ -23,9 +24,8 @@ defmodule Wspom.Entries.Database do
 
   defp init_entry_data(is_production) do
     if is_production do
-      log_notice("### PRODUCTION MODE ###")
-      %{version: entries_version} = entries_db = load_db_file(@db_file)
-      %{version: tags_version} = tags_db = load_db_file(@tags_file)
+      %{version: entries_version} = entries_db = DbBase.load_db_file(@db_file)
+      %{version: tags_version} = tags_db = DbBase.load_db_file(@tags_file)
       if entries_version != tags_version do
         raise "ERROR: versions of the entries and tags databases are different!"
       end
@@ -44,10 +44,6 @@ defmodule Wspom.Entries.Database do
       }}
       |> summarize_db()
     end
-  end
-
-  defp load_db_file(filename) do
-    File.read!(filename) |> :erlang.binary_to_term
   end
 
   # This function variant transitions from the single-file database
@@ -76,11 +72,10 @@ defmodule Wspom.Entries.Database do
   end
 
   defp summarize_db(
-    {%{entries: entries, version: version, is_production: production?},
+    {%{entries: entries, version: version},
      %{tags: tags, cascades: cascades}} = state) do
 
-    log_notice("### Database version #{version} ###")
-    log_notice("### #{if production?, do: "PRODUCTION", else: "TEST"} ###")
+    log_notice("### Entries database version #{version} ###")
     log_notice("### #{length(entries)} entries ###")
     log_notice("### #{MapSet.size(tags)} tags ###")
     log_notice("### #{map_size(cascades)} cascades ###")
@@ -96,22 +91,9 @@ defmodule Wspom.Entries.Database do
   end
 
   defp save_all({entries_db, tags_db} = state) do
-    save_one_file(entries_db, @db_file, @db_file_backup)
-    save_one_file(tags_db, @tags_file, @tags_file_backup)
+    DbBase.save_db_file(entries_db, @db_file, @db_file_backup)
+    DbBase.save_db_file(tags_db, @tags_file, @tags_file_backup)
     state
-  end
-
-  defp save_one_file(data, db_file, backup_file) do
-    # Rename the current database file to serve as a backup.
-    # This will overwrite an existing, previous backup.
-    File.rename(db_file, backup_file)
-
-    # Save.
-    File.write!(db_file, :erlang.term_to_binary(data))
-    log_notice("Database saved to #{db_file}!")
-
-    # Return the data in case the caller wants to chain function calls.
-    data
   end
 
   def get_next_entry_to_tag() do
@@ -179,7 +161,7 @@ defmodule Wspom.Entries.Database do
 
         # There is no need to save the tags database if the tags and cascades didn't change
         if MapSet.size(new_tags) == MapSet.size(tags) and map_size(cascade_defs) == 0 do
-          new_entries_state |> save_one_file(@db_file, @db_file_backup)
+          new_entries_state |> DbBase.save_db_file(@db_file, @db_file_backup)
           {new_entry, {new_entries_state, tags_state}}
         else
           new_state = {new_entries_state, %{tags_state | tags: new_tags, cascades: new_cascades}}
@@ -202,7 +184,7 @@ defmodule Wspom.Entries.Database do
         {new_entries, new_entry} = update_fun.(entries, entry)
         new_entries_state = %{entries_state | entries: new_entries}
 
-        new_entries_state |> save_one_file(@db_file, @db_file_backup)
+        new_entries_state |> DbBase.save_db_file(@db_file, @db_file_backup)
 
         {new_entry, {new_entries_state, tags_state}}
       end)
@@ -308,7 +290,7 @@ defmodule Wspom.Entries.Database do
 
         new_entries_state =
           %{entries_state | entries: db_entries ++ entries_with_ids}
-          |> save_one_file(@db_file, @db_file_backup)
+          |> DbBase.save_db_file(@db_file, @db_file_backup)
         {new_entries_state, tags_state}
       end)
 
@@ -338,7 +320,7 @@ defmodule Wspom.Entries.Database do
 
         new_entries_state =
           %{entries_state | entries: [cloned_entry | db_entries]}
-          |> save_one_file(@db_file, @db_file_backup)
+          |> DbBase.save_db_file(@db_file, @db_file_backup)
         {cloned_entry, {new_entries_state, tags_state}}
       end)
   end
@@ -414,7 +396,7 @@ defmodule Wspom.Entries.Database do
       {entries_db,
         tags_db
         |> TnC.delete_cascade(cascade_name)
-        |> save_one_file(@tags_file, @tags_file_backup)}
+        |> DbBase.save_db_file(@tags_file, @tags_file_backup)}
     end)
 
     :ok

@@ -1,7 +1,7 @@
 defmodule WspomWeb.Live.WeightEditForm do
   use WspomWeb, :live_component
 
-  import Ecto.Changeset
+  alias Wspom.Weight.Context
 
   @impl true
   def render(assigns) do
@@ -82,30 +82,11 @@ defmodule WspomWeb.Live.WeightEditForm do
     """
   end
 
-  defp validate_date(%Ecto.Changeset{} = changeset, field) do
-    with {:ok, date_str} <- changeset |> Ecto.Changeset.fetch_change(field),
-         {:error, _err} <- Date.from_iso8601(date_str) do
-      changeset |> Ecto.Changeset.add_error(:date, "invalid date")
-    else
-      _ -> changeset
-    end
-  end
-
-  defp to_changeset(%{} = data, attrs \\ %{}) do
-    types = %{weight: :float, date: :string}
-
-    {data, types}
-    |> cast(attrs, [:weight, :date])
-    |> validate_required([:weight, :date])
-    |> validate_number(:weight, greater_than: 0, less_than: 100)
-    |> validate_date(:date)
-  end
-
   @impl true
   def update(%{data: nil} = assigns, socket) do
-    # This variant is called when the "Add Weight" form is initialized
-    now = Timex.now("America/Montreal") |> DateTime.to_date() |> Date.to_string()
-    default_data = %{date: now, weight: ""}
+    # This variant is called when the "Add Weight" form is initialized…
+    # …and we simply call the other variant.
+    default_data = Context.new_record()
     update(assigns |> Map.replace(:data, default_data), socket)
   end
   def update(%{data: data} = assigns, socket) do
@@ -114,16 +95,16 @@ defmodule WspomWeb.Live.WeightEditForm do
     {:ok,
       socket
       |> assign(assigns)
-      |> assign_new(:form, fn -> to_form(to_changeset(data), as: "data") end)}
+      |> assign_new(:form, fn -> to_form(Context.to_changeset(data), as: "data") end)}
   end
 
   @impl true
   def handle_event("validate", %{"data" => form_params}, socket) do
-    changeset = to_changeset(socket.assigns.data, form_params)
+    changeset = Context.to_changeset(socket.assigns.data, form_params)
     {:noreply, assign(socket, form: to_form(changeset, action: :validate, as: "data"))}
   end
   def handle_event("save", %{"data" => form_params}, socket) do
-    save_entry(socket, socket.assigns.action, form_params)
+    save_record(socket, socket.assigns.action, form_params)
   end
   def handle_event("day_earlier", _, socket) do
     add_days_to_date(socket, -1)
@@ -149,13 +130,13 @@ defmodule WspomWeb.Live.WeightEditForm do
 
     # I am not sure if this is the idiomatic way of handling this…
     # But based on what I found on the internet and tried out myself,
-    # this is the most effective way of making dynamic changes for form fields.
+    # this is the most effective way of making dynamic changes to form fields.
     new_params = Map.put(socket.assigns.form.params, field, new_value)
     handle_event("validate", %{"data" => new_params}, socket)
   end
 
-  defp save_entry(socket, :edit, form_params) do
-    case update_record(socket.assigns.data, form_params) do
+  defp save_record(socket, :edit, form_params) do
+    case Context.update_record(socket.assigns.data, form_params) do
       {:ok, data} ->
         notify_parent({:saved, data})
 
@@ -168,8 +149,8 @@ defmodule WspomWeb.Live.WeightEditForm do
         {:noreply, assign(socket, form: to_form(changeset, action: :validate, as: "data"))}
     end
   end
-  defp save_entry(socket, :add, form_params) do
-    case create_record(form_params) do
+  defp save_record(socket, :add, form_params) do
+    case Context.create_record(form_params) do
       {:ok, data} ->
         notify_parent({:saved, data})
 
@@ -181,14 +162,6 @@ defmodule WspomWeb.Live.WeightEditForm do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset, as: "data"))}
     end
-  end
-
-  defp update_record(data, _form_params) do
-    {:ok, data}
-  end
-
-  defp create_record(_form_params) do
-    {:ok, %{}}
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})

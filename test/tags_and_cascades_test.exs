@@ -1,7 +1,7 @@
 defmodule TagsAndCascadesTest do
   use ExUnit.Case
 
-  alias Wspom.TnC
+  alias Wspom.Entries.TnC
   alias Wspom.Entry
 
   test "Tags from string" do

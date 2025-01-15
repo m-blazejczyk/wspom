@@ -62,13 +62,42 @@ defmodule Wspom.Weight.Database do
     }
   end
 
+  # Will return nil if the record is not found.
   def get_record(id) do
-    Agent.get(__MODULE__, fn {%{entries: entries}, %{}} ->
-      entries |> Enum.find(fn entry -> entry.id == id end)
+    Agent.get(__MODULE__, fn %{data: data} ->
+      data |> Enum.find(fn record -> record.id == id end)
     end)
   end
 
   def get_all_records() do
-    Agent.get(__MODULE__, fn {%{entries: entries}, %{}} -> entries end)
+    Agent.get(__MODULE__, fn %{data: data} -> data end)
+  end
+
+  def add_record_and_save(created_record) do
+    Logger.notice("Saving the added record…")
+    modify_and_save_data(created_record, fn records, record ->
+      max_id = DbBase.find_max_id(records)
+      new_record = %{record | id: max_id + 1}
+      {[new_record | records], new_record}
+    end)
+  end
+
+  def replace_record_and_save(updated_record) do
+    Logger.notice("Saving the modified record…")
+    modify_and_save_data(updated_record, fn records, record ->
+      {records |> DbBase.find_and_replace([], record), record}
+    end)
+  end
+
+  defp modify_and_save_data(record, update_fun) do
+    Agent.get_and_update(__MODULE__,
+      fn %{data: data} = state ->
+        {new_data, new_record} = update_fun.(data, record)
+        new_state = %{state | data: new_data}
+
+        new_state |> DbBase.save_db_file(@db_file, @db_file_backup)
+
+        {new_record, new_state}
+      end)
   end
 end

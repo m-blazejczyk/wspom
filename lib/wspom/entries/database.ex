@@ -195,7 +195,7 @@ defmodule Wspom.Entries.Database do
   # Returns a tuple containing the new list of entries and the original
   # unmodified entry.
   defp replace_entry(entries, entry) do
-    {entries |> find_and_replace([], entry), entry}
+    {entries |> DbBase.find_and_replace([], entry), entry}
   end
 
   @doc """
@@ -234,7 +234,7 @@ defmodule Wspom.Entries.Database do
   #
   # Returns a tuple containing the new list of entries and the modified entry.
   defp add_entry(entries, entry) do
-    max_id = find_max_id(entries)
+    max_id = DbBase.find_max_id(entries)
     new_entry = %Entry{entry | id: max_id + 1}
     {[new_entry | entries], new_entry}
   end
@@ -277,7 +277,7 @@ defmodule Wspom.Entries.Database do
 
     Agent.update(__MODULE__,
       fn {%{entries: db_entries} = entries_state, %{} = tags_state} ->
-        max_id = find_max_id(db_entries)
+        max_id = DbBase.find_max_id(db_entries)
 
         {entries_with_ids, _} = entries
         |> Enum.map_reduce(max_id + 1, fn entry, next_id ->
@@ -315,7 +315,7 @@ defmodule Wspom.Entries.Database do
 
     Agent.get_and_update(__MODULE__,
       fn {%{entries: db_entries} = entries_state, %{} = tags_state} ->
-        max_id = find_max_id(db_entries)
+        max_id = DbBase.find_max_id(db_entries)
         cloned_entry = Entry.clone(entry, max_id + 1)
 
         new_entries_state =
@@ -323,30 +323,6 @@ defmodule Wspom.Entries.Database do
           |> DbBase.save_db_file(@db_file, @db_file_backup)
         {cloned_entry, {new_entries_state, tags_state}}
       end)
-  end
-
-  defp find_and_replace([], acc, _), do: acc
-  defp find_and_replace([head | rest], acc, nil) do
-    # This variant will be called AFTER we found the entry to be replaced
-    # Just keep building the list
-    find_and_replace(rest, [head | acc], nil)
-  end
-  defp find_and_replace([head | rest], acc, %Entry{} = entry) do
-    # This variant will be called BEFORE we find the entry to be replaced
-    if head.id == entry.id do
-      # We found it! Recursively call find_and_replace with entry set to nil
-      # to prevent unnecessary comparisons
-      find_and_replace(rest, [entry | acc], nil)
-    else
-      # We haven't found it yet. Keep going!
-      find_and_replace(rest, [head | acc], entry)
-    end
-  end
-
-  defp find_max_id(entries) do
-    entries
-    |> Enum.reduce(0, fn entry, max_id ->
-      if entry.id > max_id, do: entry.id, else: max_id end)
   end
 
   @doc """

@@ -52,12 +52,11 @@ defmodule Wspom.Weight.Context do
 
   ## Examples
 
-      iex> list_records()
+      iex> get_all_records()
       [%{}]
   """
-  def list_records do
-    []
-    # Database.get_all_records()
+  def get_all_records do
+    Database.get_all_records()
   end
 
   @doc """

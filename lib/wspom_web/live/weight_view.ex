@@ -4,6 +4,8 @@ defmodule WspomWeb.Live.WeightView do
 
   require Phoenix.LiveView.HTMLEngine
 
+  alias Wspom.Weight.Context
+
   @impl true
   def mount(_params, _session, socket) do
     {:ok, socket, layout: {WspomWeb.Layouts, :data_app}}
@@ -12,6 +14,9 @@ defmodule WspomWeb.Live.WeightView do
   @impl true
   def render(%{live_action: :index} = assigns) do
     Phoenix.LiveView.HTMLEngine.compile("lib/wspom_web/live/weight_index.html.heex")
+  end
+  def render(%{live_action: :data} = assigns) do
+    Phoenix.LiveView.HTMLEngine.compile("lib/wspom_web/live/weight_data.html.heex")
   end
   def render(%{live_action: :add} = assigns) do
     ~H"""
@@ -36,6 +41,10 @@ defmodule WspomWeb.Live.WeightView do
   end
   defp apply_action(socket, :data, _) do
     socket
+    |> assign(:data,
+      Context.get_all_records
+      |> Enum.sort(&(&2.date <= &1.date))
+      |> Enum.take(30))
   end
   defp apply_action(socket, :add, _) do
     socket
@@ -56,4 +65,7 @@ defmodule WspomWeb.Live.WeightView do
   def handle_event("delete", _, socket) do
     {:noreply, socket}
   end
+
+  defp format_weight(w) when is_integer(w), do: Integer.to_string(w) ++ ".00"
+  defp format_weight(w) when is_float(w), do: :erlang.float_to_binary(w, [{:decimals, 2}])
 end

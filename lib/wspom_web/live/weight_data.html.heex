@@ -1,20 +1,32 @@
-<div class="flex justify-center items-center w-full">
-  <table class="min-w-md divide-y divide-gray-200">
-    <thead>
-      <tr>
-        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Weight</th>
-      </tr>
-    </thead>
-    <tbody class="bg-white divide-y divide-gray-200">
-      <tr :for={record <- @data}>
-        <td class="px-6 py-4 whitespace-nowrap">
-          <%= record.date %>
-        </td>
-        <td class="px-6 py-4 whitespace-nowrap">
-          <%= format_weight(record.weight) %>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<div class="max-w-lg mx-auto border border-gray-200 rounded shadow-md px-8 py-10 flex flex-col items-center">
+  <div class="flex justify-center items-center w-full">
+    <section class="min-w-md p-4">
+      <ul class="grid grid-cols-2 gap-6">
+        <WspomWeb.CardComponent.small_card href={~p"/weight/add"} img={~p"/images/add_64.png"}
+          label="Add weight measurement" />
+        <WspomWeb.CardComponent.small_card href={~p"/weight/charts"} img={~p"/images/chart_64.png"}
+          label="View weight charts" />
+      </ul>
+    </section>
+  </div>  
+  <div class="flex justify-center items-center w-full">
+    <table class="w-3/4 divide-y divide-gray-200">
+      <thead>
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Weight</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <tr :for={record <- @data}>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <%= record.date %>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <%= format_weight(record.weight) %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

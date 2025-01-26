@@ -23,11 +23,11 @@ defmodule WspomWeb.Router do
     live "/entries/new", Live.EntryView, :new
     live "/entries/:id/edit", Live.EntryView, :edit
 
-    live "/weight", Live.WeightView, :index
-    live "/weight/data", Live.WeightView, :data
-    live "/weight/add", Live.WeightView, :add
-    live "/weight/:id/edit", Live.WeightView, :edit
-    live "/weight/charts", Live.WeightView, :charts
+    live "/weight", Live.Weight.WeightIndex, :index
+    live "/weight/data", Live.Weight.WeightData, :data
+    live "/weight/add", Live.Weight.WeightEdit, :add
+    live "/weight/:id/edit", Live.Weight.WeightEdit, :edit
+    live "/weight/charts", Live.Weight.WeightCharts, :charts
   end
 
   # Enable LiveDashboard in development

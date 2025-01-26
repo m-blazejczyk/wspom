@@ -206,7 +206,7 @@ defmodule WspomWeb.Live.WeightEditForm do
         {:noreply,
          socket
          |> put_flash(:info, "Weight updated successfully!")
-         |> push_patch(to: socket.assigns.patch)}
+         |> push_navigate(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset, action: :validate, as: "data"))}
@@ -220,7 +220,7 @@ defmodule WspomWeb.Live.WeightEditForm do
         {:noreply,
          socket
          |> put_flash(:info, "Weight entered successfully!")
-         |> push_patch(to: socket.assigns.patch)}
+         |> push_navigate(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset, action: :validate, as: "data"))}

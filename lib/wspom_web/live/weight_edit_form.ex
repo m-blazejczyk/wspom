@@ -171,34 +171,28 @@ defmodule WspomWeb.Live.WeightEditForm do
     {:noreply, socket |> apply_form_params(new_params)}
   end
 
+  defp add_days_to_date(socket, days) do
+    current_text = get_param(socket.assigns.form, "date")
+    new_date = with {:ok, date} <- Date.from_iso8601(current_text) do
+      date |> Date.add(days) |> to_string()
+    else
+      _ -> current_text
+    end
+    new_params = %{"date" => new_date, "weight" => get_param(socket.assigns.form, "weight")}
+    {:noreply, socket |> apply_form_params(new_params)}
+  end
+
+  # Takes the form params, turns them into a changeset and then runs it through `to_form`
+  # and assigns the result to the socket.
   defp apply_form_params(socket, form_params) do
     changeset = Context.to_changeset(socket.assigns.data, form_params)
     form = to_form(changeset, action: :validate, as: "data")
     socket |> assign(form: form)
   end
 
-  defp add_days_to_date(socket, days) do
-    modify_field(socket, "date", fn current_date ->
-      with {:ok, date} <- Date.from_iso8601(current_date) do
-        date |> Date.add(days) |> to_string()
-      else
-        _ -> current_date
-      end
-    end)
-  end
-
-  defp modify_field(socket, field, fun) do
-    old_value = Map.get(socket.assigns.form.params, field)
-      || Map.get(socket.assigns.form.data, String.to_existing_atom(field))
-    new_value = fun.(old_value)
-
-    # I am not sure if this is the idiomatic way of handling this…
-    # But based on what I found on the internet and tried out myself,
-    # this is the most effective way of making dynamic changes to form fields.
-    new_params = Map.put(socket.assigns.form.params, field, new_value)
-    handle_event("validate", %{"data" => new_params}, socket)
-  end
-
+  # This function will grab the current value of the given field;
+  # if `params` don't contain it yet (as it may happen if the field wasn't yet modified
+  # by the user), we grab the value from `data`, i.e. the initial record.
   defp get_param(form, field) do
     Map.get(form.params, field)
       || Map.get(form.data, String.to_existing_atom(field))

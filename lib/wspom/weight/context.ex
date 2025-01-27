@@ -126,7 +126,6 @@ defmodule Wspom.Weight.Context do
       {:error, _changeset} = err ->
         err
       {:ok, db_record} ->
-        IO.inspect(db_record, label: "DB RECORD IN create_record()")
         saved_record = Database.add_record_and_save(db_record)
         {:ok, saved_record}
     end

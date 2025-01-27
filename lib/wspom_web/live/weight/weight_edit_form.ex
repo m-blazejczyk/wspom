@@ -186,6 +186,7 @@ defmodule WspomWeb.Live.WeightEditForm do
   # and assigns the result to the socket.
   defp apply_form_params(socket, form_params) do
     changeset = Context.to_changeset(socket.assigns.data, form_params)
+    IO.inspect(changeset, label: "CHANGESET")
     form = to_form(changeset, action: :validate, as: "data")
     socket |> assign(form: form)
   end

@@ -74,6 +74,7 @@ defmodule Wspom.Weight.Database do
   end
 
   def add_record_and_save(created_record) do
+    # TODO: don't allow duplicate records for the same date!
     Logger.notice("Saving the added record…")
     modify_and_save_data(created_record, fn records, record ->
       max_id = DbBase.find_max_id(records)

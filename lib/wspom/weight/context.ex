@@ -30,30 +30,37 @@ defmodule Wspom.Weight.Context do
       %Ecto.Changeset{}
   """
   def to_changeset(%{} = data, form_params \\ %{}) do
-    types = %{weight: :string, date: :string}
+    types = %{weight: :string, weight_float: :float, date: :string, date_date: :date}
 
     {data, types}
     |> cast(form_params, [:weight, :date])
     |> validate_required([:weight, :date])
-    |> validate_weight(:weight)
-    |> validate_date(:date)
+    |> validate_weight(:weight, :weight_float)
+    |> validate_date(:date, :date_date)
   end
 
-  defp validate_date(%Ecto.Changeset{} = changeset, field) do
-    with {:ok, date_str} <- changeset |> Ecto.Changeset.fetch_change(field),
-         {:error, _err} <- Date.from_iso8601(date_str) do
-      changeset |> Ecto.Changeset.add_error(:date, "invalid date")
+  # In addition to validating the string field, this function will also
+  # put the value as Date into field `db_field` of the changeset.
+  defp validate_date(%Ecto.Changeset{} = changeset, str_field, db_field) do
+    with {:ok, date_str} <- changeset |> Ecto.Changeset.fetch_change(str_field) do
+      with {:ok, date} <- Date.from_iso8601(date_str) do
+        changeset |> Ecto.Changeset.put_change(db_field, date)
+      else
+        _ -> changeset |> Ecto.Changeset.add_error(str_field, "Invalid date")
+      end
     else
       _ -> changeset
     end
   end
 
-  defp validate_weight(%Ecto.Changeset{} = changeset, field) do
-    with {:ok, weight_str} <- changeset |> Ecto.Changeset.fetch_change(field) do
-      with {_, ""} <- Float.parse(weight_str) do
-        changeset
+  # In addition to validating the string field, this function will also
+  # put the value as Float into field `db_field` of the changeset.
+  defp validate_weight(%Ecto.Changeset{} = changeset, str_field, db_field) do
+    with {:ok, weight_str} <- changeset |> Ecto.Changeset.fetch_change(str_field) do
+      with {weight, ""} <- Float.parse(weight_str) do
+        changeset |> Ecto.Changeset.put_change(db_field, weight)
       else
-        _ -> changeset |> Ecto.Changeset.add_error(:weight, "invalid weight")
+        _ -> changeset |> Ecto.Changeset.add_error(str_field, "Invalid weight")
       end
     else
       _ -> changeset
@@ -107,15 +114,14 @@ defmodule Wspom.Weight.Context do
   ## Examples
 
       iex> create_record(%{field: new_value})
-      {:ok, %{}}
+      {:ok, %{...}}
 
       iex> create_record(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
   """
-  def create_record(changes \\ %{}) do
+  def create_record(form_params \\ %{}) do
     case new_form_data()
-    |> to_changeset(changes)
-    |> change_form_record()
+    |> to_changeset(form_params)
     |> to_db_record() do
       {:error, _changeset} = err ->
         err
@@ -136,15 +142,14 @@ defmodule Wspom.Weight.Context do
   ## Examples
 
       iex> update_record(%{}, %{field: new_value})
-      {:ok, %{}}
+      {:ok, %{...}}
 
       iex> update_record(%{}, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
   """
-  def update_record(form_record, attrs \\ %{}) do
+  def update_record(form_record, form_params \\ %{}) do
     case form_record
-    |> to_changeset(attrs)
-    |> change_form_record()
+    |> to_changeset(form_params)
     |> to_db_record() do
       {:error, _changeset} = err ->
         err
@@ -157,36 +162,18 @@ defmodule Wspom.Weight.Context do
   @doc """
   Updates the record if the changeset is valid. Does not perform any validation
   (validation is supposed to take place inside to_changeset()).
-  Note: the input data for the changeset is the so-called "form record" where the
-  fields are specified as strings.
-  The data is returned in the format expected by the form (as strings).
+  The data is returned in the format expected by the database.
 
-  Returns {:ok, %{}} or {:error, %Ecto.Changeset{}}.
+  Returns {:ok, %{...}} or {:error, %Ecto.Changeset{}}.
 
   Notes:
    - changeset.data contains the original record (type: %{})
-   - changeset.changes contains a map with the changes, e.g. %{"weight" => "83.4"}
+   - changeset.changes contains a map with the changes, e.g. %{weight_float: 83.4}
   """
-  def change_form_record(%Ecto.Changeset{valid?: false} = cs) do
+  def to_db_record(%Ecto.Changeset{valid?: false} = cs) do
     {:error, cs}
   end
-  def change_form_record(%Ecto.Changeset{data: record, changes: changes}) do
-    {:ok, record |> Map.merge(changes)}
-  end
-
-  @doc """
-  Converts the record from the format expected by the form (where all fields are strings)
-  to the format expected by the database.
-
-  Returns {:ok, %{}} or {:error, %Ecto.Changeset{}}.
-  """
-  def to_db_record({:error, _changeset} = err) do
-    err
-  end
-  def to_db_record({:ok, %{id: id, date: date_str, weight: weight_str}}) do
-    {:ok, date} = Date.from_iso8601(date_str)
-    {weight, ""} = Float.parse(weight_str)
-
+  def to_db_record(%Ecto.Changeset{data: %{id: id}, changes: %{date_date: date, weight_float: weight}}) do
     {:ok, %{id: id, date: date, weight: weight}}
   end
 end

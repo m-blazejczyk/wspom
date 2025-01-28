@@ -172,7 +172,19 @@ defmodule Wspom.Weight.Context do
   def to_db_record(%Ecto.Changeset{valid?: false} = cs) do
     {:error, cs}
   end
-  def to_db_record(%Ecto.Changeset{data: %{id: id}, changes: %{date_date: date, weight_float: weight}}) do
-    {:ok, %{id: id, date: date, weight: weight}}
+  def to_db_record(%Ecto.Changeset{data: original, changes: changes}) do
+    date = if changes |> Map.has_key?(:date_date),
+      do: changes.date_date,
+      else: Date.from_iso8601!(original.date)
+    weight = if changes |> Map.has_key?(:weight_float),
+      do: changes.weight_float,
+      else: parse_float!(original.weight)
+
+    {:ok, %{id: original.id, date: date, weight: weight}}
+  end
+
+  defp parse_float!(s) do
+    {v, ""} = Float.parse(s)
+    v
   end
 end

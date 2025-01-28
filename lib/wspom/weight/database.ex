@@ -74,12 +74,20 @@ defmodule Wspom.Weight.Database do
   end
 
   def add_record_and_save(created_record) do
-    # TODO: don't allow duplicate records for the same date!
     Logger.notice("Saving the added record…")
     modify_and_save_data(created_record, fn records, record ->
-      max_id = DbBase.find_max_id(records)
-      new_record = %{record | id: max_id + 1}
-      {[new_record | records], new_record}
+    # Don't allow duplicate records for the same date!
+    record_with_same_date = records |> Enum.find(&(&1.date == record.date))
+      if record_with_same_date == nil do
+        # No record exists with this date - insert a new one
+        max_id = DbBase.find_max_id(records)
+        new_record = %{record | id: max_id + 1}
+        {[new_record | records], new_record}
+      else
+        # There already is a record with this date - modify it
+        new_record = %{record | id: record_with_same_date.id}
+        {records |> DbBase.find_and_replace(new_record), new_record}
+      end
     end)
   end
 

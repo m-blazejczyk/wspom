@@ -26,12 +26,35 @@ defmodule Wspom.DbBase do
     data
   end
 
+  @doc """
+  Returns the largest `id` of the given collection of items.
+  Assumes that the items are maps or structs with a field named `id`.
+  Will return 0 if the list is empty.
+
+  ## Examples
+
+      iex> find_max_id(items)
+      252
+  """
   def find_max_id(list) do
     list
     |> Enum.reduce(0, fn item, max_id ->
       if item.id > max_id, do: item.id, else: max_id end)
   end
 
+  @doc """
+  Goes over the list of items and replaces the one with `item.id`
+  equal to `new_item.id` with `new_item`.
+  Returns the collection of items with the item replaced.
+  Assumes that the items are maps or structs with a field named `id`.
+  The second argument should always be an empty list - or omitted.
+
+  ## Examples
+
+      iex> find_and_replace(items, new_item)
+      new_items
+  """
+  def find_and_replace(old_items, new_items \\ [], new_item)
   def find_and_replace([], acc, _), do: acc
   def find_and_replace([head | rest], acc, nil) do
     # This variant will be called AFTER we found the entry to be replaced

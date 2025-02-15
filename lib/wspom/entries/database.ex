@@ -117,6 +117,16 @@ defmodule Wspom.Entries.Database do
     end
   end
 
+  def get_stats do
+    Agent.get(__MODULE__, fn {%{entries: entries}, %{tags: tags, cascades: cascades}} ->
+      %{
+        entries: length(entries),
+        tags: MapSet.size(tags),
+        cascades: map_size(cascades)
+      }
+    end)
+  end
+
   def get_entry(id) do
     Agent.get(__MODULE__, fn {%{entries: entries}, %{}} ->
       entries |> Enum.find(fn entry -> entry.id == id end)

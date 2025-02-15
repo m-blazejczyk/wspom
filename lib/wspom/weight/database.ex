@@ -62,6 +62,12 @@ defmodule Wspom.Weight.Database do
     }
   end
 
+  def get_stats do
+    Agent.get(__MODULE__, fn %{data: data} ->
+      %{days: length(data)}
+    end)
+  end
+
   # Will return nil if the record is not found.
   def get_record(id) do
     Agent.get(__MODULE__, fn %{data: data} ->

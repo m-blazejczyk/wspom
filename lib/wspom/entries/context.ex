@@ -3,6 +3,13 @@ defmodule Wspom.Entries.Context do
   alias Wspom.Entry
 
   @doc """
+  Returns a map with database stats.
+  """
+  def get_stats do
+    Database.get_stats()
+  end
+
+  @doc """
   Returns all entries from the database.
 
   ## Examples

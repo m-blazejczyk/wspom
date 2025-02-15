@@ -2,10 +2,10 @@
 <section class="p-4">
   <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
     <WspomWeb.CardComponent.card href={~p"/entries"} img={~p"/images/diary_64.png"}
-      name="Wspom" info="4061 entries" label="Wspom" />
+      name="Wspom" info={@entries} label="Wspom" />
     <WspomWeb.CardComponent.card href={~p"/weight"} img={~p"/images/scale_64.png"}
-      name="Weight" info="482 days" label="Weight" />
+      name="Weight" info={@days} label="Weight" />
     <WspomWeb.CardComponent.card href="" img={~p"/images/books_64.png"}
-      name="Books" info="85 books" label="Books" />
+      name="Books" info="0 books" label="Books" />
   </ul>
 </section>

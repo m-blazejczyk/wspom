@@ -68,6 +68,13 @@ defmodule Wspom.Weight.Context do
   end
 
   @doc """
+  Returns a map with database stats.
+  """
+  def get_stats do
+    Database.get_stats()
+  end
+
+  @doc """
   Returns all records from the database.
 
   ## Examples

@@ -71,7 +71,12 @@ defmodule Wspom.Entries.TnC do
           if cascade != nil do
             cascade |> Enum.reduce(acc, &add_tag_token/2)
           else
-            add_tag_token(tag, acc)
+            if tag |> String.starts_with?("-") do
+              actual_tag = tag |> String.slice(1, String.length(tag) - 1)
+              add_tag_token(actual_tag, acc)
+            else
+              add_tag_token(tag, acc)
+            end
           end
         end
       end)

@@ -57,13 +57,30 @@ defmodule WspomWeb.Live.EntryEditForm do
         </div>
         <div id="all-tags" class="hidden">
           <h1 class="text-lg font-semibold leading-8 text-zinc-800" phx-click={JS.toggle(to: "#all-tags")}>
-            Tags
+            Tags & Cascades
           </h1>
           <div class="flex flex-wrap">
             <%= for tag <- prepare_tags(@tags) do %>
-              <.link patch={Filter.switch_to_tag_link(@filter, get_year(@entry), tag)}>
-                <div class="mx-5 my-2 w-20 text-gray-500"><%= tag %></div>
-              </.link>
+              <div class="flex mx-5 my-2 text-gray-500">
+                <%= if Map.has_key?(@cascades, tag) do %>
+                  <div class="font-bold">
+                    <%= tag %>
+                  </div>
+                  <div class="mx-1 my-1 text-gray-500" id={"show_cascade_" <> tag}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+                  </div>
+                  <div class="mx-1 my-1 text-gray-500 hidden" id={"hide_cascade_" <> tag}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+                  </div>
+                <% else %>
+                  <%= tag %>
+                <% end %>
+                <.link patch={Filter.switch_to_tag_link(@filter, get_year(@entry), tag)}>
+                  <div class="mx-1 my-1 text-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                  </div>
+                </.link>
+              </div>
             <% end %>
           </div>
         </div>

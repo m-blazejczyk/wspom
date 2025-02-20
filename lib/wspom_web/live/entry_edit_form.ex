@@ -63,15 +63,22 @@ defmodule WspomWeb.Live.EntryEditForm do
             <%= for tag <- prepare_tags(@tags) do %>
               <div class="flex mx-5 my-2 text-gray-500">
                 <%= if Map.has_key?(@cascades, tag) do %>
+                  <div class="hidden" id={"cascade_" <> tag}>
+                    <%= display_cascade(@cascades |> Map.get(tag), tag) <> " + " %>
+                  </div>
                   <div class="font-bold">
                     <%= tag %>
                   </div>
-                  <div class="mx-1 my-1 text-gray-500" id={"show_cascade_" <> tag}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
-                  </div>
-                  <div class="mx-1 my-1 text-gray-500 hidden" id={"hide_cascade_" <> tag}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
-                  </div>
+                  <.link phx-click={toggle_cascade(tag)}>
+                    <div class="mx-1 my-1 text-gray-500 hidden" id={"hide_cascade_" <> tag}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+                    </div>
+                  </.link>
+                  <.link phx-click={toggle_cascade(tag)}>
+                    <div class="mx-1 my-1 text-gray-500" id={"show_cascade_" <> tag}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+                    </div>
+                  </.link>
                 <% else %>
                   <%= tag %>
                 <% end %>
@@ -126,6 +133,20 @@ defmodule WspomWeb.Live.EntryEditForm do
     # "The given function should compare two arguments, and return true if the
     # first argument precedes or is in the same place as the second one".
     |> Enum.sort(fn {name1, _}, {name2, _} -> name1 < name2 end)
+  end
+
+  defp display_cascade(%MapSet{} = cascade, name) do
+    cascade
+    |> MapSet.delete(name)
+    |> MapSet.to_list()
+    |> Enum.sort()
+    |> Enum.join(" + ")
+  end
+
+  defp toggle_cascade(tag) do
+    JS.toggle(to: "#" <> "hide_cascade_" <> tag)
+    |> JS.toggle(to: "#" <> "show_cascade_" <> tag)
+    |> JS.toggle(to: "#" <> "cascade_" <> tag)
   end
 
   defp scale_description_box(description) do

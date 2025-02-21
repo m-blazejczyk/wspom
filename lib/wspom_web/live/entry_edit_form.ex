@@ -42,19 +42,6 @@ defmodule WspomWeb.Live.EntryEditForm do
             C
           </.button>
         </div>
-        <div class="flex gap-2">
-          <.input field={@form[:fuzzy]} type="number" label="Fuzzy" />
-          <div class="content-center">
-            <.input field={@form[:needs_review]} type="checkbox" label="Needs review" />
-          </div>
-        </div>
-        <.input field={@form[:description]} type="textarea"
-          rows={scale_description_box(@form[:description])} label="Description" />
-        <div class="flex gap-2 ">
-          <.input field={@form[:day]} type="number" label="Day" />
-          <.input field={@form[:month]} type="number" label="Month" />
-          <.input field={@form[:year]} type="number" label="Year" />
-        </div>
         <div id="all-tags" class="hidden">
           <h1 class="text-lg font-semibold leading-8 text-zinc-800" phx-click={JS.toggle(to: "#all-tags")}>
             Tags & Cascades
@@ -112,6 +99,19 @@ defmodule WspomWeb.Live.EntryEditForm do
               </div>
             <% end %>
           </div>
+        </div>
+        <div class="flex gap-2">
+          <.input field={@form[:fuzzy]} type="number" label="Fuzzy" />
+          <div class="content-center">
+            <.input field={@form[:needs_review]} type="checkbox" label="Needs review" />
+          </div>
+        </div>
+        <.input field={@form[:description]} type="textarea"
+          rows={scale_description_box(@form[:description])} label="Description" />
+        <div class="flex gap-2 ">
+          <.input field={@form[:day]} type="number" label="Day" />
+          <.input field={@form[:month]} type="number" label="Month" />
+          <.input field={@form[:year]} type="number" label="Year" />
         </div>
       </.simple_form>
     </div>

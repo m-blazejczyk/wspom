@@ -8,7 +8,9 @@ defmodule Wspom.Application do
   @impl true
   def start(_type, _args) do
 
-    is_production = Mix.env() != :test
+    # This used to be set to `Mix.env() != :test`
+    # but the Mix module is unavailable in production (`mix release`)
+    is_production = true
     if is_production do
       Logger.notice("### PRODUCTION MODE ###")
     else

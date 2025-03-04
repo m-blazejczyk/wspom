@@ -9,22 +9,7 @@ defmodule Wspom.Scripts do
   Wspom.Database.append_entries_and_save(entries)
   """
 
-@roman_lookup %{
-  "i" => 1,
-  "ii" => 2,
-  "iii" => 3,
-  "iv" => 4,
-  "v" => 5,
-  "vi" => 6,
-  "vii" => 7,
-  "viii" => 8,
-  "ix" => 9,
-  "x" => 10,
-  "xi" => 11,
-  "xii" => 12,
-}
-
-def entries_from_json(filename) do
+  def entries_from_json(filename) do
     # We expect `json` to be a list of maps
     {:ok, json} = read_json(filename)
 
@@ -73,8 +58,32 @@ def entries_from_json(filename) do
     end
   end
 
-  # Wspom.Scripts.load_entries("/home/michal/Documents/Wspom/test.txt", 2025)
-  def load_entries(filename, year) do
+  @roman_lookup %{
+    "i" => 1,
+    "ii" => 2,
+    "iii" => 3,
+    "iv" => 4,
+    "v" => 5,
+    "vi" => 6,
+    "vii" => 7,
+    "viii" => 8,
+    "ix" => 9,
+    "x" => 10,
+    "xi" => 11,
+    "xii" => 12,
+  }
+
+  # Create an empty database if needed:
+  #   Wspom.Scripts.create_empty_entries_db("wspom.dat")
+  #
+  # Then:
+  #   entries = Wspom.Scripts.read_text("/home/michal/Documents/Wspom/test.txt", 2025)
+  # or:
+  #   entries = Wspom.Scripts.read_text("/home/michal/Documents/Wspom/wspom2023.toimport.txt", 2023)
+  #
+  # Then call:
+  #   Wspom.Entries.Database.append_entries_and_save(entries)
+  def read_text(filename, year) do
     {entries_raw, _} = File.read!(filename)
     |> String.split("\n")
     |> Enum.map(&String.trim/1)
@@ -92,7 +101,10 @@ def entries_from_json(filename) do
 
       nil
     else
+      IO.puts("Data is valid")
+
       entries_raw
+      |> Enum.map(fn {date, title, description} -> Wspom.Entry.new(title, description, date) end)
     end
   end
 

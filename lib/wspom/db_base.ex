@@ -2,14 +2,15 @@ defmodule Wspom.DbBase do
   require Logger
 
   def load_db_file(filename, init_fun \\ nil) do
-    if init_fun == nil do
-      File.read!(filename) |> :erlang.binary_to_term
+    with {:ok, raw_data} <- File.read(filename) do
+      raw_data |> :erlang.binary_to_term
     else
-      with {:ok, raw_data} <- File.read(filename) do
-        raw_data |> :erlang.binary_to_term
-      else
-        _ -> init_fun.()
-      end
+      _ ->
+        if init_fun == nil do
+          raise "ERROR: file #{filename} does not exist and the initialization function was not provided"
+        else
+          init_fun.()
+        end
     end
   end
 

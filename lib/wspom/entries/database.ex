@@ -24,26 +24,35 @@ defmodule Wspom.Entries.Database do
 
   defp init_entry_data(is_production) do
     if is_production do
-      %{version: entries_version} = entries_db = DbBase.load_db_file(@db_file)
-      %{version: tags_version} = tags_db = DbBase.load_db_file(@tags_file)
+      %{version: entries_version} = entries_db =
+        DbBase.load_db_file(@db_file, &create_test_entries/0)
+      %{version: tags_version} = tags_db =
+        DbBase.load_db_file(@tags_file, &create_test_tags_cascades/0)
       if entries_version != tags_version do
         raise "ERROR: versions of the entries and tags databases are different!"
       end
       {entries_db, tags_db} |> maybe_migrate_and_save() |> summarize_db()
     else
-      entries = Enum.map(1..5, &generate_entry/1)
-      {%{
-        entries: entries,
-        version: Migrations.current_version(),
-        is_production: false,
-      }, %{
-        tags: MapSet.new(["t1", "t2", "c", "t3"]),
-        cascades: %{"c" => ["t1", "t2", "c"]},
-        version: Migrations.current_version(),
-        is_production: false,
-      }}
+      {create_test_entries(), create_test_tags_cascades()}
       |> summarize_db()
     end
+  end
+
+  defp create_test_entries() do
+    %{
+      entries: Enum.map(1..5, &generate_entry/1),
+      version: Migrations.current_version(),
+      is_production: false,
+    }
+  end
+
+  defp create_test_tags_cascades() do
+    %{
+      tags: MapSet.new(["t1", "t2", "c", "t3"]),
+      cascades: %{"c" => ["t1", "t2", "c"]},
+      version: Migrations.current_version(),
+      is_production: false,
+    }
   end
 
   # This function variant transitions from the single-file database

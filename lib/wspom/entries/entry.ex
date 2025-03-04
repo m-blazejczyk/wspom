@@ -17,6 +17,20 @@ defmodule Wspom.Entry do
     %Entry{description: "", title: ""}
   end
 
+  def new(title, description, date) do
+    %Wspom.Entry{
+      # The id will be set by the database when saving - not here
+      id: nil,
+      description: description,
+      title: title,
+      year: date.year,
+      month: date.month,
+      day: date.day,
+      weekday: date |> Timex.weekday(),
+      date: date
+    }
+  end
+
   def clone(entry, new_id) do
     %Entry{entry |
       id: new_id, importance: :normal, fuzzy: 0, needs_review: false, tags: MapSet.new()}

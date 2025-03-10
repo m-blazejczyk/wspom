@@ -20,7 +20,7 @@ defmodule WspomWeb.Live.Weight.WeightData do
   end
 
 
-  defp format_weight(w) when is_integer(w), do: Integer.to_string(w) ++ ".00"
+  defp format_weight(w) when is_integer(w), do: Integer.to_string(w) <> ".00"
   defp format_weight(w) when is_float(w), do: :erlang.float_to_binary(w, [{:decimals, 2}])
 
   defp format_date(d), do: Date.to_string(d)

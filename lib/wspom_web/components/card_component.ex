@@ -43,11 +43,11 @@ defmodule WspomWeb.CardComponent do
     <li>
       <a href={@href}
         class="block h-full transition-all duration-200 bg-white border border-gray-200 rounded group hover:shadow-lg hover:border-gray-700 hover:ring-1 hover:ring-gray-700/5">
-        <div class="flex items-center p-6">
+        <div class="flex items-center p-4">
           <div
-            class="flex items-center justify-center flex-shrink-0 w-16 h-16 transition-colors duration-200 rounded group-hover:bg-orange-100">
+            class="flex items-center justify-center flex-shrink-0 w-8 sm:w-16 h-8 sm:h-16 transition-colors duration-200 rounded group-hover:bg-orange-100">
             <!-- Source: flaticon.com -->
-            <img src={@img} aria-label={@label} width="64" height="64"/>
+            <img src={@img} aria-label={@label}/>
           </div>
         </div>
       </a>

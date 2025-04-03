@@ -1,7 +1,9 @@
 <div class="max-w-lg mx-auto border border-gray-200 rounded shadow-md px-8 py-10 flex flex-col items-center">
   <div class="flex justify-center items-center w-full">
     <section class="min-w-md p-4">
-      <ul class="grid grid-cols-2 gap-6">
+      <ul class="grid grid-cols-3 gap-6">
+        <WspomWeb.CardComponent.small_card href={~p"/"} img={~p"/images/home_64.png"}
+          label="Go back to the home page" />
         <WspomWeb.CardComponent.small_card href={~p"/weight/add"} img={~p"/images/add_64.png"}
           label="Add weight measurement" />
         <WspomWeb.CardComponent.small_card href={~p"/weight/charts"} img={~p"/images/chart_64.png"}

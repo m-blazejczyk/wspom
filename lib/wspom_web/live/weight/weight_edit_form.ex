@@ -9,7 +9,9 @@ defmodule WspomWeb.Live.WeightEditForm do
     <div class="max-w-lg mx-auto border border-gray-200 rounded shadow-md px-8 py-10 flex flex-col items-center">
       <div class="flex justify-center items-center w-full">
         <section class="min-w-md p-4">
-          <ul class="grid grid-cols-2 gap-6">
+          <ul class="grid grid-cols-3 gap-6">
+            <WspomWeb.CardComponent.small_card href={~p"/"} img={~p"/images/home_64.png"}
+              label="Go back to the home page" />
             <WspomWeb.CardComponent.small_card href={~p"/weight/data"} img={~p"/images/table_64.png"}
               label="View all weight data" />
             <WspomWeb.CardComponent.small_card href={~p"/weight/charts"} img={~p"/images/chart_64.png"}
@@ -29,17 +31,19 @@ defmodule WspomWeb.Live.WeightEditForm do
           <%= @title %>
         </.header>
 
-        <div class="flex gap-2 ">
-          <.button type="button" class="flex-none w-20" phx-click={JS.push("day_earlier")} phx-target={@myself}>
-            &lt;
-          </.button>
-          <div class="flex-auto">
+        <div class="grid grid-cols-1 gap-2">
+          <div>
             <.input field={@form[:date]} type="text" class="text-xl text-center"
               class_container="flex items-start flex-col justify-start"/>
           </div>
-          <.button type="button" class="flex-none w-20" phx-click={JS.push("day_later")} phx-target={@myself}>
-            &gt;
-          </.button>
+          <div>
+            <.button type="button" class="float-left w-16" phx-click={JS.push("day_earlier")} phx-target={@myself}>
+              &lt;
+            </.button>
+            <.button type="button" class="float-right w-16" phx-click={JS.push("day_later")} phx-target={@myself}>
+              &gt;
+            </.button>
+          </div>
         </div>
 
         <.input field={@form[:weight]} type="text" class="text-xl text-center"

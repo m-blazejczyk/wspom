@@ -14,7 +14,7 @@ defmodule WspomWeb.Live.Weight.WeightData do
       socket
       |> assign(:data,
         Context.get_all_records
-        |> Enum.sort(&(&2.date <= &1.date))
+        |> Enum.sort(&(Date.before?(&2.date, &1.date)))
         |> Enum.take(30))
     }
   end

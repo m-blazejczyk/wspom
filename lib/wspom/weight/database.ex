@@ -104,7 +104,7 @@ defmodule Wspom.Weight.Database do
     end)
   end
 
-  defp modify_and_save_data(record, update_fun) do
+  def modify_and_save_data(record, update_fun) do
     Agent.get_and_update(__MODULE__,
       fn %{data: data} = state ->
         {new_data, new_record} = update_fun.(data, record)

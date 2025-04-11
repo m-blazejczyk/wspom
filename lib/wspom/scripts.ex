@@ -153,7 +153,7 @@ defmodule Wspom.Scripts do
   end
 
   defp validate_title(title) do
-    if String.length(title) > 50 do
+    if String.length(title) > 60 do
       {:error, "Title too long: #{title}"}
     else
       {:ok, title}

@@ -30,90 +30,129 @@ defmodule WspomWeb.Live.EntryEditForm do
           </:actions>
         </.header>
 
-        <.input field={@form[:title]} type="text" label="Title" />
-        <div class="flex gap-2 ">
-          <div class="flex-auto">
-            <.input field={@form[:tags]} type="text" label="Tags"/>
-          </div>
-          <.button type="button" class="flex-none" phx-click={JS.toggle(to: "#all-tags")}>
-            T
-          </.button>
-          <.button type="button" class="flex-none" phx-click={JS.toggle(to: "#all-cascades")}>
-            C
-          </.button>
-        </div>
-        <div id="all-tags" class="hidden">
-          <h1 class="text-lg font-semibold leading-8 text-zinc-800" phx-click={JS.toggle(to: "#all-tags")}>
-            Tags & Cascades
-          </h1>
-          <div class="flex flex-wrap">
-            <%= for tag <- prepare_tags(@tags) do %>
-              <div class="flex mx-5 my-2 text-gray-500">
-                <%= if Map.has_key?(@cascades, tag) do %>
-                  <div class="hidden" id={"cascade_" <> tag}>
-                    <%= display_cascade(@cascades |> Map.get(tag), tag) <> " + " %>
-                  </div>
-                  <div class="font-bold">
-                    <%= tag %>
-                  </div>
-                  <.link phx-click={toggle_cascade(tag)}>
-                    <div class="mx-1 my-1 text-gray-500 hidden" id={"hide_cascade_" <> tag}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
-                    </div>
-                  </.link>
-                  <.link phx-click={toggle_cascade(tag)}>
-                    <div class="mx-1 my-1 text-gray-500" id={"show_cascade_" <> tag}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
-                    </div>
-                  </.link>
-                <% else %>
-                  <%= tag %>
-                <% end %>
-                <.link patch={Filter.switch_to_tag_link(@filter, get_year(@entry), tag)}>
-                  <div class="mx-1 my-1 text-gray-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-                  </div>
-                </.link>
-              </div>
-            <% end %>
-          </div>
-        </div>
-        <div id="all-cascades" class="hidden">
-          <h1 class="text-lg font-semibold leading-8 text-zinc-800" phx-click={JS.toggle(to: "#all-cascades")}>
-            Cascades
-          </h1>
-          <div class="flex flex-wrap">
-            <%= for {name, tags} <- prepare_cascades(@cascades) do %>
-              <div class="mx-5 my-2 text-gray-500">
-                <b>
-                  <.link patch={Filter.switch_to_tag_link(@filter, get_year(@entry), name)}>
-                    <%= name %>
-                  </.link>
-                </b>
-                <%= for tag <- tags do %>
-                  +
-                  <.link patch={Filter.switch_to_tag_link(@filter, get_year(@entry), tag)}>
-                    <%= tag %>
-                  </.link>
-                <% end %>
-              </div>
-            <% end %>
-          </div>
-        </div>
-        <div class="flex gap-2">
-          <.input field={@form[:fuzzy]} type="number" label="Fuzzy" />
-          <div class="content-center">
-            <.input field={@form[:needs_review]} type="checkbox" label="Needs review" />
-          </div>
-        </div>
-        <.input field={@form[:description]} type="textarea"
-          rows={scale_description_box(@form[:description])} label="Description" />
-        <div class="flex gap-2 ">
-          <.input field={@form[:day]} type="number" label="Day" />
-          <.input field={@form[:month]} type="number" label="Month" />
-          <.input field={@form[:year]} type="number" label="Year" />
-        </div>
+        <%= if @action == :edit do %>
+          <%= tags_field(assigns) %>
+          <%= title_field(assigns) %>
+          <%= additional_field(assigns) %>
+          <%= content_field(assigns) %>
+          <%= date_field(assigns) %>
+        <% end %>
+        <%= if @action == :new do %>
+          <%= date_field(assigns) %>
+          <%= content_field(assigns) %>
+          <%= title_field(assigns) %>
+          <%= tags_field(assigns) %>
+          <%= additional_field(assigns) %>
+        <% end %>
       </.simple_form>
+    </div>
+    """
+  end
+
+  defp title_field(assigns) do
+    ~H"""
+    <.input field={@form[:title]} type="text" label="Title" />
+    """
+  end
+
+  defp content_field(assigns) do
+    ~H"""
+    <.input field={@form[:description]} type="textarea"
+      rows={scale_description_box(@form[:description])} label="Description" />
+    """
+  end
+
+  defp date_field(assigns) do
+    ~H"""
+    <div class="flex gap-2 ">
+      <.input field={@form[:day]} type="number" label="Day" />
+      <.input field={@form[:month]} type="number" label="Month" />
+      <.input field={@form[:year]} type="number" label="Year" />
+    </div>
+    """
+  end
+
+  defp additional_field(assigns) do
+    ~H"""
+    <div class="flex gap-2">
+      <.input field={@form[:fuzzy]} type="number" label="Fuzzy" />
+      <div class="content-center">
+        <.input field={@form[:needs_review]} type="checkbox" label="Needs review" />
+      </div>
+    </div>
+    """
+  end
+
+  defp tags_field(assigns) do
+    ~H"""
+    <div class="flex gap-2 ">
+      <div class="flex-auto">
+        <.input field={@form[:tags]} type="text" label="Tags"/>
+      </div>
+      <.button type="button" class="flex-none" phx-click={JS.toggle(to: "#all-tags")}>
+        T
+      </.button>
+      <.button type="button" class="flex-none" phx-click={JS.toggle(to: "#all-cascades")}>
+        C
+      </.button>
+    </div>
+    <div id="all-tags" class="hidden">
+      <h1 class="text-lg font-semibold leading-8 text-zinc-800" phx-click={JS.toggle(to: "#all-tags")}>
+        Tags & Cascades
+      </h1>
+      <div class="flex flex-wrap">
+        <%= for tag <- prepare_tags(@tags) do %>
+          <div class="flex mx-5 my-2 text-gray-500">
+            <%= if Map.has_key?(@cascades, tag) do %>
+              <div class="hidden" id={"cascade_" <> tag}>
+                <%= display_cascade(@cascades |> Map.get(tag), tag) <> " + " %>
+              </div>
+              <div class="font-bold">
+                <%= tag %>
+              </div>
+              <.link phx-click={toggle_cascade(tag)}>
+                <div class="mx-1 my-1 text-gray-500 hidden" id={"hide_cascade_" <> tag}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+                </div>
+              </.link>
+              <.link phx-click={toggle_cascade(tag)}>
+                <div class="mx-1 my-1 text-gray-500" id={"show_cascade_" <> tag}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+                </div>
+              </.link>
+            <% else %>
+              <%= tag %>
+            <% end %>
+            <.link patch={Filter.switch_to_tag_link(@filter, get_year(@entry), tag)}>
+              <div class="mx-1 my-1 text-gray-300">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+              </div>
+            </.link>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div id="all-cascades" class="hidden">
+      <h1 class="text-lg font-semibold leading-8 text-zinc-800" phx-click={JS.toggle(to: "#all-cascades")}>
+        Cascades
+      </h1>
+      <div class="flex flex-wrap">
+        <%= for {name, tags} <- prepare_cascades(@cascades) do %>
+          <div class="mx-5 my-2 text-gray-500">
+            <b>
+              <.link patch={Filter.switch_to_tag_link(@filter, get_year(@entry), name)}>
+                <%= name %>
+              </.link>
+            </b>
+            <%= for tag <- tags do %>
+              +
+              <.link patch={Filter.switch_to_tag_link(@filter, get_year(@entry), tag)}>
+                <%= tag %>
+              </.link>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
     </div>
     """
   end

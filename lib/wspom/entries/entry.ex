@@ -43,7 +43,7 @@ defmodule Wspom.Entry do
     |> validate_required([:description, :title, :year, :month, :day])
     |> validate_number(:day, greater_than: 0, less_than: 32)
     |> validate_number(:month, greater_than: 0, less_than: 13)
-    |> validate_number(:year, greater_than: 1899, less_than: 2025)
+    |> validate_number(:year, greater_than: 1899, less_than: 2026)
     |> validate_date()
     |> ignore_tags()
   end

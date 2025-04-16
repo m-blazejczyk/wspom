@@ -55,7 +55,7 @@
         </div>
         <div>
           <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-gray-200 py-1 px-2 my-2 font-sans text-xs leading-none text-gray-800">
-            <b class="uppercase"><%= Timex.day_name(entry.weekday) %></b>
+            <b class="uppercase"><%= Utils.weekday_long_name(entry.weekday) %></b>
           </div>
           <%= if entry.fuzzy > 0 do %>
             <div class="center relative inline-block select-none whitespace-nowrap rounded-lg bg-gray-200 py-1 px-2 my-2 font-sans text-xs leading-none text-gray-800">
@@ -133,5 +133,6 @@
     tags={@tags}
     cascades={@cascades}
     filter={@filter}
+    weekday={WspomWeb.Live.EntryEditForm.init_weekday(@entry)}
   />
 </.modal>

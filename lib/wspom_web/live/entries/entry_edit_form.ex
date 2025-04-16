@@ -12,7 +12,7 @@ defmodule WspomWeb.Live.EntryEditForm do
   @impl true
   def render(assigns) do
     # Note: this code can only use the assigns that have been explicitly passed
-    # to the <.live_component> tag in index.html.heex. This code has no access
+    # to the <.live_component> tag in entry_view.html.heex. This code has no access
     # to the assigns from the LiveView.
     ~H"""
     <div>
@@ -68,6 +68,14 @@ defmodule WspomWeb.Live.EntryEditForm do
       <.input field={@form[:day]} type="number" label="Day" />
       <.input field={@form[:month]} type="number" label="Month" />
       <.input field={@form[:year]} type="number" label="Year" />
+      <div>
+        <label class="block text-sm font-semibold leading-6 text-zinc-800">
+          Weekday
+        </label>
+        <div class="mt-2 block w-full rounded-lg text-zinc-900 sm:leading-6">
+          <%= @weekday %>
+        </div>
+      </div>
     </div>
     """
   end
@@ -89,6 +97,7 @@ defmodule WspomWeb.Live.EntryEditForm do
       <div class="flex-auto">
         <.input field={@form[:tags]} type="text" label="Tags"/>
       </div>
+
       <.button type="button" class="flex-none" phx-click={JS.toggle(to: "#all-tags")}>
         T
       </.button>
@@ -115,7 +124,8 @@ defmodule WspomWeb.Live.EntryEditForm do
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
                 </div>
               </.link>
-              <.link phx-click={toggle_cascade(tag)}>
+              <.link phx-click=
+                {toggle_cascade(tag)}>
                 <div class="mx-1 my-1 text-gray-500" id={"show_cascade_" <> tag}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
                 </div>
@@ -210,7 +220,10 @@ defmodule WspomWeb.Live.EntryEditForm do
   @impl true
   def handle_event("validate", %{"entry" => entry_params}, socket) do
     changeset = Context.change_entry(socket.assigns.entry, entry_params)
-    {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
+    weekday = calculate_weekday(changeset)
+    {:noreply, socket
+      |> assign(form: to_form(changeset, action: :validate))
+      |> assign(weekday: weekday)}
   end
 
   def handle_event("save", %{"entry" => entry_params}, socket) do
@@ -254,6 +267,43 @@ defmodule WspomWeb.Live.EntryEditForm do
       <br><%= line %>
     <% end %>
     """
+  end
+
+  # Here's the logic here:
+  # * We try pulling the date components from changeset.changes (a map)
+  # * If they're not there, we get them from changeset.data (%Wspom.Entry)
+  # * And we ignore the date altogether if changeset.errors contains
+  #   a matching error
+  defp calculate_weekday(changeset) do
+    if changeset.errors |> Keyword.has_key?(:year) or
+      changeset.errors |> Keyword.has_key?(:month) or
+      changeset.errors |> Keyword.has_key?(:day) do
+      "?"
+    else
+      day = Map.get(changeset.changes, :day, changeset.data.day) || 0
+      month = Map.get(changeset.changes, :month, changeset.data.month) || 0
+      year = Map.get(changeset.changes, :year, changeset.data.year) || 0
+
+      with {:ok, date} <- Date.new(year, month, day) do
+        Date.day_of_week(date) |> Utils.weekday_short_name()
+      else
+        _ -> "?"
+      end
+    end
+  end
+
+  def init_weekday(entry) do
+    # Any of these fields may be nil
+    # Date.new() does not support nil arguments
+    day = entry.day || 0
+    month = entry.month || 0
+    year = entry.year || 0
+
+    with {:ok, date} <- Date.new(year, month, day) do
+      Date.day_of_week(date) |> Utils.weekday_short_name()
+    else
+      _ -> "?"
+    end
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})

@@ -31,6 +31,84 @@ defmodule WspomWeb.Live.WeightEditForm do
           <%= @title %>
         </.header>
 
+        <.input field={@form[:weight]} type="text" class="text-xl text-center"
+          class_container="flex items-start flex-col justify-start"/>
+
+        <div class="flex flex-wrap rounded-lg bg-gray-300 max-w-sm mx-auto mt-24">
+          <div class="w-1/3">
+            <button type="button" class="w-full h-16 text-xl text-gray-700 rounded-lg hover:bg-gray-400"
+              phx-click={JS.push("append", value: %{text: "1"})} phx-target={@myself}>
+              1
+            </button>
+          </div>
+          <div class="w-1/3">
+            <button type="button" class="w-full h-16 text-xl text-gray-700 rounded-lg hover:bg-gray-400"
+              phx-click={JS.push("append", value: %{text: "2"})} phx-target={@myself}>
+              2
+            </button>
+          </div>
+          <div class="w-1/3">
+            <button type="button" class="w-full h-16 text-xl text-gray-700 rounded-lg hover:bg-gray-400"
+              phx-click={JS.push("append", value: %{text: "3"})} phx-target={@myself}>
+              3
+            </button>
+          </div>
+          <div class="w-1/3">
+            <button type="button" class="w-full h-16 text-xl text-gray-700 rounded-lg hover:bg-gray-400"
+              phx-click={JS.push("append", value: %{text: "4"})} phx-target={@myself}>
+              4
+            </button>
+          </div>
+          <div class="w-1/3">
+            <button type="button" class="w-full h-16 text-xl text-gray-700 rounded-lg hover:bg-gray-400"
+              phx-click={JS.push("append", value: %{text: "5"})} phx-target={@myself}>
+              5
+            </button>
+          </div>
+          <div class="w-1/3">
+            <button type="button" class="w-full h-16 text-xl text-gray-700 rounded-lg hover:bg-gray-400"
+              phx-click={JS.push("append", value: %{text: "6"})} phx-target={@myself}>
+              6
+            </button>
+          </div>
+          <div class="w-1/3">
+            <button type="button" class="w-full h-16 text-xl text-gray-700 rounded-lg hover:bg-gray-400"
+              phx-click={JS.push("append", value: %{text: "7"})} phx-target={@myself}>
+              7
+            </button>
+          </div>
+          <div class="w-1/3">
+            <button type="button" class="w-full h-16 text-xl text-gray-700 rounded-lg hover:bg-gray-400"
+              phx-click={JS.push("append", value: %{text: "8"})} phx-target={@myself}>
+              8
+            </button>
+          </div>
+          <div class="w-1/3">
+            <button type="button" class="w-full h-16 text-xl text-gray-700 rounded-lg hover:bg-gray-400"
+              phx-click={JS.push("append", value: %{text: "9"})} phx-target={@myself}>
+              9
+            </button>
+          </div>
+          <div class="w-1/3">
+            <button type="button" class="w-full h-16 text-xl text-gray-700 rounded-lg hover:bg-gray-400"
+              phx-click={JS.push("append", value: %{text: "."})} phx-target={@myself}>
+              •
+            </button>
+          </div>
+          <div class="w-1/3">
+            <button type="button" class="w-full h-16 text-xl text-gray-700 rounded-lg hover:bg-gray-400"
+              phx-click={JS.push("append", value: %{text: "0"})} phx-target={@myself}>
+              0
+            </button>
+          </div>
+          <div class="w-1/3">
+            <button type="button" class="w-full h-16 text-xl text-gray-700 rounded-lg hover:bg-gray-400"
+              phx-click={JS.push("delete")} phx-target={@myself}>
+              ⌫
+            </button>
+          </div>
+        </div>
+
         <div class="grid grid-cols-1 gap-2">
           <div>
             <.input field={@form[:date]} type="text" class="text-xl text-center"
@@ -46,87 +124,10 @@ defmodule WspomWeb.Live.WeightEditForm do
           </div>
         </div>
 
-        <.input field={@form[:weight]} type="text" class="text-xl text-center"
-          class_container="flex items-start flex-col justify-start"/>
-
-        <div class="flex flex-wrap rounded-lg bg-gray-300 max-w-sm mx-auto mt-24">
-          <div class="w-1/3">
-            <button type="button" class="w-full h-20 text-xl text-gray-700 rounded-lg hover:bg-gray-400"
-              phx-click={JS.push("append", value: %{text: "1"})} phx-target={@myself}>
-              1
-            </button>
-          </div>
-          <div class="w-1/3">
-            <button type="button" class="w-full h-20 text-xl text-gray-700 rounded-lg hover:bg-gray-400"
-              phx-click={JS.push("append", value: %{text: "2"})} phx-target={@myself}>
-              2
-            </button>
-          </div>
-          <div class="w-1/3">
-            <button type="button" class="w-full h-20 text-xl text-gray-700 rounded-lg hover:bg-gray-400"
-              phx-click={JS.push("append", value: %{text: "3"})} phx-target={@myself}>
-              3
-            </button>
-          </div>
-          <div class="w-1/3">
-            <button type="button" class="w-full h-20 text-xl text-gray-700 rounded-lg hover:bg-gray-400"
-              phx-click={JS.push("append", value: %{text: "4"})} phx-target={@myself}>
-              4
-            </button>
-          </div>
-          <div class="w-1/3">
-            <button type="button" class="w-full h-20 text-xl text-gray-700 rounded-lg hover:bg-gray-400"
-              phx-click={JS.push("append", value: %{text: "5"})} phx-target={@myself}>
-              5
-            </button>
-          </div>
-          <div class="w-1/3">
-            <button type="button" class="w-full h-20 text-xl text-gray-700 rounded-lg hover:bg-gray-400"
-              phx-click={JS.push("append", value: %{text: "6"})} phx-target={@myself}>
-              6
-            </button>
-          </div>
-          <div class="w-1/3">
-            <button type="button" class="w-full h-20 text-xl text-gray-700 rounded-lg hover:bg-gray-400"
-              phx-click={JS.push("append", value: %{text: "7"})} phx-target={@myself}>
-              7
-            </button>
-          </div>
-          <div class="w-1/3">
-            <button type="button" class="w-full h-20 text-xl text-gray-700 rounded-lg hover:bg-gray-400"
-              phx-click={JS.push("append", value: %{text: "8"})} phx-target={@myself}>
-              8
-            </button>
-          </div>
-          <div class="w-1/3">
-            <button type="button" class="w-full h-20 text-xl text-gray-700 rounded-lg hover:bg-gray-400"
-              phx-click={JS.push("append", value: %{text: "9"})} phx-target={@myself}>
-              9
-            </button>
-          </div>
-          <div class="w-1/3">
-            <button type="button" class="w-full h-20 text-xl text-gray-700 rounded-lg hover:bg-gray-400"
-              phx-click={JS.push("append", value: %{text: "."})} phx-target={@myself}>
-              •
-            </button>
-          </div>
-          <div class="w-1/3">
-            <button type="button" class="w-full h-20 text-xl text-gray-700 rounded-lg hover:bg-gray-400"
-              phx-click={JS.push("append", value: %{text: "0"})} phx-target={@myself}>
-              0
-            </button>
-          </div>
-          <div class="w-1/3">
-            <button type="button" class="w-full h-20 text-xl text-gray-700 rounded-lg hover:bg-gray-400"
-              phx-click={JS.push("delete")} phx-target={@myself}>
-              ⌫
-            </button>
-          </div>
-        </div>
-
         <:actions>
-          <.button phx-disable-with="Saving…" class="w-full">Save</.button>
+          <.button phx-disable-with="Saving…" class="w-full">Save ME!</.button>
         </:actions>
+
       </.simple_form>
     </div>
     """

@@ -7,7 +7,7 @@ It also allows me to track some other data that I am interested in, e.g. my weig
 
 Icons taken from flaticon.com.
 
-# Backup
+# Backup (Server ==> Local)
 
 ```
 scp michal@rpi:/home/michal/wspom/tags.dat .
@@ -15,7 +15,7 @@ scp michal@rpi:/home/michal/wspom/wspom.dat .
 scp michal@rpi:/home/michal/wspom/weight.dat .
 ```
 
-# Restore from backup
+# Restore from backup (Local ==> Server)
 
 ```
 scp tags.dat weight.dat wspom.dat michal@rpi:/home/michal/wspom

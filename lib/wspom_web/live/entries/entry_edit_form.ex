@@ -33,7 +33,7 @@ defmodule WspomWeb.Live.EntryEditForm do
         <%= if @action == :edit do %>
           <%= tags_field(assigns) %>
           <%= title_field(assigns) %>
-          <%= additional_field(assigns) %>
+          <%= additional_fields(assigns) %>
           <%= content_field(assigns) %>
           <%= date_field(assigns) %>
         <% end %>
@@ -42,7 +42,7 @@ defmodule WspomWeb.Live.EntryEditForm do
           <%= content_field(assigns) %>
           <%= title_field(assigns) %>
           <%= tags_field(assigns) %>
-          <%= additional_field(assigns) %>
+          <%= additional_fields(assigns) %>
         <% end %>
       </.simple_form>
     </div>
@@ -80,13 +80,17 @@ defmodule WspomWeb.Live.EntryEditForm do
     """
   end
 
-  defp additional_field(assigns) do
+  defp additional_fields(assigns) do
     ~H"""
-    <div class="flex gap-2">
+    <div class="flex flex-row gap-4">
       <.input field={@form[:fuzzy]} type="number" label="Fuzzy" />
-      <div class="content-center">
+      <div class="content-center justify-items-center grow">
         <.input field={@form[:needs_review]} type="checkbox" label="Needs review" />
       </div>
+      <.input field={@form[:importance]} type="select" label="Importance"
+        options={[{"Normal", "normal"},
+          {"Important", "important"},
+          {"Very important", "very_important"}]} />
     </div>
     """
   end

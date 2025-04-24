@@ -5,6 +5,7 @@ defmodule Wspom.Entry do
   alias Wspom.Entry
   import Ecto.Changeset
 
+  # importance can be :normal, :important or :very_important
   defstruct [:id, :description, :title, :year, :month, :day, :weekday, :date,
     importance: :normal, fuzzy: 0, needs_review: false, tags: MapSet.new()]
 
@@ -31,6 +32,8 @@ defmodule Wspom.Entry do
     }
   end
 
+  # Clone the entry but reset fields such as tags, importance, fuzzy
+  # and needs_review
   def clone(entry, new_id) do
     %Entry{entry |
       id: new_id, importance: :normal, fuzzy: 0, needs_review: false, tags: MapSet.new()}
@@ -44,6 +47,7 @@ defmodule Wspom.Entry do
     |> validate_number(:day, greater_than: 0, less_than: 32)
     |> validate_number(:month, greater_than: 0, less_than: 13)
     |> validate_number(:year, greater_than: 1899, less_than: 2026)
+    |> validate_inclusion(:importance, ["normal", "important", "very_important"])
     |> validate_date()
     |> ignore_tags()
   end
@@ -138,8 +142,17 @@ defmodule Wspom.Entry do
     when field_name == :weekday or field_name == :date do
     {:error, {field_name, "Not allowed to set #{field_name} directly"}}
   end
-  defp update_field({:importance, _field_value}, {:continue, %Entry{}, _tags_info}) do
-    {:error, {:importance, "Importance: not implemented"}}
+  defp update_field({:importance, "normal"}, {:continue, entry = %Entry{}, tags_info}) do
+    {:continue, entry |> Map.put(:importance, :normal), tags_info}
+  end
+  defp update_field({:importance, "important"}, {:continue, entry = %Entry{}, tags_info}) do
+    {:continue, entry |> Map.put(:importance, :important), tags_info}
+  end
+  defp update_field({:importance, "very_important"}, {:continue, entry = %Entry{}, tags_info}) do
+    {:continue, entry |> Map.put(:importance, :very_important), tags_info}
+  end
+  defp update_field({:importance, _other}, {:continue, %Entry{}, _tags_info}) do
+    {:error, {:importance, "Importance: unrecognized value"}}
   end
   defp update_field({:tags, field_value}, {:continue, %Entry{} = entry, _tags_info}) do
     case TnC.tags_from_string(field_value) do

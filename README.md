@@ -7,6 +7,8 @@ It also allows me to track some other data that I am interested in, e.g. my weig
 
 Icons taken from flaticon.com.
 
+More icons: https://tailwindcss-generator.com/icon
+
 # Backup (Server ==> Local)
 
 ```

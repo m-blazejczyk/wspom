@@ -8,10 +8,20 @@
     <div class="flex flex-grow justify-center content-center">
       <!-- The filter won't be set when editing an item -->
       <%= if @filter do %>
+        <%= if @filter.prev_date7 do %>
+          <.link patch={Wspom.Entries.Filter.ff_prev_link(@filter)}>
+            <.button class="h-10 mr-1">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m11 17-5-5 5-5"></path>
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m18 17-5-5 5-5"></path>
+              </svg>
+            </.button>
+          </.link>
+        <% end %>
         <.link patch={Wspom.Entries.Filter.prev_link(@filter)}>
           <.button class="h-10">
             <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12l4-4m-4 4 4 4"/>
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 18-6-6 6-6"/>
             </svg>
           </.button>
         </.link>
@@ -24,10 +34,20 @@
         <.link patch={Wspom.Entries.Filter.next_link(@filter)} >
           <.button class="h-10">
             <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 12H5m14 0-4 4m4-4-4-4"/>
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18 6-6-6-6"/>
             </svg>
           </.button>
         </.link>
+        <%= if @filter.next_date7 do %>
+          <.link patch={Wspom.Entries.Filter.ff_next_link(@filter)} >
+            <.button class="h-10 ml-1">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 17 5-5-5-5"></path>
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m13 17 5-5-5-5"></path>
+              </svg>
+            </.button>
+          </.link>
+        <% end %>
       <% end %>
     </div>
     <div class="flex flex-none invisible md:visible md:w-80 md:gap-4 md:justify-end">

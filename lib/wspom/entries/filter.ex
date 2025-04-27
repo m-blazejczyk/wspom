@@ -10,17 +10,21 @@ defmodule Wspom.Entries.Filter do
   # In addition to the "current" state of the filter, we also have to
   # store the "Next" and "Previous" so that it can be used to generate links.
   # Allowed values of 'which': :day, :year and :tag.
-  defstruct [:which, :day, :month, :year, :tag, :prev_date, :next_date]
+  defstruct [:which, :day, :month, :year, :tag,
+    :prev_date, :prev_date7, :next_date, :next_date7]
 
   @spec init_day_filter_from_date(DateTime.t()) :: %Filter{}
   defp init_day_filter_from_date(dt) do
     next_date = dt |> Timex.shift(days: 1)
     prev_date = dt |> Timex.shift(days: -1)
+    next_date7 = dt |> Timex.shift(days: 7)
+    prev_date7 = dt |> Timex.shift(days: -7)
 
     %Filter{
       which: :day,
       day: dt.day, month: dt.month,
-      prev_date: prev_date, next_date: next_date}
+      prev_date: prev_date, next_date: next_date,
+      prev_date7: prev_date7, next_date7: next_date7}
   end
 
   # This function is only called on the initial page load.
@@ -55,7 +59,8 @@ defmodule Wspom.Entries.Filter do
     %Filter{
       which: :year,
       day: day_int, month: month_int, year: year_int,
-      prev_date: prev_date, next_date: next_date}
+      prev_date: prev_date, next_date: next_date,
+      prev_date7: nil, next_date7: nil}
   end
   def from_params(%{"filter" => "tag", "day" => day, "month" => month, "year" => year, "tag" => tag}, entries) do
     year_int = String.to_integer(year)
@@ -74,7 +79,8 @@ defmodule Wspom.Entries.Filter do
       which: :tag,
       day: day_int, month: month_int, year: year_int,
       tag: tag,
-      prev_date: prev_date, next_date: next_date}
+      prev_date: prev_date, next_date: next_date,
+      prev_date7: nil, next_date7: nil}
   end
 
   @spec toString(%Filter{}) :: String.t()
@@ -142,6 +148,20 @@ defmodule Wspom.Entries.Filter do
   end
   def next_link(%Filter{which: :tag, tag: tag, next_date: next_date}) do
     ~p"/entries?filter=tag&tag=#{tag}&day=#{next_date.day}&month=#{next_date.month}&year=#{next_date.year}"
+  end
+
+  def ff_prev_link(%Filter{which: :day, prev_date7: prev_date7}) do
+    ~p"/entries?filter=day&day=#{prev_date7.day}&month=#{prev_date7.month}"
+  end
+  def ff_prev_link(_) do
+    ""
+  end
+
+  def ff_next_link(%Filter{which: :day, next_date7: next_date7}) do
+    ~p"/entries?filter=day&day=#{next_date7.day}&month=#{next_date7.month}"
+  end
+  def ff_next_link(_) do
+    ""
   end
 
   def switch_to_day_link(%Filter{day: day, month: month}) do

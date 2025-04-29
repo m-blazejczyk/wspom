@@ -35,7 +35,9 @@ defmodule Wspom.Entries.TnC do
     {tags_db, cascades_db} = Database.all_tags_and_cascades()
 
     input
-    |> String.split(" ", trim: true)
+    # The entries can be separated by any combination of spaces,
+    # commas and and semicolons
+    |> String.split([" ", ",", ";"], trim: true)
     # Process the tags, checking for cascade names & definitions.
     # This function also initializes the accumulator for subsequent steps.
     |> phase_one(tags_db, cascades_db)

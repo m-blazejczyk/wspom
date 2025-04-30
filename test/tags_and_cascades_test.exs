@@ -4,6 +4,13 @@ defmodule TagsAndCascadesTest do
   alias Wspom.Entries.TnC
   alias Wspom.Entry
 
+  ###################################################################
+  #
+  # BEFORE RUNNING THESE TESTS, open application.ex and change
+  # is_production to false!
+  #
+  ###################################################################
+
   test "Tags from string" do
     {:ok, %{tags_applied: tags_applied}} = TnC.tags_from_string("")
     assert tags_applied == MapSet.new([])

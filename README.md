@@ -33,7 +33,12 @@ scp weight.dat michal@rpi:/home/michal/wspom
 
 # Deploy or re-deploy
 
-First, kill the running process:
+Go to the `wspom` folder:
+```
+cd wspom
+```
+
+First, kill the running process and exit the screen. After the first command, do `CTRL+C A` to stop the Elixir process, and then continue with `-ls` and `-X -S`.
 
 ```
 screen -r
@@ -41,14 +46,31 @@ screen -ls
 screen -X -S 2967.pts-1.malina quit 
 ```
 
-Then, rebuild:
-
-xyz
-
-Finally, run the process:
+Get latest:
 
 ```
-cd wspom
+git pull
+```
+
+Change the version on the top of this file:
+
+```
+vi mix.exs
+```
+
+Then, rebuild:
+
+```
+MIX_ENV=prod mix release
+mix assets.deploy 
+```
+
+If everything was fine, commit the changes made to `mix.exs`.
+
+Then, open `screen` and run the process:
+
+```
+screen
 authbind --deep _build/prod/rel/wspom/bin/wspom start
 ```
 

@@ -61,8 +61,10 @@ vi mix.exs
 Then, rebuild:
 
 ```
-MIX_ENV=prod mix release
-mix assets.deploy 
+MIX_ENV=prod mix compile
+MIX_ENV=prod mix assets.deploy
+mix phx.gen.release
+MIX_ENV=prod mix release 
 ```
 
 If everything was fine, commit the changes made to `mix.exs`.

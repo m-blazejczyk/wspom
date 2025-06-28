@@ -1,5 +1,6 @@
 defmodule WspomWeb.Live.Weight.WeightData do
   use WspomWeb, :live_view
+
   alias Wspom.Weight.Context
 
   @impl true
@@ -19,7 +20,8 @@ defmodule WspomWeb.Live.Weight.WeightData do
     }
   end
 
-
+  # These are helper functions for the HEEX template
+  # (That's why they are `defp`).
   defp format_weight(w) when is_integer(w), do: Integer.to_string(w) <> ".00"
   defp format_weight(w) when is_float(w), do: :erlang.float_to_binary(w, [{:decimals, 2}])
 

@@ -1,7 +1,7 @@
 defmodule Wspom.Book do
   alias Wspom.Book
 
-  import Ecto.Changeset
+  # import Ecto.Changeset
 
   # :length_type is either :pages, :time or :percent.
   # If :length_type is :time, :hours and :minutes should be set,
@@ -20,6 +20,7 @@ defmodule Wspom.Book do
 
   # These types are only used for changeset validation.
   # These are the types that will be visible and editable in the form.
+  # They are different that what will be saved to the database.
   # See https://hexdocs.pm/ecto/Ecto.Schema.html#module-types-and-castin
   @types %{id: :integer, title: :string, author: :string,
     length: :string, medium: :string, is_fiction: :boolean, status: :string}

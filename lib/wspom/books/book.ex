@@ -14,7 +14,7 @@ defmodule Wspom.Book do
   # The date fields are calculated, not directly editable; they can both
   # be nil; :started_date will be nil in the rare cases of books that
   # were started being read before they were added to the database.
-  defstruct [:id, :title, :author, length: {:pages, 0},
+  defstruct [:id, :title, :short_title, :author, length: {:pages, 0},
     medium: :book, is_fiction: true, status: :active,
     started_date: nil, finished_date: nil, history: []]
 
@@ -22,7 +22,7 @@ defmodule Wspom.Book do
   # These are the types that will be visible and editable in the form.
   # They are different that what will be saved to the database.
   # See https://hexdocs.pm/ecto/Ecto.Schema.html#module-types-and-castin
-  @types %{id: :integer, title: :string, author: :string,
+  @types %{id: :integer, title: :string, short_title: :string, author: :string,
     length: :string, medium: :string, is_fiction: :boolean, status: :string}
 
 end

@@ -1,15 +1,43 @@
 <div class="max-w-lg mx-auto border border-gray-200 rounded shadow-md px-8 py-10 flex flex-col items-center">
   <div class="flex justify-center items-center w-full">
     <section class="min-w-md">
-      <ul class="grid grid-cols-2 gap-6">
+      <ul class="grid grid-cols-3 gap-6">
         <WspomWeb.CardComponent.small_card href={~p"/"} img={~p"/images/home_64.png"}
           label="Go back to the home page" />
+        <WspomWeb.CardComponent.small_card href={~p"/books"} img={~p"/images/books_64.png"}
+          label="Go back to books" />
         <WspomWeb.CardComponent.small_card href={~p"/books/new"} img={~p"/images/add_64.png"}
           label="Add a book" />
       </ul>
     </section>
   </div>  
   <div class="flex justify-center items-center w-full">
-    Books will go here!
+    <table class="w-3/4 divide-y divide-gray-200">
+      <thead>
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Book</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">%</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Act</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <tr :for={book <- @books}>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <.link navigate={~p"/books/#{book.id}/view"}><%= book.short_title %></.link>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            X
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <ul class="grid grid-cols-2 gap-2">
+            <WspomWeb.CardComponent.tiny_card href={~p"/books/#{book.id}/edit"}
+              img={~p"/images/edit_24.png"} label="Edit book" />
+            <WspomWeb.CardComponent.tiny_card href={~p"/books/#{book.id}/read"}
+              img={~p"/images/read_24.png"} label="Read book" />
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

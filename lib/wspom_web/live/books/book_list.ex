@@ -16,12 +16,26 @@ defmodule WspomWeb.Live.Books.BookList do
   # This page will list all books and provide some filtering / sorting options.
   defp apply_action(socket, :list, _params) do
     socket
-    |> assign(:data,
-      Context.get_all_records())
+    |> assign(:books, Context.get_all_records())
   end
 
   # This displays the "add book" popup on top of the books list page.
   defp apply_action(socket, :add_book, _params) do
+    socket
+  end
+
+  # This displays the "read book" popup on top of the books list page.
+  defp apply_action(socket, :read_book, _params) do
+    socket
+  end
+
+  # This displays the "view book" popup on top of the books list page.
+  defp apply_action(socket, :view_book, _params) do
+    socket
+  end
+
+  # This displays the "edit book" popup on top of the books list page.
+  defp apply_action(socket, :edit_book, _params) do
     socket
   end
 end

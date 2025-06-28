@@ -54,4 +54,22 @@ defmodule WspomWeb.CardComponent do
     </li>
     """
   end
+
+  def tiny_card(assigns) do
+    ~H"""
+    <li>
+      <a href={@href}
+        class="block h-full bg-white">
+        <div class="flex items-center">
+          <div
+            class="flex items-center justify-center flex-shrink-0 w-8 h-8">
+            <!-- Source: flaticon.com -->
+            <img class="transition-all duration-200 rounded group-hover:bg-orange-100 border border-gray-200 rounded group hover:shadow-lg hover:border-gray-700 hover:ring-1 hover:ring-gray-700/5"
+              src={@img} aria-label={@label}/>
+          </div>
+        </div>
+      </a>
+    </li>
+    """
+  end
 end

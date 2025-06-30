@@ -41,3 +41,15 @@
     </table>
   </div>
 </div>
+
+<.modal :if={@live_action in [:add_book, :view_book, :edit_book]}
+  id="book-modal" show on_cancel={JS.patch(~p"/books/list")}>
+  <.live_component
+    module={WspomWeb.Live.BookEditForm}
+    id={@book.id || :new}
+    title={@page_title}
+    action={@live_action}
+    book={@book}
+    patch={~p"/books/list"}
+  />
+</.modal>

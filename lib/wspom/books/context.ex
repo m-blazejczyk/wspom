@@ -35,4 +35,48 @@ defmodule Wspom.Books.Context do
       medium: :book, is_fiction: false, status: :active,
       started_date: ~D[2025-03-28], finished_date: nil}]
   end
+
+  @doc """
+  Gets a single book by id. the id can be a string.
+
+  Raises `Ecto.NoResultsError`if the Book does not exist.
+
+  ## Examples
+
+      iex> get_book!(123)
+      %Entry{}
+
+      iex> get_book!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_book!(id) when is_binary(id) do
+    get_book!(String.to_integer(id))
+  end
+  def get_book!(id) when is_integer(id) do
+    # case entry = Database.get_entry(id) do
+    #   %Entry{} ->
+    #     entry
+    #   _ ->
+    #     raise Ecto.NoResultsError, message: "No entry with id #{id}"
+    # end
+    %Book{id: 5, title: "Sad Planets", short_title: "Sad Planets",
+      author: "Eugene Thacker", length: {:pages, 325},
+      medium: :book, is_fiction: false, status: :active,
+      started_date: ~D[2025-03-28], finished_date: nil}
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking book changes.
+  This function is invoked every time a field in the form changes.
+
+  ## Examples
+
+      iex> change_book(book)
+      %Ecto.Changeset{data: %Book{}}
+
+  """
+  def change_book(book, attrs \\ %{}) do
+    Book.changeset(book, attrs)
+  end
 end

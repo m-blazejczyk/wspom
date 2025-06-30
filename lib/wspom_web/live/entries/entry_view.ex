@@ -48,7 +48,7 @@ defmodule WspomWeb.Live.EntryView do
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
-    entry = Context.get_entry!(id) |> IO.inspect(label: "EDITING ENTRY")
+    entry = Context.get_entry!(id)
     {tags, cascades} = Context.get_tags_and_cascades()
 
     socket

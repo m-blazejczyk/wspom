@@ -1,7 +1,7 @@
 defmodule Wspom.Book do
   alias Wspom.Book
 
-  # import Ecto.Changeset
+  import Ecto.Changeset
 
   # :length_type is either :pages, :time or :percent.
   # If :length_type is :time, :hours and :minutes should be set,
@@ -25,4 +25,10 @@ defmodule Wspom.Book do
   @types %{id: :integer, title: :string, short_title: :string, author: :string,
     length: :string, medium: :string, is_fiction: :boolean, status: :string}
 
+  # Creates and validates a chnageset.
+  def changeset(book, attrs) do
+    {book, @types}
+    |> cast(attrs, [:id, :title, :short_title, :author, :length, :medium, :is_fiction, :status])
+    |> validate_required([:title, :short_title, :author, :length, :medium, :is_fiction])
+  end
 end

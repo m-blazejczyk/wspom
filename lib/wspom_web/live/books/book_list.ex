@@ -17,25 +17,38 @@ defmodule WspomWeb.Live.Books.BookList do
   defp apply_action(socket, :list, _params) do
     socket
     |> assign(:books, Context.get_all_records())
+    |> assign(:page_title, "All Books")
   end
 
   # This displays the "add book" popup on top of the books list page.
   defp apply_action(socket, :add_book, _params) do
     socket
+    |> assign(:books, Context.get_all_records())
+    |> assign(:page_title, "New Book")
   end
 
   # This displays the "read book" popup on top of the books list page.
   defp apply_action(socket, :read_book, _params) do
     socket
+    |> assign(:books, Context.get_all_records())
+    |> assign(:page_title, "Read Book")
   end
 
   # This displays the "view book" popup on top of the books list page.
-  defp apply_action(socket, :view_book, _params) do
+  defp apply_action(socket, :view_book, %{"book" => id}) do
+    book = Context.get_book!(id)
     socket
+    |> assign(:books, Context.get_all_records())
+    |> assign(:book, book)
+    |> assign(:page_title, "View Book")
   end
 
   # This displays the "edit book" popup on top of the books list page.
-  defp apply_action(socket, :edit_book, _params) do
+  defp apply_action(socket, :edit_book, %{"book" => id}) do
+    book = Context.get_book!(id)
     socket
+    |> assign(:books, Context.get_all_records())
+    |> assign(:book, book)
+    |> assign(:page_title, "Edit Book")
   end
 end

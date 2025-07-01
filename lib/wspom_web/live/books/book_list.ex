@@ -1,6 +1,7 @@
 defmodule WspomWeb.Live.Books.BookList do
   use WspomWeb, :live_view
 
+  alias Wspom.Book
   alias Wspom.Books.Context
 
   @impl true
@@ -24,6 +25,7 @@ defmodule WspomWeb.Live.Books.BookList do
   defp apply_action(socket, :add, _params) do
     socket
     |> assign(:books, Context.get_all_records())
+    |> assign(:book, Book.new())
     |> assign(:page_title, "New Book")
   end
 

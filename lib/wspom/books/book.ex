@@ -31,4 +31,8 @@ defmodule Wspom.Book do
     |> cast(attrs, [:id, :title, :short_title, :author, :length, :medium, :is_fiction])
     |> validate_required([:title, :short_title, :author, :length, :medium, :is_fiction])
   end
+
+  def new() do
+    %Book{title: "", short_title: "", author: ""}
+  end
 end

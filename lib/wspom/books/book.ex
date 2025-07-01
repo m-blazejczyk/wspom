@@ -3,12 +3,9 @@ defmodule Wspom.Book do
 
   import Ecto.Changeset
 
-  # :length_type is either :pages, :time or :percent.
-  # If :length_type is :time, :hours and :minutes should be set,
-  # and :pages should be nil.
-  # For the other values of :length_type, it's the opposite.
+  # For the explanation of the :length field, see book_len.ex.
   # :medium can be: :book, :audiobook, :ebook, :comics.
-  # :status can be: :active, :finished, :on_hold, :abandoned.
+  # :status can be: :new, :active, :finished, :on_hold, :abandoned.
   # :history is a list containing both reading history and status history.
   # See book_history.ex for more information.
   # The date fields are calculated, not directly editable; they can both

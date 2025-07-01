@@ -1,6 +1,4 @@
 defmodule Wspom.BookHistory do
-  alias Wspom.BookHistory
-
   # This data type is extremely simple but flexible in order to
   # accomodate any type of information that would need to be tracked.
   #

@@ -33,10 +33,12 @@ defmodule WspomWeb.Router do
     live "/books/history/new", Live.Books.BookIndex, :add_history
 
     live "/books/list", Live.Books.BookList, :list
-    live "/books/new", Live.Books.BookList, :add_book
-    live "/books/:book/read", Live.Books.BookList, :read_book
-    live "/books/:book/view", Live.Books.BookList, :view_book
-    live "/books/:book/edit", Live.Books.BookList, :edit_book
+    live "/books/new", Live.Books.BookList, :add
+    live "/books/:book/read", Live.Books.BookList, :read
+    live "/books/:book/edit", Live.Books.BookList, :edit
+
+    live "/books/:book", Live.Books.BookView, :view
+    # live "/books/:book/view/edit", Live.Books.BookView, :edit
   end
 
   # Enable LiveDashboard in development

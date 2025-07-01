@@ -28,7 +28,7 @@ defmodule Wspom.Book do
   # Creates and validates a chnageset.
   def changeset(book, attrs) do
     {book, @types}
-    |> cast(attrs, [:id, :title, :short_title, :author, :length, :medium, :is_fiction, :status])
+    |> cast(attrs, [:id, :title, :short_title, :author, :length, :medium, :is_fiction])
     |> validate_required([:title, :short_title, :author, :length, :medium, :is_fiction])
   end
 end

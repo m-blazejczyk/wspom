@@ -23,7 +23,7 @@
       <tbody class="bg-white divide-y divide-gray-200">
         <tr :for={book <- @books}>
           <td class="px-6 py-4 whitespace-nowrap">
-            <.link navigate={~p"/books/#{book.id}/view"}><%= book.short_title %></.link>
+            <.link navigate={~p"/books/#{book.id}"}><%= book.short_title %></.link>
           </td>
           <td class="px-6 py-4 whitespace-nowrap">
             X
@@ -42,7 +42,7 @@
   </div>
 </div>
 
-<.modal :if={@live_action in [:add_book, :view_book, :edit_book]}
+<.modal :if={@live_action in [:add, :edit]}
   id="book-modal" show on_cancel={JS.patch(~p"/books/list")}>
   <.live_component
     module={WspomWeb.Live.BookEditForm}

@@ -17,14 +17,14 @@ defmodule WspomWeb.Live.Books.BookList do
   # This page will list all books and provide some filtering / sorting options.
   defp apply_action(socket, :list, _params) do
     socket
-    |> assign(:books, Context.get_all_records())
+    |> assign(:books, Context.get_all_books())
     |> assign(:page_title, "All Books")
   end
 
   # This displays the "add book" popup on top of the books list page.
   defp apply_action(socket, :add, _params) do
     socket
-    |> assign(:books, Context.get_all_records())
+    |> assign(:books, Context.get_all_books())
     |> assign(:book, Book.new())
     |> assign(:page_title, "New Book")
   end
@@ -32,7 +32,7 @@ defmodule WspomWeb.Live.Books.BookList do
   # This displays the "read book" popup on top of the books list page.
   defp apply_action(socket, :read, _params) do
     socket
-    |> assign(:books, Context.get_all_records())
+    |> assign(:books, Context.get_all_books())
     |> assign(:page_title, "Read Book")
   end
 
@@ -40,7 +40,7 @@ defmodule WspomWeb.Live.Books.BookList do
   defp apply_action(socket, :edit, %{"book" => id}) do
     book = Context.get_book!(id)
     socket
-    |> assign(:books, Context.get_all_records())
+    |> assign(:books, Context.get_all_books())
     |> assign(:book, book)
     |> assign(:page_title, "Edit Book")
   end

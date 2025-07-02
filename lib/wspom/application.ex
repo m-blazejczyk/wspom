@@ -22,6 +22,8 @@ defmodule Wspom.Application do
       {Phoenix.PubSub, name: Wspom.PubSub},
       {Wspom.Entries.Database, is_production: is_production},
       {Wspom.Weight.Database, is_production: is_production},
+      {Wspom.Books.Database, is_production: false},
+
       # Start to serve requests, typically the last entry
       WspomWeb.Endpoint
     ]

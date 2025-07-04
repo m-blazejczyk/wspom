@@ -54,4 +54,31 @@ defmodule Wspom.Books.Context do
   def change_book(book, attrs \\ %{}) do
     Book.changeset(book, attrs)
   end
+
+
+  @doc """
+  Updates a book and saves it in the database.
+  The `book` argument is the original, unmodified book (%Book{}).
+  The `attrs` argument is a map containing all the values from the form.
+
+  ## Examples
+
+      iex> update_book(book, %{field: new_value})
+      {:ok, %Book{}}
+
+      iex> update_book(book, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_book(book, attrs) do
+    case book
+    |> Book.changeset(attrs)
+    |> Book.update_book() do
+      {:error, _changeset} = err ->
+        err
+      {:ok, updated_book} ->
+        saved_book = Database.replace_book_and_save(updated_book)
+        {:ok, saved_book}
+    end
+end
 end

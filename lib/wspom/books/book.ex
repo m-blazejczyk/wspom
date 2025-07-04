@@ -22,7 +22,7 @@ defmodule Wspom.Book do
   @types %{id: :integer, title: :string, short_title: :string, author: :string,
     length: :string, medium: :string, is_fiction: :boolean, status: :string}
 
-  # Creates and validates a chnageset.
+  # Creates and validates a changeset - only used to validate the form.
   def changeset(book, attrs) do
     {book, @types}
     |> cast(attrs, [:id, :title, :short_title, :author, :length, :medium, :is_fiction])
@@ -31,5 +31,43 @@ defmodule Wspom.Book do
 
   def new() do
     %Book{title: "", short_title: "", author: ""}
+  end
+
+  @doc """
+  Updates a book if the changeset is valid.
+  Returns {:ok, %Book{}} or {:error, %Ecto.Changeset{}}.
+  Notes:
+   - changeset.data contains the original book (type: %Book{})
+   - changeset.changes contains a map containing the changes,
+     e.g. %{title: "Kajko i Kokosz", author: "Christa"}
+  """
+  def update_book(%Ecto.Changeset{valid?: false} = cs) do
+    {:error, cs}
+  end
+  def update_book(%Ecto.Changeset{data: book, changes: changes} = changeset) do
+    # Go over all changes and update the book for each of them - or throw an error
+    case Enum.reduce(changes, {:continue, book}, &update_field/2) do
+      {:error, {field, error}} ->
+        {:error, changeset |> Ecto.Changeset.add_error(field, error)}
+      {:continue, new_book} ->
+        # We may need to handle length here… We'll see.
+        # new_book = %Book{new_book | date: new_date, weekday: Timex.weekday(new_date)}
+        {:ok, new_book}
+    end
+  end
+
+  # Used by Enum.reduce() to go over a map of field changes.
+  # The first argument is a tuple with {field_name, new_value}.
+  # The second argument is the accumulator - one of:
+  #   {:continue, %Book{}}
+  #   {:error, message} (where 'message' is a string)
+  # Returns the new accumulator.
+  defp update_field(_, {:error, _} = error) do
+    # Once an error has been encountered, ignore all subsequent changes.
+    error
+  end
+  # "Enum" fields will require special handling; skip for now
+  defp update_field({field_name, field_value}, {:continue, %Book{} = book}) do
+    {:continue, book |> Map.put(field_name, field_value)}
   end
 end

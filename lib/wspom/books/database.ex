@@ -82,4 +82,34 @@ defmodule Wspom.Books.Database do
   def get_all_books() do
     Agent.get(__MODULE__, fn %{books: books} -> books end)
   end
+
+  def add_book_and_save(created_book) do
+    Logger.notice("Saving the new book…")
+    modify_and_save_data(created_book, fn books, book ->
+      max_id = DbBase.find_max_id(books)
+      new_book = %{book | id: max_id + 1}
+      {[new_book | books], new_book}
+    end)
+  end
+
+  def replace_book_and_save(updated_book) do
+    Logger.notice("Saving the modified book…")
+    modify_and_save_data(updated_book, fn books, book ->
+      {books |> DbBase.find_and_replace([], book), book}
+    end)
+  end
+
+  def modify_and_save_data(book, update_fun) do
+    Agent.get_and_update(__MODULE__,
+      fn %{books: books, is_production: is_prod} = state ->
+        {new_books, new_book} = update_fun.(books, book)
+        new_state = %{state | books: new_books}
+
+        if is_prod do
+          new_state |> DbBase.save_db_file(@db_file, @db_file_backup)
+        end
+
+        {new_book, new_state}
+      end)
+  end
 end

@@ -3,8 +3,6 @@ defmodule WspomWeb.Live.BookEditForm do
 
   alias Wspom.Books.Context
 
-  # Protocol.UndefinedError
-
   # This is required in order for the form to load the initial value
   # of length from Book.
   defimpl Phoenix.HTML.Safe, for: Tuple do
@@ -62,30 +60,27 @@ defmodule WspomWeb.Live.BookEditForm do
   end
 
   def handle_event("save", %{"book" => params}, socket) do
-    save_entry(socket, socket.assigns.action, params)
+    save_book(socket, socket.assigns.action, params)
   end
 
-  defp save_entry(socket, :edit, params) do
-    # case Context.update_entry(socket.assigns.entry, params) do
-    #   {:ok, entry, summary} ->
-    #     notify_parent({:saved, entry})
+  defp save_book(socket, :edit, params) do
+    case Context.update_book(socket.assigns.book, params) do
+      {:ok, book} ->
+        notify_parent({:saved, book})
 
-    #     {:noreply,
-    #      socket
-    #      |> push_patch(to: socket.assigns.patch)}
+        {:noreply,
+         socket
+         |> push_patch(to: socket.assigns.patch)}
 
-    #   {:error, %Ecto.Changeset{} = changeset} ->
-    #     {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
-    # end
-    {:noreply,
-      socket
-      |> push_patch(to: socket.assigns.patch)}
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
+    end
   end
 
-  defp save_entry(socket, :new, params) do
-    # case Context.create_entry(params) do
-    #   {:ok, entry, summary} ->
-    #     notify_parent({:saved, entry})
+  defp save_book(socket, :new, params) do
+    # case Context.create_book(params) do
+    #   {:ok, book, summary} ->
+    #     notify_parent({:saved, book})
 
     #     {:noreply,
     #      socket

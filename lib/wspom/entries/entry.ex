@@ -142,6 +142,8 @@ defmodule Wspom.Entry do
     when field_name == :weekday or field_name == :date do
     {:error, {field_name, "Not allowed to set #{field_name} directly"}}
   end
+  # TODO: it appears that it is nor necessary to manually convert
+  # strings to atoms (see book.ex).
   defp update_field({:importance, "normal"}, {:continue, entry = %Entry{}, tags_info}) do
     {:continue, entry |> Map.put(:importance, :normal), tags_info}
   end

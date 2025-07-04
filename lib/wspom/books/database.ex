@@ -72,6 +72,12 @@ defmodule Wspom.Books.Database do
     state
   end
 
+  def get_stats do
+    Agent.get(__MODULE__, fn %{books: books} ->
+      %{books: length(books)}
+    end)
+  end
+
   # Will return nil if the book is not found.
   def get_book(id) do
     Agent.get(__MODULE__, fn %{books: books} ->

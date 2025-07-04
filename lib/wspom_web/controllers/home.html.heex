@@ -6,7 +6,7 @@
     <WspomWeb.CardComponent.card href={~p"/weight"} img={~p"/images/scale_64.png"}
       name="Weight" info={@days} label="Weight" />
     <WspomWeb.CardComponent.card href={~p"/books"} img={~p"/images/books_64.png"}
-      name="Books" info="0 books" label="Books" />
+      name="Books" info={@books} label="Books" />
   </ul>
   <p class="px-2 text-xs leading-2 m-8">
     wsp <%= Application.spec(:wspom, :vsn) %>

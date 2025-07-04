@@ -4,6 +4,13 @@ defmodule Wspom.Books.Context do
   alias Wspom.Books.Database
 
   @doc """
+  Returns a map with database stats.
+  """
+  def get_stats do
+    Database.get_stats()
+  end
+
+  @doc """
   Returns all books from the database.
 
   ## Examples

@@ -1,5 +1,6 @@
 defmodule Wspom.Book do
   alias Wspom.Book
+  alias Wspom.BookLen
 
   import Ecto.Changeset
 
@@ -11,7 +12,7 @@ defmodule Wspom.Book do
   # The date fields are calculated, not directly editable; they can both
   # be nil; :started_date will be nil in the rare cases of books that
   # were started being read before they were added to the database.
-  defstruct [:id, :title, :short_title, :author, length: {:pages, 0},
+  defstruct [:id, :title, :short_title, :author, length: BookLen.new_pages(0),
     medium: :book, is_fiction: true, status: :active,
     started_date: nil, finished_date: nil, history: []]
 
@@ -27,10 +28,27 @@ defmodule Wspom.Book do
     {book, @types}
     |> cast(attrs, [:id, :title, :short_title, :author, :length, :medium, :is_fiction])
     |> validate_required([:title, :short_title, :author, :length, :medium, :is_fiction])
+    |> validate_book_length(:length, :valid_length)
+  end
+
+  # In addition to validating the length field (entered as a string),
+  # this function will also put the value as %BookLen{} into field
+  # `db_field` of the changeset.
+  defp validate_book_length(%Ecto.Changeset{} = changeset, str_field, db_field) do
+    with {:ok, length_str} <- changeset |> Ecto.Changeset.fetch_change(str_field) do
+      case BookLen.parse_str(length_str) do
+        {:ok, length_parsed} ->
+          changeset |> Ecto.Changeset.put_change(db_field, length_parsed)
+        {:error, error} ->
+          changeset |> Ecto.Changeset.add_error(str_field, error)
+      end
+    else
+      _ -> changeset
+    end
   end
 
   def new() do
-    %Book{title: "", short_title: "", author: ""}
+    %Book{title: "", short_title: "", author: "", length: BookLen.new_pages(0)}
   end
 
   @doc """

@@ -5,8 +5,8 @@ defmodule WspomWeb.Live.BookEditForm do
 
   # This is required in order for the form to load the initial value
   # of length from Book.
-  defimpl Phoenix.HTML.Safe, for: Tuple do
-    def to_iodata(t), do: Wspom.BookLen.len_to_string(t)
+  defimpl Phoenix.HTML.Safe, for: Wspom.BookLen do
+    def to_iodata(len), do: Wspom.BookLen.to_string(len)
   end
 
   @impl true

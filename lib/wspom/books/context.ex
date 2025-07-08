@@ -62,11 +62,34 @@ defmodule Wspom.Books.Context do
     Book.changeset(book, attrs)
   end
 
+  @doc """
+  Creates a new book based on a map of changes made in a form,
+  then saves it in the database.
+
+  ## Examples
+
+      iex> create_book(%{field: new_value, …})
+      {:ok, %{...}}
+
+      iex> create_book(%{field: bad_value, …})
+      {:error, %Ecto.Changeset{}}
+  """
+  def create_book(params \\ %{}) do
+    case Book.new()
+    |> Book.changeset(params)
+    |> Book.update_book() do
+      {:error, _changeset} = err ->
+        err
+      {:ok, updated_book} ->
+        saved_book = Database.add_book_and_save(updated_book)
+        {:ok, saved_book}
+    end
+  end
 
   @doc """
   Updates a book and saves it in the database.
   The `book` argument is the original, unmodified book (%Book{}).
-  The `attrs` argument is a map containing all the values from the form.
+  The `params` argument is a map containing all the values from the form.
 
   ## Examples
 
@@ -77,9 +100,9 @@ defmodule Wspom.Books.Context do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_book(book, attrs) do
+  def update_book(book, params) do
     case book
-    |> Book.changeset(attrs)
+    |> Book.changeset(params)
     |> Book.update_book() do
       {:error, _changeset} = err ->
         err
@@ -87,5 +110,5 @@ defmodule Wspom.Books.Context do
         saved_book = Database.replace_book_and_save(updated_book)
         {:ok, saved_book}
     end
-end
+  end
 end

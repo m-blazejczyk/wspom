@@ -83,22 +83,18 @@ defmodule WspomWeb.Live.BookEditForm do
     end
   end
 
-  defp save_book(socket, :new, params) do
-    # case Context.create_book(params) do
-    #   {:ok, book, summary} ->
-    #     notify_parent({:saved, book})
+  defp save_book(socket, :add, params) do
+    case Context.create_book(params) do
+      {:ok, book} ->
+        notify_parent({:saved, book})
 
-    #     {:noreply,
-    #      socket
-    #      |> push_patch(to: socket.assigns.patch)}
+        {:noreply,
+         socket
+         |> push_patch(to: socket.assigns.patch)}
 
-    #   {:error, %Ecto.Changeset{} = changeset} ->
-    #     {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
-    # end
-
-    {:noreply,
-      socket
-      |> push_patch(to: socket.assigns.patch)}
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
+    end
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})

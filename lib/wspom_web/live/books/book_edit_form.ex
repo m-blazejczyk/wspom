@@ -35,7 +35,7 @@ defmodule WspomWeb.Live.BookEditForm do
         <.input field={@form[:author]} type="text" label="Author" />
         <.input field={@form[:length]} type="text" label="Length (pages or hh:mm)" />
         <.input field={@form[:medium]} type="select" label="Medium"
-          options={[{"Printed Book", "book, , , "},
+          options={[{"Printed Book", "book"},
             {"Audiobook", "audiobook"},
             {"E-book", "ebook"},
             {"Comics / Graphic Novel", "comics"}]} />

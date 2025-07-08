@@ -28,19 +28,17 @@ defmodule Wspom.Book do
     {book, @types}
     |> cast(attrs, [:id, :title, :short_title, :author, :length, :medium, :is_fiction])
     |> validate_required([:title, :short_title, :author, :length, :medium, :is_fiction])
-    |> validate_book_length(:length, :valid_length)
+    |> validate_book_length(:length)
   end
 
-  # In addition to validating the length field (entered as a string),
-  # this function will also put the value as %BookLen{} into field
-  # `db_field` of the changeset.
-  defp validate_book_length(%Ecto.Changeset{} = changeset, str_field, db_field) do
-    with {:ok, length_str} <- changeset |> Ecto.Changeset.fetch_change(str_field) do
+  # Validates the length field (entered as a string).
+  defp validate_book_length(%Ecto.Changeset{} = changeset, field) do
+    with {:ok, length_str} <- changeset |> Ecto.Changeset.fetch_change(field) do
       case BookLen.parse_str(length_str) do
-        {:ok, length_parsed} ->
-          changeset |> Ecto.Changeset.put_change(db_field, length_parsed)
+        {:ok, _length_parsed} ->
+          changeset
         {:error, error} ->
-          changeset |> Ecto.Changeset.add_error(str_field, error)
+          changeset |> Ecto.Changeset.add_error(field, error)
       end
     else
       _ -> changeset
@@ -68,9 +66,15 @@ defmodule Wspom.Book do
       {:error, {field, error}} ->
         {:error, changeset |> Ecto.Changeset.add_error(field, error)}
       {:continue, new_book} ->
-        # We may need to handle length here… We'll see.
-        # new_book = %Book{new_book | date: new_date, weekday: Timex.weekday(new_date)}
-        {:ok, new_book}
+        # At this point, new_book.length is a string - but it's been validated
+        case BookLen.parse_str(new_book.length) do
+          {:ok, length_parsed} ->
+            {:ok, %Book{new_book | length: length_parsed}}
+          {:error, error} ->
+            # We should never get to this code but I will include it
+            # for completness sake
+            {:error, changeset |> Ecto.Changeset.add_error(:length, error)}
+        end
     end
   end
 

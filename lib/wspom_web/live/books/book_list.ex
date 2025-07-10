@@ -11,7 +11,10 @@ defmodule WspomWeb.Live.Books.BookList do
 
   @impl true
   def handle_params(params, _url, socket) do
-    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+    {
+      :noreply,
+      apply_action(socket, socket.assigns.live_action, params)
+    }
   end
 
   # This page will list all books and provide some filtering / sorting options.

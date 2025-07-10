@@ -1,0 +1,48 @@
+<div class="max-w-[800px] mx-auto border border-gray-200 rounded shadow-md px-8 py-10 flex flex-col items-center">
+  <div class="flex justify-center items-center w-full pb-8">
+    <section class="min-w-md">
+      <ul class="grid grid-cols-3 gap-6">
+        <WspomWeb.CardComponent.small_card href={~p"/"} img={~p"/images/home_64.png"}
+          label="Go back to the home page" />
+        <WspomWeb.CardComponent.small_card href={~p"/books"} img={~p"/images/books_64.png"}
+          label="Go back to books" />
+        <WspomWeb.CardComponent.small_card href={~p"/books/#{@book.id}/view/edit"} img={~p"/images/add_64.png"}
+          label="Edit this book" />
+      </ul>
+    </section>
+  </div>
+  <div class="w-3/4 flex justify-center items-center w-full">
+
+    <header class="items-center justify-between gap-6">
+      <div>
+        <h1 class="text-lg font-semibold leading-8 text-zinc-800">
+          <%= @book.title %>
+        </h1>
+        <h2 class="text-base mt-2 leading-6 text-zinc-800">
+          <%= @book.author %>
+        </h2>
+      </div>
+    </header>
+  </div>
+  <div class="flex justify-center items-center w-full">
+    <.list>
+      <:item title="Short title"><%= @book.short_title %></:item>
+      <:item title="Status"><%= @book.status %></:item>
+      <:item title="Length"><%= @book.length %></:item>
+      <:item title="Medium"><%= @book.medium %></:item>
+      <:item title="Type"><%= @book.is_fiction %></:item>
+    </.list>
+  </div>
+</div>
+
+<.modal :if={@live_action in [:edit]}
+  id="book-modal" show on_cancel={JS.patch(~p"/books/#{@book.id}")}>
+  <.live_component
+    module={WspomWeb.Live.BookEditForm}
+    id={@book.id}
+    title={@page_title}
+    action={@live_action}
+    book={@book}
+    patch={~p"/books/{@book.id}"}
+  />
+</.modal>

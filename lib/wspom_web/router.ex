@@ -30,7 +30,7 @@ defmodule WspomWeb.Router do
     live "/weight/charts", Live.Weight.WeightCharts, :charts
 
     live "/books", Live.Books.BookIndex, :index
-    live "/books/history/new", Live.Books.BookIndex, :add_history
+    live "/books/read", Live.Books.BookIndex, :read
 
     live "/books/list", Live.Books.BookList, :list
     live "/books/new", Live.Books.BookList, :add
@@ -39,6 +39,7 @@ defmodule WspomWeb.Router do
 
     live "/books/:book", Live.Books.BookView, :view
     live "/books/:book/view/edit", Live.Books.BookView, :edit
+    live "/books/:book/view/read", Live.Books.BookView, :read
   end
 
   # Enable LiveDashboard in development

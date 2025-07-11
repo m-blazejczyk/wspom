@@ -2,11 +2,11 @@
   <div class="flex justify-center items-center w-full pb-8">
     <section class="min-w-md">
       <ul class="grid grid-cols-3 gap-6">
-        <WspomWeb.CardComponent.small_card href={~p"/"} img={~p"/images/home_64.png"}
-          label="Go back to the home page" />
-        <WspomWeb.CardComponent.small_card href={~p"/books"} img={~p"/images/books_64.png"}
+        <WspomWeb.CardComponent.small_card href={~p"/books/list"} img={~p"/images/table_64.png"}
           label="Go back to books" />
-        <WspomWeb.CardComponent.small_card href={~p"/books/#{@book.id}/view/edit"} img={~p"/images/add_64.png"}
+        <WspomWeb.CardComponent.small_card href={~p"/books/#{@book.id}/view/read"} img={~p"/images/read_64.png"}
+          label="Read this book" />
+        <WspomWeb.CardComponent.small_card href={~p"/books/#{@book.id}/view/edit"} img={~p"/images/edit_64.png"}
           label="Edit this book" />
       </ul>
     </section>

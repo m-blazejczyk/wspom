@@ -16,8 +16,7 @@ defmodule Wspom.Weight.Context do
       %{id: nil, date: "2025-01-16", weight: ""}
   """
   def new_form_data() do
-    now = Timex.now("America/Montreal") |> DateTime.to_date() |> Date.to_string()
-    %{id: nil, date: now, weight: ""}
+    %{id: nil, date: Utils.date_now(), weight: ""}
   end
 
   @doc """

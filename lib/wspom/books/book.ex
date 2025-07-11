@@ -28,21 +28,7 @@ defmodule Wspom.Book do
     {book, @types}
     |> cast(attrs, [:id, :title, :short_title, :author, :length, :medium, :is_fiction])
     |> validate_required([:title, :short_title, :author, :length, :medium, :is_fiction])
-    |> validate_book_length(:length)
-  end
-
-  # Validates the length field (entered as a string).
-  defp validate_book_length(%Ecto.Changeset{} = changeset, field) do
-    with {:ok, length_str} <- changeset |> Ecto.Changeset.fetch_change(field) do
-      case BookLen.parse_str(length_str) do
-        {:ok, _length_parsed} ->
-          changeset
-        {:error, error} ->
-          changeset |> Ecto.Changeset.add_error(field, error)
-      end
-    else
-      _ -> changeset
-    end
+    |> BookLen.validate(:length)
   end
 
   def new() do

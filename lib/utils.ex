@@ -14,4 +14,8 @@ defmodule Utils do
   def weekday_short_name(5), do: "Pt"
   def weekday_short_name(6), do: "So"
   def weekday_short_name(7), do: "N"
+
+  def date_now() do
+    Timex.now("America/Montreal") |> DateTime.to_date() |> Date.to_string()
+  end
 end

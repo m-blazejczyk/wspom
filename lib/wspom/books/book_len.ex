@@ -1,5 +1,4 @@
 defmodule Wspom.BookLen do
-
   alias Wspom.BookLen
 
   @parser ~r/^(?<pages>[0-9]+)$|^(?<perc>[0-9]+)%$|^(?<hours>[0-9]+):(?<minutes>[0-9]+)$/
@@ -35,6 +34,21 @@ defmodule Wspom.BookLen do
   end
   def to_string(%BookLen{len_type: :percent, int_len: percent}) do
     Integer.to_string(percent) <> "%"
+  end
+
+  # Validates a form field representing a BookLen, entered as a string.
+  # To be used in changeset() functions.
+  def validate(%Ecto.Changeset{} = changeset, field) do
+    with {:ok, length_str} <- changeset |> Ecto.Changeset.fetch_change(field) do
+      case BookLen.parse_str(length_str) do
+        {:ok, _length_parsed} ->
+          changeset
+        {:error, error} ->
+          changeset |> Ecto.Changeset.add_error(field, error)
+      end
+    else
+      _ -> changeset
+    end
   end
 
   # This function returns {:ok, %BookLen{}} or {:error, "Error message"}

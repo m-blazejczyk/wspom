@@ -1,5 +1,6 @@
 defmodule Wspom.Books.Context do
 
+  alias Wspom.BookHistory
   alias Wspom.Book
   alias Wspom.Books.Database
 
@@ -60,6 +61,20 @@ defmodule Wspom.Books.Context do
   """
   def change_book(book, attrs \\ %{}) do
     Book.changeset(book, attrs)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking book history changes.
+  This function is invoked every time a field in the form changes.
+
+  ## Examples
+
+      iex> change_book_history(history)
+      %Ecto.Changeset{data: %BookHistory{}}
+
+  """
+  def change_book_history(history, attrs \\ %{}) do
+    BookHistory.changeset(history, attrs)
   end
 
   @doc """

@@ -2,6 +2,7 @@ defmodule Wspom.Books.Database do
   use Agent
   require Logger
 
+  alias Wspom.BookHistory
   alias Wspom.DbBase
   alias Wspom.Book
   alias Wspom.BookLen
@@ -39,6 +40,25 @@ defmodule Wspom.Books.Database do
   end
 
   defp fake_data do
+    fake_history = [
+      %BookHistory{id: 1, book_id: 5, date: ~D[2025-03-28], type: :status,
+        value: :new},
+      %BookHistory{id: 2, book_id: 5, date: ~D[2025-03-28], type: :status,
+        value: :active},
+      %BookHistory{id: 3, book_id: 5, date: ~D[2025-03-28], type: :read,
+        value: BookLen.new_pages(12)},
+      %BookHistory{id: 4, book_id: 5, date: ~D[2025-03-29], type: :read,
+        value: BookLen.new_pages(18)},
+      %BookHistory{id: 5, book_id: 5, date: ~D[2025-03-30], type: :read,
+        value: BookLen.new_pages(29)},
+      %BookHistory{id: 6, book_id: 5, date: ~D[2025-04-08], type: :updated,
+        value: BookLen.new_pages(82)},
+      %BookHistory{id: 7, book_id: 5, date: ~D[2025-04-09], type: :read,
+        value: BookLen.new_pages(95)},
+      %BookHistory{id: 8, book_id: 5, date: ~D[2025-04-10], type: :read,
+        value: BookLen.new_pages(112)},
+    ]
+
     [
       %Book{id: 1, title: "Singularity is Nearer", short_title: "Singularity",
       author: "Kurtzweil", length: BookLen.new_time(9, 36),
@@ -59,7 +79,8 @@ defmodule Wspom.Books.Database do
       %Book{id: 5, title: "Sad Planets", short_title: "Sad Planets",
       author: "Eugene Thacker", length: BookLen.new_pages(325),
       medium: :book, is_fiction: false, status: :active,
-      started_date: ~D[2025-03-28], finished_date: nil}
+      started_date: ~D[2025-03-28], finished_date: nil,
+      history: fake_history}
     ]
   end
 

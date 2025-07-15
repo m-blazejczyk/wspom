@@ -6,8 +6,8 @@ defmodule Wspom.Book do
 
   # For the explanation of the :length field, see book_len.ex.
   # :medium can be: :book, :audiobook, :ebook, :comics.
-  # :status can be: :new, :active, :finished, :on_hold, :abandoned.
-  # :history is a list containing both reading history and status history.
+  # :status can be: :active, :finished, :abandoned.
+  # :history is a list containing the reading history.
   # See book_history.ex for more information.
   # The date fields are calculated, not directly editable; they can both
   # be nil; :started_date will be nil in the rare cases of books that

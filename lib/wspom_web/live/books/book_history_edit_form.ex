@@ -31,7 +31,7 @@ defmodule WspomWeb.Live.BookHistoryEditForm do
           <%= @title %>
         </.header>
 
-        <.input field={@form[:value]} type="text" class="text-xl text-center"
+        <.input field={@form[:position]} type="text" class="text-xl text-center"
           class_container="flex items-start flex-col justify-start"/>
 
         <div class="flex flex-wrap rounded-lg bg-gray-300 max-w-sm mx-auto mt-24">

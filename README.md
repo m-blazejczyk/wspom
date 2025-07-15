@@ -69,9 +69,12 @@ MIX_ENV=prod mix release
 
 If everything was fine, commit the changes made to `mix.exs`.
 
-Then, open `screen` and run the process:
+# Run the application
+
+Open `screen` and run the process from the `wspom` directory:
 
 ```
+cd wspom
 screen
 authbind --deep _build/prod/rel/wspom/bin/wspom start
 ```

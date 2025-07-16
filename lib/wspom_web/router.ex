@@ -40,6 +40,7 @@ defmodule WspomWeb.Router do
     live "/books/:book", Live.Books.BookView, :view
     live "/books/:book/view/edit", Live.Books.BookView, :edit
     live "/books/:book/view/read", Live.Books.BookView, :read
+    live "/books/:book/view/history/:hist/edit", Live.Books.BookView, :history
   end
 
   # Enable LiveDashboard in development

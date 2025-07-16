@@ -21,4 +21,12 @@ defmodule WspomWeb.Live.Books.BookView do
 
   defp page_title(:view), do: "View Book"
   defp page_title(:edit), do: "Edit Book"
+  defp page_title(:read), do: "Read Book"
+  defp page_title(:history), do: "Edit Book History Record"
+
+  # These are helper functions for the HEEX template
+  # (That's why they are `defp`).
+  defp format_type(:read), do: ""
+  defp format_type(:updated), do: "Bulk update"
+  defp format_type(:skipped), do: "Skipped to:"
 end

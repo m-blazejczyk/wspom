@@ -36,6 +36,20 @@ defmodule Wspom.BookLen do
     Integer.to_string(percent) <> "%"
   end
 
+  # Calculates the "percent completed" value
+  # The first argument is the current position, the second one is the length
+  def to_percent(%BookLen{len_type: :pages, int_len: cur_pages},
+    %BookLen{len_type: :pages, int_len: len_pages}) do
+    Float.round(cur_pages / len_pages * 100.0, 1)
+  end
+  def to_percent(%BookLen{len_type: :time, time_len: {cur_hours, cur_minutes}},
+    %BookLen{len_type: :time, time_len: {len_hours, len_minutes}}) do
+    Float.round((cur_hours * 60 + cur_minutes) / (len_hours * 60 + len_minutes) * 100.0, 1)
+  end
+  def to_percent(%BookLen{len_type: :percent, int_len: cur_percent}, _) do
+    Float.round(cur_percent / 1 * 100.0, 1)
+  end
+
   # Validates a form field representing a BookLen, entered as a string.
   # To be used in changeset() functions.
   def validate(%Ecto.Changeset{} = changeset, field) do

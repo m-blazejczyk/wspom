@@ -540,7 +540,7 @@ defmodule WspomWeb.CoreComponents do
     <div class="w-3/4 mt-14">
       <dl class="-my-4 divide-y divide-zinc-100">
         <div :for={item <- @item} class="flex gap-4 py-4 leading-6 sm:gap-8">
-          <dt class="w-1/4 flex-none text-zinc-800"><%= item.title %></dt>
+          <dt class="w-1/4 flex-none text-zinc-800 px-6"><%= item.title %></dt>
           <dd class="text-zinc-600"><%= render_slot(item) %></dd>
         </div>
       </dl>

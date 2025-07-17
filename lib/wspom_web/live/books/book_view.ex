@@ -10,19 +10,35 @@ defmodule WspomWeb.Live.Books.BookView do
   end
 
   @impl true
-  def handle_params(%{"book" => id}, _, socket) do
-    {
-      :noreply,
-      socket
-        |> assign(:page_title, page_title(socket.assigns.live_action))
-        |> assign(:book, Context.get_book!(id))
-    }
+  def handle_params(%{"book" => book_id} = params, _url, socket) do
+    book = Context.get_book!(book_id)
+    {:noreply,
+      apply_action(socket, socket.assigns.live_action, book, params)}
   end
 
-  defp page_title(:view), do: "View Book"
-  defp page_title(:edit), do: "Edit Book"
-  defp page_title(:read), do: "Read Book"
-  defp page_title(:history), do: "Edit Book History Record"
+  defp apply_action(socket, :view, book, _params) do
+    socket
+    |> assign(:book, book)
+    |> assign(:page_title, "View Book")
+  end
+
+  defp apply_action(socket, :edit, book, _params) do
+    socket
+    |> assign(:book, book)
+    |> assign(:page_title, "Edit Book")
+  end
+
+  defp apply_action(socket, :read, book, _params) do
+    socket
+    |> assign(:book, book)
+    |> assign(:page_title, "Read Book")
+  end
+
+  defp apply_action(socket, :history, book, %{"hist" => _hist_id}) do
+    socket
+    |> assign(:book, book)
+    |> assign(:page_title, "Edit Book History Record")
+  end
 
   # These are helper functions for the HEEX template
   # (That's why they are `defp`).

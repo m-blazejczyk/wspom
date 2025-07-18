@@ -1,13 +1,15 @@
 defmodule WspomWeb.Live.Books.BookView do
   use WspomWeb, :live_view
 
-  # alias Wspom.Book
+  alias Wspom.Book
   alias Wspom.Books.Context
 
   @impl true
   def mount(_params, _session, socket) do
     {:ok, socket, layout: {WspomWeb.Layouts, :data_app}}
   end
+
+  # put_flash(socket, :error, "last member cannot leave organization")
 
   @impl true
   def handle_params(%{"book" => book_id} = params, _url, socket) do
@@ -34,9 +36,10 @@ defmodule WspomWeb.Live.Books.BookView do
     |> assign(:page_title, "Read Book")
   end
 
-  defp apply_action(socket, :history, book, %{"hist" => _hist_id}) do
+  defp apply_action(socket, :history, book, %{"hist" => hist_id}) do
     socket
     |> assign(:book, book)
+    |> assign(:history, book |> Book.find_history(hist_id))
     |> assign(:page_title, "Edit Book History Record")
   end
 

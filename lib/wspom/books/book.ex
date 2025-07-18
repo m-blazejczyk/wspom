@@ -35,6 +35,13 @@ defmodule Wspom.Book do
     %Book{title: "", short_title: "", author: "", length: BookLen.new_pages(0)}
   end
 
+  def find_history(%Book{} = book, hist_id) when is_binary(hist_id) do
+    find_history(book, String.to_integer(hist_id))
+  end
+  def find_history(%Book{} = book, hist_id) when is_integer(hist_id) do
+    book.history |> Enum.find(&(&1.id == hist_id))
+  end
+
   @doc """
   Updates a book if the changeset is valid.
   Returns {:ok, %Book{}} or {:error, %Ecto.Changeset{}}.

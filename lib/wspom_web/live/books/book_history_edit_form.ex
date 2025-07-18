@@ -7,18 +7,6 @@ defmodule WspomWeb.Live.BookHistoryEditForm do
   def render(assigns) do
     ~H"""
     <div class="max-w-lg mx-auto border border-gray-200 rounded shadow-md px-8 py-10 flex flex-col items-center">
-      <div class="flex justify-center items-center w-full">
-        <section class="min-w-md">
-          <ul class="grid grid-cols-3 gap-6">
-            <WspomWeb.CardComponent.small_card href={~p"/"} img={~p"/images/home_64.png"}
-              label="Go back to the home page" />
-            <WspomWeb.CardComponent.small_card href={~p"/weight/data"} img={~p"/images/table_64.png"}
-              label="View all weight data" />
-            <WspomWeb.CardComponent.small_card href={~p"/weight/charts"} img={~p"/images/chart_64.png"}
-              label="View weight charts" />
-          </ul>
-        </section>
-      </div>
       <.simple_form
         for={@form}
         id="book-history-form"
@@ -31,7 +19,35 @@ defmodule WspomWeb.Live.BookHistoryEditForm do
           <%= @title %>
         </.header>
 
-        <.input field={@form[:position]} type="text" class="text-xl text-center"
+        <.input :if={@book == nil}
+          field={@form[:book_id]} type="number" label="Book (list)"
+          class="text-xl text-center"
+          class_container="flex items-start flex-col justify-start"/>
+
+        <.input :if={@book != nil}
+          field={@form[:book_id]} type="number" label="Book"
+          class="text-xl text-center text-zinc-500"
+          class_container="flex items-start flex-col justify-start"
+          disabled />
+
+        <div class="grid grid-cols-1 gap-2">
+          <div>
+            <.input field={@form[:date]} type="text" label="Date"
+              class="text-xl text-center"
+              class_container="flex items-start flex-col justify-start"/>
+          </div>
+          <div>
+            <.button type="button" class="float-left w-16" phx-click={JS.push("day_earlier")} phx-target={@myself}>
+              &lt;
+            </.button>
+            <.button type="button" class="float-right w-16" phx-click={JS.push("day_later")} phx-target={@myself}>
+              &gt;
+            </.button>
+          </div>
+        </div>
+
+        <.input field={@form[:position]} type="text" label="Position"
+          class="text-xl text-center"
           class_container="flex items-start flex-col justify-start"/>
 
         <div class="flex flex-wrap rounded-lg bg-gray-300 max-w-sm mx-auto mt-24">
@@ -109,20 +125,11 @@ defmodule WspomWeb.Live.BookHistoryEditForm do
           </div>
         </div>
 
-        <div class="grid grid-cols-1 gap-2">
-          <div>
-            <.input field={@form[:date]} type="text" class="text-xl text-center"
-              class_container="flex items-start flex-col justify-start"/>
-          </div>
-          <div>
-            <.button type="button" class="float-left w-16" phx-click={JS.push("day_earlier")} phx-target={@myself}>
-              &lt;
-            </.button>
-            <.button type="button" class="float-right w-16" phx-click={JS.push("day_later")} phx-target={@myself}>
-              &gt;
-            </.button>
-          </div>
-        </div>
+        <.input field={@form[:type]} type="select" label="Type"
+          options={[{"Regular read", "read"},
+            {"Bulk update", "updated"},
+            {"Skipped to position", "skipped"}]}
+          class="text-xl text-center" />
 
         <:actions>
           <.button phx-disable-with="Saving…" class="w-full">Save</.button>

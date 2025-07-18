@@ -7,18 +7,6 @@ defmodule WspomWeb.Live.WeightEditForm do
   def render(assigns) do
     ~H"""
     <div class="max-w-lg mx-auto border border-gray-200 rounded shadow-md px-8 py-10 flex flex-col items-center">
-      <div class="flex justify-center items-center w-full">
-        <section class="min-w-md">
-          <ul class="grid grid-cols-3 gap-6">
-            <WspomWeb.CardComponent.small_card href={~p"/"} img={~p"/images/home_64.png"}
-              label="Go back to the home page" />
-            <WspomWeb.CardComponent.small_card href={~p"/weight/data"} img={~p"/images/table_64.png"}
-              label="View all weight data" />
-            <WspomWeb.CardComponent.small_card href={~p"/weight/charts"} img={~p"/images/chart_64.png"}
-              label="View weight charts" />
-          </ul>
-        </section>
-      </div>
       <.simple_form
         for={@form}
         id="weight-form"

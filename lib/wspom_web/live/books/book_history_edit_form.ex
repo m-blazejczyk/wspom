@@ -20,15 +20,17 @@ defmodule WspomWeb.Live.BookHistoryEditForm do
         </.header>
 
         <.input :if={@book == nil}
-          field={@form[:book_id]} type="number" label="Book (list)"
+          field={@form[:book_id]} type="text" label="Book (list)"
           class="text-xl text-center"
           class_container="flex items-start flex-col justify-start"/>
 
         <.input :if={@book != nil}
-          field={@form[:book_id]} type="number" label="Book"
-          class="text-xl text-center text-zinc-500"
-          class_container="flex items-start flex-col justify-start"
-          disabled />
+          field={@form[:book_id]} type="text" label="Book"
+          value={@book.title}
+          disabled
+          class="text-xl text-center"
+          class_text="text-zinc-500"
+          class_container="flex items-start flex-col justify-start"/>
 
         <div class="grid grid-cols-1 gap-2">
           <div>

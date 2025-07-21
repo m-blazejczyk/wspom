@@ -84,7 +84,7 @@ defmodule Wspom.Books.Context do
   ## Examples
 
       iex> create_book(%{field: new_value, …})
-      {:ok, %{...}}
+      {:ok, %Book{...}}
 
       iex> create_book(%{field: bad_value, …})
       {:error, %Ecto.Changeset{}}
@@ -109,7 +109,7 @@ defmodule Wspom.Books.Context do
   ## Examples
 
       iex> update_book(book, %{field: new_value})
-      {:ok, %Book{}}
+      {:ok, %Book{...}}
 
       iex> update_book(book, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
@@ -124,6 +124,57 @@ defmodule Wspom.Books.Context do
       {:ok, updated_book} ->
         saved_book = Database.replace_book_and_save(updated_book)
         {:ok, saved_book}
+    end
+  end
+
+  @doc """
+  Creates a new book history record based on a map of changes made
+  in a form, then saves it in the database.
+
+  ## Examples
+
+      iex> create_book_history(%{field: new_value, …})
+      {:ok, %BookHistory{...}}
+
+      iex> create_book_history(%{field: bad_value, …})
+      {:error, %Ecto.Changeset{}}
+  """
+  def create_book_history(params \\ %{}) do
+    case BookHistory.new_form_data()
+    |> BookHistory.changeset(params)
+    |> BookHistory.update() do
+      {:error, _changeset} = err ->
+        err
+      {:ok, updated_book_history} ->
+        saved_book_history = Database.add_book_history_and_save(updated_book_history)
+        {:ok, saved_book_history}
+    end
+  end
+
+  @doc """
+  Updates an existing book history record and saves it in the database.
+  The `book_history` argument is the original, unmodified record
+  (of type %BookHistory{}).
+  The `params` argument is a map containing all the values from the form.
+
+  ## Examples
+
+      iex> update_book_history(book_history, %{field: new_value})
+      {:ok, %BookHistory{}}
+
+      iex> update_book_history(book_history, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_book_history(book_history, params) do
+    case book_history
+    |> BookHistory.changeset(params)
+    |> BookHistory.update() do
+      {:error, _changeset} = err ->
+        err
+      {:ok, updated_book_history} ->
+        saved_book_history = Database.replace_book_history_and_save(updated_book_history)
+        {:ok, saved_book_history}
     end
   end
 end

@@ -128,7 +128,7 @@ defmodule WspomWeb.Live.BookHistoryEditForm do
         </div>
 
         <.input field={@form[:type]} type="select" label="Type"
-          options={[{"Regular read", "read"},
+          options={[{"Daily read", "read"},
             {"Bulk update", "updated"},
             {"Skipped to position", "skipped"}]}
           class="text-xl text-center" />
@@ -155,17 +155,45 @@ defmodule WspomWeb.Live.BookHistoryEditForm do
   end
 
   @impl true
-  def handle_event("validate", %{"history" => params}, socket) do
-    changeset = Context.change_book_history(socket.assigns.book, params)
+  def handle_event("validate", %{"book_history" => params}, socket) do
+    IO.inspect(params, label: "PARAMS in VALIDATE")
+    changeset = Context.change_book_history(socket.assigns.history, params)
     {:noreply, socket
       |> assign(form: to_form(changeset, action: :validate))
     }
   end
 
-  def handle_event("save", %{"history" => _params}, _socket) do
-    # save_history(socket, socket.assigns.action, params)
-    nil
+  def handle_event("save", %{"book_history" => params}, socket) do
+    save_history(socket, socket.assigns.action, params)
   end
 
-  # defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
+  defp save_history(socket, :history, params) do
+    case Context.update_book_history(socket.assigns.history, params) do
+      {:ok, history} ->
+        notify_parent({:saved, history})
+
+        {:noreply,
+         socket
+         |> push_patch(to: socket.assigns.patch)}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
+    end
+  end
+
+  defp save_history(socket, :read, params) do
+    case Context.create_book_history(params) do
+      {:ok, history} ->
+        notify_parent({:saved, history})
+
+        {:noreply,
+         socket
+         |> push_patch(to: socket.assigns.patch)}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
+    end
+  end
+
+  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 end

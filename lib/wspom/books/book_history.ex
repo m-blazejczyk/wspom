@@ -52,4 +52,51 @@ defmodule Wspom.BookHistory do
     %BookHistory{id: nil, book_id: nil, date: Utils.date_now(),
       type: :read, position: ""}
   end
+
+  @doc """
+  Updates a book history record if the changeset is valid.
+  Returns {:ok, %BookHistory{}} or {:error, %Ecto.Changeset{}}.
+  Notes:
+   - changeset.data contains the original record (type: %BookHistory{})
+   - changeset.changes contains a map containing the changes,
+     e.g. %{date: "2025-05-16", type: :skipped}
+  """
+  def update(%Ecto.Changeset{valid?: false} = cs) do
+    {:error, cs}
+  end
+  def update(%Ecto.Changeset{data: book_history, changes: changes} = changeset) do
+    # Go over all changes and update the record for each of them -
+    # or add an error to the changeset
+    case Enum.reduce(changes, {:continue, book_history}, &update_field/2) do
+      {:error, {field, error}} ->
+        {:error, changeset |> Ecto.Changeset.add_error(field, error)}
+      {:continue, new_book_history} ->
+        # At this point, new_book_history.position is a string -
+        # but it's already been validated so it should have no errors
+        case BookLen.parse_str(new_book_history.position) do
+          {:ok, position_parsed} ->
+            {:ok, %BookHistory{new_book_history | position: position_parsed}}
+          {:error, error} ->
+            # We should never get to this code (because the record
+            # should have already been validated) but I will include it
+            # for completness sake
+            {:error, changeset |> Ecto.Changeset.add_error(:position, error)}
+        end
+    end
+  end
+
+  # Used by Enum.reduce() to go over a map of field changes.
+  # The first argument is a tuple with {field_name, new_value}.
+  # The second argument is the accumulator - one of:
+  #   {:continue, %BookHistory{}}
+  #   {:error, message} (where 'message' is a string)
+  # Returns the new accumulator.
+  defp update_field(_, {:error, _} = error) do
+    # Once an error has been encountered, ignore all subsequent changes.
+    error
+  end
+  # "Enum" fields will require special handling; skip for now
+  defp update_field({field_name, field_value}, {:continue, %BookHistory{} = book_history}) do
+    {:continue, book_history |> Map.put(field_name, field_value)}
+  end
 end

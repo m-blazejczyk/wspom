@@ -108,7 +108,7 @@ defmodule Wspom.Books.Database do
   end
 
   def add_book_and_save(created_book) do
-    Logger.notice("Saving the new book…")
+    Logger.notice("Saving a new book…")
     modify_and_save_data(created_book, fn books, book ->
       max_id = DbBase.find_max_id(books)
       new_book = %{book | id: max_id + 1}
@@ -118,9 +118,28 @@ defmodule Wspom.Books.Database do
 
   def replace_book_and_save(updated_book) do
     Logger.notice("Saving the modified book…")
+    IO.inspect(updated_book, label: "BOOK")
     modify_and_save_data(updated_book, fn books, book ->
       {books |> DbBase.find_and_replace([], book), book}
     end)
+  end
+
+  def add_book_history_and_save(new_book_history) do
+    Logger.notice("Saving the new book history record…")
+    IO.inspect(new_book_history, label: "RECORD")
+    # modify_and_save_data(new_book_history, fn book_historys, book_history ->
+    #   max_id = DbBase.find_max_id(book_historys)
+    #   new_book_history = %{book_history | id: max_id + 1}
+    #   {[new_book_history | book_historys], new_book_history}
+    # end)
+  end
+
+  def replace_book_history_and_save(updated_book_history) do
+    Logger.notice("Saving the modified book history record…")
+    IO.inspect(updated_book_history, label: "RECORD")
+    # modify_and_save_data(updated_book_history, fn book_historys, book_history ->
+    #   {book_historys |> DbBase.find_and_replace([], book_history), book_history}
+    # end)
   end
 
   def modify_and_save_data(book, update_fun) do

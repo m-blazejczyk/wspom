@@ -95,7 +95,10 @@ defmodule Wspom.BookHistory do
     # Once an error has been encountered, ignore all subsequent changes.
     error
   end
-  # "Enum" fields will require special handling; skip for now
+  defp update_field({:type, field_value}, {:continue, %BookHistory{} = book_history}) do
+    # Safe to do because the values of :type have already been validated
+    {:continue, book_history |> Map.put(:type, String.to_atom(field_value))}
+  end
   defp update_field({field_name, field_value}, {:continue, %BookHistory{} = book_history}) do
     {:continue, book_history |> Map.put(field_name, field_value)}
   end

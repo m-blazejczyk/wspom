@@ -28,6 +28,7 @@ defmodule Wspom.Book do
     {book, @types}
     |> cast(attrs, [:id, :title, :short_title, :author, :length, :medium, :is_fiction])
     |> validate_required([:title, :short_title, :author, :length, :medium, :is_fiction])
+    |> validate_inclusion(:medium, ["book", "audiobook", "ebook", "comics"])
     |> BookLen.validate(:length)
   end
 
@@ -81,7 +82,10 @@ defmodule Wspom.Book do
     # Once an error has been encountered, ignore all subsequent changes.
     error
   end
-  # "Enum" fields will require special handling; skip for now
+  defp update_field({:medium, field_value}, {:continue, %Book{} = book}) do
+    # Safe to do because the values of :medium have already been validated
+    {:continue, book |> Map.put(:medium, String.to_atom(field_value))}
+  end
   defp update_field({field_name, field_value}, {:continue, %Book{} = book}) do
     {:continue, book |> Map.put(field_name, field_value)}
   end

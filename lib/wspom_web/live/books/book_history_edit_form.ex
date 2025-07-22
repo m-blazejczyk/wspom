@@ -130,8 +130,7 @@ defmodule WspomWeb.Live.BookHistoryEditForm do
         <.input field={@form[:type]} type="select" label="Type"
           options={[{"Daily read", "read"},
             {"Bulk update", "updated"},
-            {"Skipped to position", "skipped"}]}
-          class="text-xl text-center" />
+            {"Skipped to position", "skipped"}]} />
 
         <:actions>
           <.button phx-disable-with="Saving…" class="w-full">Save</.button>

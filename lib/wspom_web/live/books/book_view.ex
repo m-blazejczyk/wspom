@@ -9,8 +9,6 @@ defmodule WspomWeb.Live.Books.BookView do
     {:ok, socket, layout: {WspomWeb.Layouts, :data_app}}
   end
 
-  # put_flash(socket, :error, "last member cannot leave organization")
-
   @impl true
   def handle_params(%{"book" => book_id} = params, _url, socket) do
     book = Context.get_book!(book_id)

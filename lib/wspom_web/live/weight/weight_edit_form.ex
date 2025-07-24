@@ -153,17 +153,17 @@ defmodule WspomWeb.Live.WeightEditForm do
     add_days_to_date(socket, 1)
   end
   def handle_event("append", %{"text" => text}, socket) do
-    new_weight = Utils.get_form_param(socket, "weight") <> text
+    new_weight = get_form_param(socket, "weight") <> text
     handle_form_change(socket, Utils.set_form_param(socket, "weight", new_weight))
   end
   def handle_event("delete", _, socket) do
-    current_text = Utils.get_form_param(socket, "weight")
+    current_text = get_form_param(socket, "weight")
     new_weight = current_text |> String.slice(0, String.length(current_text) - 1)
     handle_form_change(socket, Utils.set_form_param(socket, "weight", new_weight))
   end
 
   defp add_days_to_date(socket, days) do
-    current_text = Utils.get_form_param(socket, "date")
+    current_text = get_form_param(socket, "date")
     new_date = with {:ok, date} <- Date.from_iso8601(current_text) do
       date |> Date.add(days) |> to_string()
     else
@@ -176,6 +176,14 @@ defmodule WspomWeb.Live.WeightEditForm do
     changeset = Context.to_changeset(socket.assigns.data, form_params)
     form = to_form(changeset, action: :validate, as: "data")
     {:noreply, socket |> assign(form: form)}
+  end
+
+  # This function will grab the current value of the given form field;
+  # if `params` don't contain it yet (as it will happen if the field wasn't yet
+  # modified by the user), we grab the value from `data`, i.e. the initial record.
+  def get_form_param(socket, field) do
+    Map.get(socket.assigns.form.params, field)
+      || Map.get(socket.assigns.form.data, String.to_existing_atom(field))
   end
 
   defp save_record(socket, :edit, form_params) do

@@ -144,8 +144,8 @@ alias Wspom.BookLen
 
 
   @impl true
-  def update(%{history: history} = assigns, socket) do
-    changeset = Context.change_book_history(history)
+  def update(%{history: history, book: book} = assigns, socket) do
+    changeset = Context.change_book_history(history, book)
 
     {:ok,
       socket
@@ -188,7 +188,8 @@ alias Wspom.BookLen
   end
 
   defp handle_form_change(socket, params) do
-    changeset = Context.change_book_history(socket.assigns.history, params)
+    changeset = Context.change_book_history(
+      socket.assigns.history, socket.assigns.book, params)
     {:noreply, socket
       |> assign(form: to_form(changeset, action: :validate))
     }
@@ -210,7 +211,8 @@ alias Wspom.BookLen
   end
 
   defp save_history(socket, :history, params) do
-    case Context.update_book_history(socket.assigns.history, params) do
+    case Context.update_book_history(
+      socket.assigns.history, socket.assigns.book, params) do
       {:ok, history} ->
         notify_parent({:saved, history})
 
@@ -224,7 +226,7 @@ alias Wspom.BookLen
   end
 
   defp save_history(socket, :read, params) do
-    case Context.create_book_history(params) do
+    case Context.create_book_history(socket.assigns.book, params) do
       {:ok, history} ->
         notify_parent({:saved, history})
 

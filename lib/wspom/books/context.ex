@@ -64,20 +64,6 @@ defmodule Wspom.Books.Context do
   end
 
   @doc """
-  Returns an `%Ecto.Changeset{}` for tracking book history changes.
-  This function is invoked every time a field in the form changes.
-
-  ## Examples
-
-      iex> change_book_history(history)
-      %Ecto.Changeset{data: %BookHistory{}}
-
-  """
-  def change_book_history(history, attrs \\ %{}) do
-    BookHistory.changeset(history, attrs)
-  end
-
-  @doc """
   Creates a new book based on a map of changes made in a form,
   then saves it in the database.
 
@@ -128,8 +114,24 @@ defmodule Wspom.Books.Context do
   end
 
   @doc """
+  Returns an `%Ecto.Changeset{}` for tracking book history changes.
+  This function is invoked every time a field in the form changes.
+  `book` is the book that this history record will be a part of.
+
+  ## Examples
+
+      iex> change_book_history(history, book)
+      %Ecto.Changeset{data: %BookHistory{}}
+
+  """
+  def change_book_history(%BookHistory{} = history, %Book{} = book, attrs \\ %{}) do
+    BookHistory.changeset(history, book, attrs)
+  end
+
+  @doc """
   Creates a new book history record based on a map of changes made
   in a form, then saves it in the database.
+  `book` is the book that this history record will be a part of.
 
   ## Examples
 
@@ -139,9 +141,9 @@ defmodule Wspom.Books.Context do
       iex> create_book_history(%{field: bad_value, …})
       {:error, %Ecto.Changeset{}}
   """
-  def create_book_history(params \\ %{}) do
+  def create_book_history(%Book{} = book, params \\ %{}) do
     case BookHistory.new_form_data()
-    |> BookHistory.changeset(params)
+    |> BookHistory.changeset(book, params)
     |> BookHistory.update() do
       {:error, _changeset} = err ->
         err
@@ -153,28 +155,28 @@ defmodule Wspom.Books.Context do
 
   @doc """
   Updates an existing book history record and saves it in the database.
-  The `book_history` argument is the original, unmodified record
-  (of type %BookHistory{}).
-  The `params` argument is a map containing all the values from the form.
+  `book_history` is the original, unmodified record (of type %BookHistory{}).
+  `book` is the book that this history record will be a part of.
+  `params` is a map containing all the values from the form.
 
   ## Examples
 
-      iex> update_book_history(book_history, %{field: new_value})
+      iex> update_book_history(book_history, book, %{field: new_value})
       {:ok, %BookHistory{}}
 
-      iex> update_book_history(book_history, %{field: bad_value})
+      iex> update_book_history(book_history, book, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_book_history(book_history, params) do
-    case book_history
-    |> BookHistory.changeset(params)
+  def update_book_history(%BookHistory{} = history, %Book{} = book, params) do
+    case history
+    |> BookHistory.changeset(book, params)
     |> BookHistory.update() do
       {:error, _changeset} = err ->
         err
-      {:ok, updated_book_history} ->
-        saved_book_history = Database.replace_book_history_and_save(updated_book_history)
-        {:ok, saved_book_history}
+      {:ok, updated_history} ->
+        saved_history = Database.replace_book_history_and_save(updated_history)
+        {:ok, saved_history}
     end
   end
 end

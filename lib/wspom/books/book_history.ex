@@ -2,6 +2,7 @@ defmodule Wspom.BookHistory do
 
   alias Wspom.BookHistory
   alias Wspom.BookLen
+  alias Wspom.Book
 
   import Ecto.Changeset
 
@@ -36,7 +37,8 @@ defmodule Wspom.BookHistory do
     type: :string, position: :string}
 
   # Creates and validates a changeset - only used to validate the form.
-  def changeset(history, attrs) do
+  # `book` is the book that this history record will be a part of.
+  def changeset(%BookHistory{} = history, %Book{} = _book, attrs) do
     {history, @types}
     |> cast(attrs, [:id, :book_id, :date, :type, :position])
     |> validate_required([:book_id, :date, :type, :position])

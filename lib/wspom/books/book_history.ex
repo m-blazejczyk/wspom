@@ -32,8 +32,10 @@ defmodule Wspom.BookHistory do
   # These types are only used for changeset validation for forms.
   # These are the types that will be visible and editable in the form.
   # They are different that what will be saved to the database.
+  # Marking a field as type :date kicks off the appropriate vallidation
+  # in `cast()`.
   # See https://hexdocs.pm/ecto/Ecto.Schema.html#module-types-and-castin
-  @types %{id: :integer, book_id: :integer, date: :string,
+  @types %{id: :integer, book_id: :integer, date: :date,
     type: :string, position: :string}
 
   # Creates and validates a changeset - only used to validate the form.
@@ -43,18 +45,7 @@ defmodule Wspom.BookHistory do
     |> cast(attrs, [:id, :book_id, :date, :type, :position])
     |> validate_required([:book_id, :date, :type, :position])
     |> validate_inclusion(:type, ["read", "updated", "skipped"])
-    |> validate_date(:date)
     |> BookLen.validate(:position)
-  end
-
-  defp validate_date(%Ecto.Changeset{} = changeset, field) do
-    with {:ok, date_str} <- changeset |> Ecto.Changeset.fetch_change(field),
-      {:ok, _date} <- Date.from_iso8601(date_str) do
-        changeset
-    else
-      _ -> changeset |> Ecto.Changeset.add_error(
-        field, "Invalid date (format: YYYY-MM-DD)")
-    end
   end
 
   # Returns a new book progress object with a `nil` id and with `date`
@@ -112,12 +103,6 @@ defmodule Wspom.BookHistory do
     # Safe to call `to_atom` because the values of :type have already
     # been validated
     {:continue, book_history |> Map.put(:type, String.to_atom(field_value))}
-  end
-  defp update_field({:date, field_value}, {:continue, %BookHistory{} = book_history}) do
-    case Date.from_iso8601(field_value) do
-      {:ok, date} -> {:continue, book_history |> Map.put(:date, date)}
-      _ -> {:error, "Invalid date (format: YYYY-MM-DD)"}
-    end
   end
   defp update_field({field_name, field_value}, {:continue, %BookHistory{} = book_history}) do
     {:continue, book_history |> Map.put(field_name, field_value)}

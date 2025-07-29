@@ -71,7 +71,7 @@ If everything was fine, commit the changes made to `mix.exs`.
 
 # Run the application
 
-Open `screen` and run the process from the `wspom` directory:
+Go into the `wspom` directory and run `screen`:
 
 ```
 cd wspom

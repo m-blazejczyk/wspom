@@ -1,8 +1,6 @@
 defmodule Wspom.BookHistory do
 
-  alias Wspom.BookHistory
-  alias Wspom.BookLen
-  alias Wspom.Book
+  alias Wspom.{BookHistory, BookLen, Book}, warn: false
 
   import Ecto.Changeset
 
@@ -36,7 +34,7 @@ defmodule Wspom.BookHistory do
   # in `cast()`.
   # See https://hexdocs.pm/ecto/Ecto.Schema.html#module-types-and-castin
   @types %{id: :integer, book_id: :integer, date: :date,
-    type: :string, position: :string}
+    type: :string, position: BookLen}
 
   # Creates and validates a changeset - only used to validate the form.
   # `book` is the book that this history record will be a part of.
@@ -45,7 +43,6 @@ defmodule Wspom.BookHistory do
     |> cast(attrs, [:id, :book_id, :date, :type, :position])
     |> validate_required([:book_id, :date, :type, :position])
     |> validate_inclusion(:type, ["read", "updated", "skipped"])
-    |> BookLen.validate(:position)
   end
 
   # Returns a new book progress object with a `nil` id and with `date`
@@ -54,7 +51,7 @@ defmodule Wspom.BookHistory do
   # by the form component - not the data structure to be saved in the database.
   def new_form_data() do
     %BookHistory{id: nil, book_id: nil, date: Utils.date_now(),
-      type: :read, position: ""}
+      type: :read, position: nil}
   end
 
   @doc """
@@ -75,17 +72,7 @@ defmodule Wspom.BookHistory do
       {:error, {field, error}} ->
         {:error, changeset |> Ecto.Changeset.add_error(field, error)}
       {:continue, new_book_history} ->
-        # At this point, new_book_history.position is a string -
-        # but it's already been validated so it should have no errors
-        case BookLen.parse_str(new_book_history.position) do
-          {:ok, position_parsed} ->
-            {:ok, %BookHistory{new_book_history | position: position_parsed}}
-          {:error, error} ->
-            # We should never get to this code (because the record
-            # should have already been validated) but I will include it
-            # for completness sake
-            {:error, changeset |> Ecto.Changeset.add_error(:position, error)}
-        end
+        {:ok, new_book_history}
     end
   end
 

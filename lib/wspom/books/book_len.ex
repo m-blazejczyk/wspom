@@ -1,4 +1,7 @@
 defmodule Wspom.BookLen do
+  use Ecto.Type
+  def type, do: :map
+
   alias Wspom.BookLen
 
   @parser ~r/^(?<pages>[0-9]+)$|^(?<perc>[0-9]+)%$|^(?<hours>[0-9]+):(?<minutes>[0-9]+)$/
@@ -6,6 +9,37 @@ defmodule Wspom.BookLen do
   # `len_type` can be :pages, :time or :percent
   defstruct [:len_type, int_len: nil, time_len: nil]
 
+  #####
+  # `cast`, `load` and `dump` are implementing the Ecto.Type behavior.
+  # See https://hexdocs.pm/ecto/Ecto.Type.html.
+
+  # Provide custom casting rules.
+  # Cast strings into the BookLen struct to be used at runtime
+  def cast(len) when is_binary(len) do
+    case BookLen.parse_str(len) do
+      {:ok, _length_parsed} = ok_result ->
+        ok_result
+      {:error, _error} ->
+        :error
+    end
+  end
+  # Accept casting of BookLen structs as well
+  def cast(%BookLen{} = len), do: {:ok, len}
+  # Everything else is a failure though
+  def cast(_), do: :error
+
+  # We'll ignore `load` and `dump` because we don't use Ecto for storage.
+  def load(data) do
+    IO.warn("BookLen.load() was called!")
+    {:ok, data}
+  end
+
+  def dump(len) do
+    IO.warn("BookLen.dump() was called!")
+    {:ok, len}
+  end
+
+  #####
   # Constructors
   def new_pages(pages)
   when is_integer(pages) do

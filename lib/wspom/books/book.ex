@@ -12,7 +12,7 @@ defmodule Wspom.Book do
   # The date fields are calculated, not directly editable; they can both
   # be nil; :started_date will be nil in the rare cases of books that
   # were started being read before they were added to the database.
-  defstruct [:id, :title, :short_title, :author, length: BookLen.new_pages(0),
+  defstruct [:id, :title, :short_title, :author, length: nil,
     medium: :book, is_fiction: true, status: :active,
     started_date: nil, finished_date: nil, history: []]
 
@@ -21,7 +21,7 @@ defmodule Wspom.Book do
   # They are different that what will be saved to the database.
   # See https://hexdocs.pm/ecto/Ecto.Schema.html#module-types-and-castin
   @types %{id: :integer, title: :string, short_title: :string, author: :string,
-    length: :string, medium: :string, is_fiction: :boolean, status: :string}
+    length: BookLen, medium: :string, is_fiction: :boolean, status: :string}
 
   # Creates and validates a changeset - only used to validate the form.
   def changeset(book, attrs) do
@@ -29,11 +29,10 @@ defmodule Wspom.Book do
     |> cast(attrs, [:id, :title, :short_title, :author, :length, :medium, :is_fiction])
     |> validate_required([:title, :short_title, :author, :length, :medium, :is_fiction])
     |> validate_inclusion(:medium, ["book", "audiobook", "ebook", "comics"])
-    |> BookLen.validate(:length)
   end
 
   def new() do
-    %Book{title: "", short_title: "", author: "", length: BookLen.new_pages(0)}
+    %Book{title: "", short_title: "", author: "", length: nil}
   end
 
   def find_history(%Book{} = book, hist_id) when is_binary(hist_id) do
@@ -60,15 +59,7 @@ defmodule Wspom.Book do
       {:error, {field, error}} ->
         {:error, changeset |> Ecto.Changeset.add_error(field, error)}
       {:continue, new_book} ->
-        # At this point, new_book.length is a string - but it's been validated
-        case BookLen.parse_str(new_book.length) do
-          {:ok, length_parsed} ->
-            {:ok, %Book{new_book | length: length_parsed}}
-          {:error, error} ->
-            # We should never get to this code but I will include it
-            # for completness sake
-            {:error, changeset |> Ecto.Changeset.add_error(:length, error)}
-        end
+        {:ok, new_book}
     end
   end
 

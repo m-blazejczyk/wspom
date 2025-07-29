@@ -1,5 +1,8 @@
 defmodule Wspom.Weight.Context do
 
+  # WARNING! This is a very weird implementation, written when I was
+  # still learning (and struggling with) forms…
+
   import Ecto.Changeset
 
   alias Wspom.Weight.Database

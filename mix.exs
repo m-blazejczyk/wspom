@@ -2,9 +2,10 @@ defmodule Wspom.MixProject do
   use Mix.Project
 
   def project do
+    now = DateTime.utc_now()
     [
       app: :wspom,
-      version: "0.3.0",
+      version: Enum.join([now.year, now.month, now.day], "."),
       elixir: "~> 1.16",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,

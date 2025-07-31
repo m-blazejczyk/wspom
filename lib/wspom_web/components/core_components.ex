@@ -274,6 +274,7 @@ defmodule WspomWeb.CoreComponents do
   attr :class, :string, default: nil
   attr :class_container, :string, default: nil
   attr :class_text, :string, default: nil
+  attr :formatter, :any, default: nil
 
   attr :type, :string,
     default: "text",
@@ -378,7 +379,7 @@ defmodule WspomWeb.CoreComponents do
         type={@type}
         name={@name}
         id={@id}
-        value={Phoenix.HTML.Form.normalize_value(@type, @value)}
+        value={if @formatter, do: @formatter.(@type, @value), else: Phoenix.HTML.Form.normalize_value(@type, @value)}
         class={[
           "mt-2 block w-full rounded-lg focus:ring-0 sm:leading-6 phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400",
           @class || "",

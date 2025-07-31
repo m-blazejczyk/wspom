@@ -8,20 +8,18 @@ defmodule Wspom.Weight.Context do
   alias Wspom.Weight.Database
 
   @doc """
-  Returns a new weight measurement record with a `nil` id and with `date`
-  defaulted to today, formatted as string. The weight defaults to "" to make it
-  easier on the form. This is the data structure expected by the form component -
-  not the data structure to be saved in the database.
+  Returns a new weight measurement record with a `nil` id, with `date`
+  defaulted to today, and with the weight set to nil.
 
   ## Examples
 
       iex> new_form_data()
-      %{id: nil, date: "2025-01-16", weight: ""}
+      %{id: nil, date: ~D[2025-07-30], weight: nil}
   """
   def new_form_data() do
     %{id: nil,
       date: Utils.date_now(),
-      weight: ""}
+      weight: nil}
   end
 
   @doc """
@@ -34,26 +32,12 @@ defmodule Wspom.Weight.Context do
       %Ecto.Changeset{}
   """
   def to_changeset(%{} = data, form_params \\ %{}) do
-    types = %{weight: :string, weight_float: :float, date: :date}
+    types = %{weight: :float, date: :date}
 
     {data, types}
     |> cast(form_params, [:weight, :date])
     |> validate_required([:weight, :date])
-    |> validate_weight(:weight, :weight_float)
-  end
-
-  # In addition to validating the string field, this function will also
-  # put the value as Float into field `db_field` of the changeset.
-  defp validate_weight(%Ecto.Changeset{} = changeset, str_field, db_field) do
-    with {:ok, weight_str} <- changeset |> Ecto.Changeset.fetch_change(str_field) do
-      with {weight, ""} <- Float.parse(weight_str) do
-        changeset |> Ecto.Changeset.put_change(db_field, weight)
-      else
-        _ -> changeset |> Ecto.Changeset.add_error(str_field, "Invalid weight")
-      end
-    else
-      _ -> changeset
-    end
+    |> validate_number(:weight, greater_than: 45.0, less_than: 100.0)
   end
 
   @doc """
@@ -118,7 +102,7 @@ defmodule Wspom.Weight.Context do
   def create_record(form_params \\ %{}) do
     case new_form_data()
     |> to_changeset(form_params)
-    |> to_db_record() do
+    |> to_db_record() |> IO.inspect(label: "RECORD") do
       {:error, _changeset} = err ->
         err
       {:ok, db_record} ->
@@ -169,18 +153,8 @@ defmodule Wspom.Weight.Context do
     {:error, cs}
   end
   def to_db_record(%Ecto.Changeset{data: original, changes: changes}) do
-    date = if changes |> Map.has_key?(:date),
-      do: changes.date,
-      else: original.date
-    weight = if changes |> Map.has_key?(:weight_float),
-      do: changes.weight_float,
-      else: parse_float!(original.weight)
-
-    {:ok, %{id: original.id, date: date, weight: weight}}
-  end
-
-  defp parse_float!(s) do
-    {v, ""} = Float.parse(s)
-    v
+    {:ok, %{id: original.id,
+      date: Map.get(changes, :date, original.date),
+      weight: Map.get(changes, :weight, original.weight)}}
   end
 end

@@ -20,7 +20,8 @@ defmodule WspomWeb.Live.WeightEditForm do
         </.header>
 
         <.input field={@form[:weight]} type="text" class="text-xl text-center"
-          class_container="flex items-start flex-col justify-start"/>
+          class_container="flex items-start flex-col justify-start"
+          formatter={&weight_formatter/2}/>
 
         <div class="flex flex-wrap rounded-lg bg-gray-300 max-w-sm mx-auto mt-24">
           <div class="w-1/3">
@@ -121,6 +122,20 @@ defmodule WspomWeb.Live.WeightEditForm do
     """
   end
 
+  # We need a custom formatter because otherwise, entering "8" using
+  # the buttons will display "8.0" (but, magically, adding more digits
+  # using the buttons will work just fine).
+  defp weight_formatter(_type, nil) do
+    ""
+  end
+  defp weight_formatter(_type, value) when is_binary(value) do
+    value
+  end
+  defp weight_formatter(_type, value) when is_float(value) do
+    value_int = Float.round(value)
+    if value_int == value, do: round(value_int), else: Float.to_string(value)
+  end
+
   @impl true
   def update(%{data: data} = assigns, socket) do
     # Note: all calls to `to_form()` in this module require the `as: "data"` argument.
@@ -145,7 +160,8 @@ defmodule WspomWeb.Live.WeightEditForm do
     add_days_to_date(socket, 1)
   end
   def handle_event("append", %{"text" => text}, socket) do
-    new_weight = get_form_param(socket, "weight") <> text
+    raw = get_form_param(socket, "weight") |> IO.inspect(label: "RAW")
+    new_weight = raw <> text
     handle_form_change(socket, Utils.set_form_param(socket, "weight", new_weight))
   end
   def handle_event("delete", _, socket) do
@@ -179,6 +195,7 @@ defmodule WspomWeb.Live.WeightEditForm do
   def get_form_param(socket, field) do
     Map.get(socket.assigns.form.params, field)
       || Map.get(socket.assigns.form.data, String.to_existing_atom(field))
+      || ""
   end
 
   defp save_record(socket, :edit, form_params) do

@@ -1,6 +1,6 @@
 defmodule Wspom.Weight.Context do
 
-  # WARNING! This is a very weird implementation, written when I was
+  # WARNING! This is quite a weird implementation, written when I was
   # still learning (and struggling with) forms…
 
   import Ecto.Changeset
@@ -19,7 +19,9 @@ defmodule Wspom.Weight.Context do
       %{id: nil, date: "2025-01-16", weight: ""}
   """
   def new_form_data() do
-    %{id: nil, date: Utils.date_now(), weight: ""}
+    %{id: nil,
+      date: Utils.date_now(),
+      weight: ""}
   end
 
   @doc """
@@ -32,27 +34,12 @@ defmodule Wspom.Weight.Context do
       %Ecto.Changeset{}
   """
   def to_changeset(%{} = data, form_params \\ %{}) do
-    types = %{weight: :string, weight_float: :float, date: :string, date_date: :date}
+    types = %{weight: :string, weight_float: :float, date: :date}
 
     {data, types}
     |> cast(form_params, [:weight, :date])
     |> validate_required([:weight, :date])
     |> validate_weight(:weight, :weight_float)
-    |> validate_date(:date, :date_date)
-  end
-
-  # In addition to validating the string field, this function will also
-  # put the value as Date into field `db_field` of the changeset.
-  defp validate_date(%Ecto.Changeset{} = changeset, str_field, db_field) do
-    with {:ok, date_str} <- changeset |> Ecto.Changeset.fetch_change(str_field) do
-      with {:ok, date} <- Date.from_iso8601(date_str) do
-        changeset |> Ecto.Changeset.put_change(db_field, date)
-      else
-        _ -> changeset |> Ecto.Changeset.add_error(str_field, "Invalid date")
-      end
-    else
-      _ -> changeset
-    end
   end
 
   # In addition to validating the string field, this function will also
@@ -182,9 +169,9 @@ defmodule Wspom.Weight.Context do
     {:error, cs}
   end
   def to_db_record(%Ecto.Changeset{data: original, changes: changes}) do
-    date = if changes |> Map.has_key?(:date_date),
-      do: changes.date_date,
-      else: Date.from_iso8601!(original.date)
+    date = if changes |> Map.has_key?(:date),
+      do: changes.date,
+      else: original.date
     weight = if changes |> Map.has_key?(:weight_float),
       do: changes.weight_float,
       else: parse_float!(original.weight)

@@ -16,7 +16,7 @@ defmodule Utils do
   def weekday_short_name(7), do: "N"
 
   def date_now() do
-    Timex.now("America/Montreal") |> DateTime.to_date() |> Date.to_string()
+    Timex.now("America/Montreal") |> DateTime.to_date()
   end
 
   # This function will set a new value of the given form field.

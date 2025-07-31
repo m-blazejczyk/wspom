@@ -1,6 +1,7 @@
 defmodule WspomWeb.Live.Weight.WeightEdit do
   use WspomWeb, :live_view
-  # alias Wspom.Weight.Context
+
+  alias Wspom.Weight.Context
 
   @impl true
   def mount(_params, _session, socket) do
@@ -15,7 +16,7 @@ defmodule WspomWeb.Live.Weight.WeightEdit do
       id={:new}
       title="Add a Weight Measurement"
       action={@live_action}
-      data={nil}
+      data={Context.new_form_data()}
       patch={~p"/weight/data"}
     />
     """

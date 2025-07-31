@@ -122,16 +122,8 @@ defmodule WspomWeb.Live.WeightEditForm do
   end
 
   @impl true
-  def update(%{data: nil} = assigns, socket) do
-    # This variant is called when the "Add Weight" form is initialized…
-    # …and we simply call the other variant.
-    default_data = Context.new_form_data()
-    update(assigns |> Map.replace(:data, default_data), socket)
-  end
   def update(%{data: data} = assigns, socket) do
-    # This variant is called in all other contexts.
-    # It expects a properly formed `:data` attribute in `assigns`.
-    # For this reason, all calls to `to_form()` in this module require the `as: "data"` argument.
+    # Note: all calls to `to_form()` in this module require the `as: "data"` argument.
     # That's because we're not using a struct to back the form data.
     {:ok,
       socket
@@ -163,13 +155,16 @@ defmodule WspomWeb.Live.WeightEditForm do
   end
 
   defp add_days_to_date(socket, days) do
-    current_text = get_form_param(socket, "date")
-    new_date = with {:ok, date} <- Date.from_iso8601(current_text) do
-      date |> Date.add(days) |> to_string()
+    current_date = get_form_param(socket, "date")
+    if is_binary(current_date) do
+      # This will get called if the < or > button is clicked while the
+      # content of the date field is invalid
+      handle_form_change(socket, socket.assigns.form.params)
     else
-      _ -> current_text
+      # This will get called if the date field contains a valid date
+      new_date = current_date |> Date.add(days)
+      handle_form_change(socket, Utils.set_form_param(socket, "date", new_date))
     end
-    handle_form_change(socket, Utils.set_form_param(socket, "date", new_date))
   end
 
   defp handle_form_change(socket, form_params) do

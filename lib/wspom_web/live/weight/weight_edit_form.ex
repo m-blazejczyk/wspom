@@ -160,7 +160,7 @@ defmodule WspomWeb.Live.WeightEditForm do
     add_days_to_date(socket, 1)
   end
   def handle_event("append", %{"text" => text}, socket) do
-    raw = get_form_param(socket, "weight") |> IO.inspect(label: "RAW")
+    raw = get_form_param(socket, "weight")
     new_weight = raw <> text
     handle_form_change(socket, Utils.set_form_param(socket, "weight", new_weight))
   end

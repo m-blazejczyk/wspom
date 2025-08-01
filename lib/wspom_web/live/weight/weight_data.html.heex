@@ -4,7 +4,7 @@
       <ul class="grid grid-cols-3 gap-6">
         <WspomWeb.CardComponent.small_card href={~p"/"} img={~p"/images/home_64.png"}
           label="Go back to the home page" />
-        <WspomWeb.CardComponent.small_card href={~p"/weight/add"} img={~p"/images/add_64.png"}
+        <WspomWeb.CardComponent.small_card href={~p"/weight/data/add"} img={~p"/images/add_64.png"}
           label="Add weight measurement" />
         <WspomWeb.CardComponent.small_card href={~p"/weight/charts"} img={~p"/images/chart_64.png"}
           label="View weight charts" />
@@ -20,7 +20,7 @@
         </tr>
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">
-        <tr :for={record <- @data}>
+        <tr :for={record <- @records}>
           <td class="px-6 py-4 whitespace-nowrap">
             <%= format_date(record.date) %>
           </td>
@@ -32,3 +32,15 @@
     </table>
   </div>
 </div>
+
+<.modal :if={@live_action in [:add]} id="weight-modal" show
+  on_cancel={JS.patch(~p"/weight/data")}>
+  <.live_component
+    module={WspomWeb.Live.WeightEditForm}
+    id={:new}
+    title="Add a Weight Measurement"
+    action={@live_action}
+    data={Context.new_form_data()}
+    patch={~p"/weight/data"}
+  />
+</.modal>

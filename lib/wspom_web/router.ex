@@ -24,9 +24,10 @@ defmodule WspomWeb.Router do
     live "/entries/:id/edit", Live.EntryView, :edit
 
     live "/weight", Live.Weight.WeightIndex, :index
+    live "/weight/add", Live.Weight.WeightIndex, :add
     live "/weight/data", Live.Weight.WeightData, :data
-    live "/weight/add", Live.Weight.WeightEdit, :add
-    live "/weight/:id/edit", Live.Weight.WeightEdit, :edit
+    live "/weight/data/add", Live.Weight.WeightData, :add
+    # live "/weight/:id/edit", Live.Weight.WeightEdit, :edit
     live "/weight/charts", Live.Weight.WeightCharts, :charts
 
     live "/books", Live.Books.BookIndex, :index

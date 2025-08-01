@@ -1,6 +1,8 @@
 defmodule WspomWeb.Live.Weight.WeightIndex do
   use WspomWeb, :live_view
 
+  alias Wspom.Weight.Context
+
   @impl true
   def mount(_params, _session, socket) do
     {:ok, socket, layout: {WspomWeb.Layouts, :data_app}}

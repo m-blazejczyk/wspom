@@ -10,3 +10,15 @@
       name="Charts" info="View charts" label="View weight charts" />
   </ul>
 </section>
+
+<.modal :if={@live_action in [:add]} id="weight-modal" show
+  on_cancel={JS.patch(~p"/weight")}>
+  <.live_component
+    module={WspomWeb.Live.WeightEditForm}
+    id={:new}
+    title="Add a Weight Measurement"
+    action={@live_action}
+    data={Context.new_form_data()}
+    patch={~p"/weight"}
+  />
+</.modal>

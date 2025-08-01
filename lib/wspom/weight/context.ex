@@ -102,7 +102,7 @@ defmodule Wspom.Weight.Context do
   def create_record(form_params \\ %{}) do
     case new_form_data()
     |> to_changeset(form_params)
-    |> to_db_record() |> IO.inspect(label: "RECORD") do
+    |> to_db_record() do
       {:error, _changeset} = err ->
         err
       {:ok, db_record} ->

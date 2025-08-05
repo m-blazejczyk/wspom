@@ -56,6 +56,10 @@ defmodule Wspom.BookLen do
     %BookLen{len_type: :percent, int_len: percent}
   end
 
+  def type_to_string(:pages), do: "the number of pages"
+  def type_to_string(:time), do: "time (h:mm)"
+  def type_to_string(:percent), do: "percent (including the percent sign)"
+
   # Expected data structures (examples):
   # %BookLen{len_type: :pages, int_len: 120} - 120 pages
   # %BookLen{len_type: :time, time_len: {3, 42}} - 3 hours and 42 minutes
@@ -82,6 +86,17 @@ defmodule Wspom.BookLen do
   end
   def to_percent(%BookLen{len_type: :percent, int_len: cur_percent}, _) do
     Float.round(cur_percent / 1 * 100.0, 1)
+  end
+
+  # Returns an integer that can be used to compare book length records.
+  def to_comparable_int(%BookLen{len_type: :pages, int_len: pages}) do
+    pages
+  end
+  def to_comparable_int(%BookLen{len_type: :time, time_len: {hours, minutes}}) do
+    hours * 60 + minutes
+  end
+  def to_comparable_int(%BookLen{len_type: :percent, int_len: percent}) do
+    percent
   end
 
   # Validates a form field representing a BookLen, entered as a string.

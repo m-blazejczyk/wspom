@@ -1,5 +1,6 @@
 defmodule Wspom.BookHistory do
 
+  alias Ecto.Changeset
   alias Wspom.{BookHistory, BookLen, Book}, warn: false
 
   import Ecto.Changeset
@@ -38,11 +39,100 @@ defmodule Wspom.BookHistory do
 
   # Creates and validates a changeset - only used to validate the form.
   # `book` is the book that this history record will be a part of.
-  def changeset(%BookHistory{} = history, %Book{} = _book, attrs) do
+  def changeset(%BookHistory{} = history, %Book{} = book, attrs) do
     {history, @types}
     |> cast(attrs, [:id, :book_id, :date, :type, :position])
     |> validate_required([:book_id, :date, :type, :position])
     |> validate_inclusion(:type, ["read", "updated", "skipped"])
+    |> validate_with_book(book)
+    |> validate_with_book_history(book)
+  end
+
+  def validate_with_book(%Ecto.Changeset{valid?: false} = changeset, _) do
+    changeset
+  end
+  def validate_with_book(%Ecto.Changeset{} = changeset, %Book{} = book) do
+    # At this stage, we have no access to the updated history record.
+    # We have to rely on what's in the `changes` field.
+    if book.status in [:finished, :abandoned] do
+      # Book status validation
+      changeset |> Ecto.Changeset.add_error(:position,
+        "Not allowed to log progress on a book that is finished or abandoned.")
+    else
+      case changeset |> Changeset.fetch_change(:position) do
+        {:ok, new_position} ->
+          if new_position.len_type != book.length.len_type do
+            # Position type must be the same as the books
+            changeset |> Ecto.Changeset.add_error(:position,
+              "Please enter the position as #{BookLen.type_to_string(book.length.len_type)}.")
+          else
+            if BookLen.to_comparable_int(new_position) > BookLen.to_comparable_int(book.length) do
+              # Position must be less than book length
+              changeset |> Ecto.Changeset.add_error(:position,
+                "Position is located past the length of this book (#{BookLen.to_string(book.length)}).")
+            else
+              changeset
+            end
+          end
+        :error ->
+          # Position hasn't changed - assume it's correct
+          changeset
+      end
+    end
+  end
+
+  def validate_with_book_history(%Ecto.Changeset{valid?: false} = changeset, _) do
+    changeset
+  end
+  def validate_with_book_history(%Ecto.Changeset{} = changeset, %Book{} = book) do
+    # At this stage, we have no access to the updated history record.
+    # We have to rely on what's in the `changes` field.
+
+    # Get the BookHistory record representing the new / changed record.
+    {:ok, position} = changeset |> update()
+
+    monotonous = position
+    # Integrate it into the history list of the book.
+    |> add_to_history(book.history)
+    # Sort by position. The given function should compare two arguments, and return true if
+    # the first argument precedes or is in the same place as the second one.
+    |> Enum.sort(fn h1, h2 ->
+      BookLen.to_comparable_int(h1.position) <= BookLen.to_comparable_int(h2.position) end)
+    # Check if the dates are monotonous.
+    |> monotonous?()
+
+    if monotonous do
+      changeset
+    else
+      changeset |> Ecto.Changeset.add_error(:position,
+        "Invalid date for this position.")
+    end
+  end
+
+  # This gets called when a new history record is added.
+  defp add_to_history(%BookHistory{id: nil} = position, history) do
+    [position | history]
+  end
+  # This gets called when a history record is edited.
+  defp add_to_history(%BookHistory{id: id} = position, history) do
+    idx = history |> Enum.find_index(&(&1.id == id))
+    history |> List.replace_at(idx, position)
+  end
+
+  defp monotonous?(history) do
+    {_, is_monotonous} = history
+    |> Enum.reduce({List.first(history).date, true}, &monotonous_reducer/2)
+
+    is_monotonous
+  end
+
+  defp monotonous_reducer(_position, {_prev_date, false} = acc) do
+    acc
+  end
+  defp monotonous_reducer(%BookHistory{} = position, {prev_date, true}) do
+    # `compare` returns :gt if first date is later than the second.
+    # If that happens, we'll set the second element of the tuple to `false`.
+    {position.date, Date.compare(prev_date, position.date) != :gt}
   end
 
   # Returns a new book progress object with a `nil` id and with `date`

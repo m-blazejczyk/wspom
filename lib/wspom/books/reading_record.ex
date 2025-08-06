@@ -1,7 +1,7 @@
 defmodule Wspom.ReadingRecord do
 
   alias Ecto.Changeset
-  alias Wspom.{ReadingRecord, BookLen, Book}, warn: false
+  alias Wspom.{ReadingRecord, BookPos, Book}, warn: false
 
   import Ecto.Changeset
 
@@ -35,7 +35,7 @@ defmodule Wspom.ReadingRecord do
   # in `cast()`.
   # See https://hexdocs.pm/ecto/Ecto.Schema.html#module-types-and-castin
   @types %{id: :integer, book_id: :integer, date: :date,
-    type: :string, position: BookLen}
+    type: :string, position: BookPos}
 
   # Creates and validates a changeset - only used to validate the form.
   # `book` is the book that this reading position will be a part of.
@@ -61,15 +61,15 @@ defmodule Wspom.ReadingRecord do
     else
       case changeset |> Changeset.fetch_change(:position) do
         {:ok, new_position} ->
-          if new_position.len_type != book.length.len_type do
+          if new_position.pos_type != book.length.pos_type do
             # Position type must be the same as the books
             changeset |> Ecto.Changeset.add_error(:position,
-              "Please enter the position as #{BookLen.type_to_string(book.length.len_type)}.")
+              "Please enter the position as #{BookPos.type_to_string(book.length.pos_type)}.")
           else
-            if BookLen.to_comparable_int(new_position) > BookLen.to_comparable_int(book.length) do
+            if BookPos.to_comparable_int(new_position) > BookPos.to_comparable_int(book.length) do
               # Position must be less than book length
               changeset |> Ecto.Changeset.add_error(:position,
-                "Position is located past the length of this book (#{BookLen.to_string(book.length)}).")
+                "Position is located past the length of this book (#{BookPos.to_string(book.length)}).")
             else
               changeset
             end
@@ -97,7 +97,7 @@ defmodule Wspom.ReadingRecord do
     # Sort by position. The given function should compare two arguments, and return true if
     # the first argument precedes or is in the same place as the second one.
     |> Enum.sort(fn r1, r2 ->
-      BookLen.to_comparable_int(r1.position) <= BookLen.to_comparable_int(r2.position) end)
+      BookPos.to_comparable_int(r1.position) <= BookPos.to_comparable_int(r2.position) end)
     # Check if the dates are monotonous.
     |> monotonous?()
 

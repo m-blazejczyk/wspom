@@ -1,5 +1,5 @@
 defmodule WspomWeb.Live.ReadingRecordEditForm do
-alias Wspom.BookLen
+alias Wspom.BookPos
   use WspomWeb, :live_component
 
   alias Wspom.Books.Context
@@ -207,7 +207,7 @@ alias Wspom.BookLen
   # Same as above but for the `position` field.
   defp get_position_from_form(socket) do
     Map.get(socket.assigns.form.params, "position")
-      || BookLen.to_string(Map.get(socket.assigns.form.data, :position))
+      || BookPos.to_string(Map.get(socket.assigns.form.data, :position))
   end
 
   defp save_record(socket, :history, params) do

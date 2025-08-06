@@ -71,10 +71,10 @@
             <%= format_type(record.type) %>
           </td>
           <td class="px-6 py-4 whitespace-nowrap text-zinc-800">
-            <%= Wspom.BookLen.to_string(record.position) %>
+            <%= Wspom.BookPos.to_string(record.position) %>
           </td>
           <td class="px-6 py-4 whitespace-nowrap text-xs text-zinc-500">
-            <%= Wspom.BookLen.to_percent(record.position, @book.length) %>%
+            <%= Wspom.BookPos.to_percent(record.position, @book.length) %>%
           </td>
           <td class="px-6 py-4 whitespace-nowrap text-zinc-800">
             <ul class="grid grid-cols-2 gap-2">

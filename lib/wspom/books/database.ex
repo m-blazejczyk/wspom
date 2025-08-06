@@ -5,7 +5,7 @@ defmodule Wspom.Books.Database do
   alias Wspom.ReadingRecord
   alias Wspom.DbBase
   alias Wspom.Book
-  alias Wspom.BookLen
+  alias Wspom.BookPos
 
   @db_file "books.dat"
   @db_file_backup "books.bak.dat"
@@ -42,38 +42,38 @@ defmodule Wspom.Books.Database do
   defp fake_data do
     fake_history = [
       %ReadingRecord{id: 1, book_id: 5, date: ~D[2025-03-28], type: :read,
-        position: BookLen.new_pages(12)},
+        position: BookPos.new_pages(12)},
       %ReadingRecord{id: 2, book_id: 5, date: ~D[2025-03-29], type: :read,
-        position: BookLen.new_pages(18)},
+        position: BookPos.new_pages(18)},
       %ReadingRecord{id: 3, book_id: 5, date: ~D[2025-03-30], type: :read,
-        position: BookLen.new_pages(29)},
+        position: BookPos.new_pages(29)},
       %ReadingRecord{id: 4, book_id: 5, date: ~D[2025-04-08], type: :updated,
-        position: BookLen.new_pages(82)},
+        position: BookPos.new_pages(82)},
       %ReadingRecord{id: 5, book_id: 5, date: ~D[2025-04-09], type: :read,
-        position: BookLen.new_pages(95)},
+        position: BookPos.new_pages(95)},
       %ReadingRecord{id: 6, book_id: 5, date: ~D[2025-04-10], type: :read,
-        position: BookLen.new_pages(112)},
+        position: BookPos.new_pages(112)},
     ]
 
     [
       %Book{id: 1, title: "Singularity is Nearer", short_title: "Singularity",
-      author: "Kurtzweil", length: BookLen.new_time(9, 36),
+      author: "Kurtzweil", length: BookPos.new_time(9, 36),
       medium: :audiobook, is_fiction: false, status: :finished,
       started_date: ~D[2025-02-10], finished_date: ~D[2025-04-21]},
       %Book{id: 2, title: "There is Hope", short_title: "There is Hope",
-      author: "Chomsky", length: BookLen.new_pages(228),
+      author: "Chomsky", length: BookPos.new_pages(228),
       medium: :book, is_fiction: false, status: :abandoned,
       started_date: ~D[2025-01-10], finished_date: ~D[2025-03-06]},
       %Book{id: 3, title: "Folly of Realism", short_title: "Folly of Realism",
-      author: "Some Guy", length: BookLen.new_pages(180),
+      author: "Some Guy", length: BookPos.new_pages(180),
       medium: :book, is_fiction: false, status: :finished,
       started_date: ~D[2024-12-28], finished_date: ~D[2025-03-21]},
       %Book{id: 4, title: "Havana Connection", short_title: "Havana",
-      author: "Viau", length: BookLen.new_percent(100),
+      author: "Viau", length: BookPos.new_percent(100),
       medium: :book, is_fiction: true, status: :active,
       started_date: ~D[2025-05-02], finished_date: nil},
       %Book{id: 5, title: "Sad Planets", short_title: "Sad Planets",
-      author: "Eugene Thacker", length: BookLen.new_pages(325),
+      author: "Eugene Thacker", length: BookPos.new_pages(325),
       medium: :book, is_fiction: false, status: :active,
       started_date: ~D[2025-03-28], finished_date: nil,
       history: fake_history}

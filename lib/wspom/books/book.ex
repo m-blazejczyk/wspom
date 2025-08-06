@@ -1,6 +1,6 @@
 defmodule Wspom.Book do
   alias Wspom.Book
-  alias Wspom.BookLen
+  alias Wspom.BookPos
 
   import Ecto.Changeset
 
@@ -21,7 +21,7 @@ defmodule Wspom.Book do
   # They are different that what will be saved to the database.
   # See https://hexdocs.pm/ecto/Ecto.Schema.html#module-types-and-castin
   @types %{id: :integer, title: :string, short_title: :string, author: :string,
-    length: BookLen, medium: :string, is_fiction: :boolean, status: :string}
+    length: BookPos, medium: :string, is_fiction: :boolean, status: :string}
 
   # Creates and validates a changeset - only used to validate the form.
   def changeset(book, attrs) do

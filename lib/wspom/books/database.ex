@@ -2,7 +2,7 @@ defmodule Wspom.Books.Database do
   use Agent
   require Logger
 
-  alias Wspom.BookHistory
+  alias Wspom.ReadingRecord
   alias Wspom.DbBase
   alias Wspom.Book
   alias Wspom.BookLen
@@ -41,17 +41,17 @@ defmodule Wspom.Books.Database do
 
   defp fake_data do
     fake_history = [
-      %BookHistory{id: 1, book_id: 5, date: ~D[2025-03-28], type: :read,
+      %ReadingRecord{id: 1, book_id: 5, date: ~D[2025-03-28], type: :read,
         position: BookLen.new_pages(12)},
-      %BookHistory{id: 2, book_id: 5, date: ~D[2025-03-29], type: :read,
+      %ReadingRecord{id: 2, book_id: 5, date: ~D[2025-03-29], type: :read,
         position: BookLen.new_pages(18)},
-      %BookHistory{id: 3, book_id: 5, date: ~D[2025-03-30], type: :read,
+      %ReadingRecord{id: 3, book_id: 5, date: ~D[2025-03-30], type: :read,
         position: BookLen.new_pages(29)},
-      %BookHistory{id: 4, book_id: 5, date: ~D[2025-04-08], type: :updated,
+      %ReadingRecord{id: 4, book_id: 5, date: ~D[2025-04-08], type: :updated,
         position: BookLen.new_pages(82)},
-      %BookHistory{id: 5, book_id: 5, date: ~D[2025-04-09], type: :read,
+      %ReadingRecord{id: 5, book_id: 5, date: ~D[2025-04-09], type: :read,
         position: BookLen.new_pages(95)},
-      %BookHistory{id: 6, book_id: 5, date: ~D[2025-04-10], type: :read,
+      %ReadingRecord{id: 6, book_id: 5, date: ~D[2025-04-10], type: :read,
         position: BookLen.new_pages(112)},
     ]
 
@@ -118,27 +118,26 @@ defmodule Wspom.Books.Database do
 
   def replace_book_and_save(updated_book) do
     Logger.notice("Saving the modified book…")
-    IO.inspect(updated_book, label: "BOOK")
     modify_and_save_data(updated_book, fn books, book ->
       {books |> DbBase.find_and_replace([], book), book}
     end)
   end
 
-  def add_book_history_and_save(new_book_history) do
-    Logger.notice("Saving the new book history record…")
-    IO.inspect(new_book_history, label: "RECORD")
-    # modify_and_save_data(new_book_history, fn book_historys, book_history ->
-    #   max_id = DbBase.find_max_id(book_historys)
-    #   new_book_history = %{book_history | id: max_id + 1}
-    #   {[new_book_history | book_historys], new_book_history}
+  def add_reading_record_and_save(new_record) do
+    Logger.notice("Saving the new reading record…")
+    IO.inspect(new_record, label: "NEW READING RECORD")
+    # modify_and_save_data(new_record, fn records, record ->
+    #   max_id = DbBase.find_max_id(records)
+    #   new_record = %{record | id: max_id + 1}
+    #   {[new_record | records], new_record}
     # end)
   end
 
-  def replace_book_history_and_save(updated_book_history) do
-    Logger.notice("Saving the modified book history record…")
-    IO.inspect(updated_book_history, label: "RECORD")
-    # modify_and_save_data(updated_book_history, fn book_historys, book_history ->
-    #   {book_historys |> DbBase.find_and_replace([], book_history), book_history}
+  def replace_reading_record_and_save(updated_record) do
+    Logger.notice("Saving the modified reading record…")
+    IO.inspect(updated_record, label: "UPDATED READING RECORD")
+    # modify_and_save_data(updated_record, fn records, record ->
+    #   {records |> DbBase.find_and_replace([], record), record}
     # end)
   end
 

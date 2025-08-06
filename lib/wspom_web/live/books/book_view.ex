@@ -34,11 +34,11 @@ defmodule WspomWeb.Live.Books.BookView do
     |> assign(:page_title, "Read Book")
   end
 
-  defp apply_action(socket, :history, book, %{"hist" => hist_id}) do
+  defp apply_action(socket, :history, book, %{"hist" => record_id}) do
     socket
     |> assign(:book, book)
-    |> assign(:history, book |> Book.find_history(hist_id))
-    |> assign(:page_title, "Edit Book History Record")
+    |> assign(:reading_rec, book |> Book.find_reading_record(record_id))
+    |> assign(:page_title, "Edit Book Reading Record")
   end
 
   # These are helper functions for the HEEX template

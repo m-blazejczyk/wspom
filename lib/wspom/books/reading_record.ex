@@ -1,7 +1,7 @@
-defmodule Wspom.BookHistory do
+defmodule Wspom.ReadingRecord do
 
   alias Ecto.Changeset
-  alias Wspom.{BookHistory, BookLen, Book}, warn: false
+  alias Wspom.{ReadingRecord, BookLen, Book}, warn: false
 
   import Ecto.Changeset
 
@@ -38,9 +38,9 @@ defmodule Wspom.BookHistory do
     type: :string, position: BookLen}
 
   # Creates and validates a changeset - only used to validate the form.
-  # `book` is the book that this history record will be a part of.
-  def changeset(%BookHistory{} = history, %Book{} = book, attrs) do
-    {history, @types}
+  # `book` is the book that this reading position will be a part of.
+  def changeset(%ReadingRecord{} = record, %Book{} = book, attrs) do
+    {record, @types}
     |> cast(attrs, [:id, :book_id, :date, :type, :position])
     |> validate_required([:book_id, :date, :type, :position])
     |> validate_inclusion(:type, ["read", "updated", "skipped"])
@@ -52,7 +52,7 @@ defmodule Wspom.BookHistory do
     changeset
   end
   def validate_with_book(%Ecto.Changeset{} = changeset, %Book{} = book) do
-    # At this stage, we have no access to the updated history record.
+    # At this stage, we have no access to the updated reading position.
     # We have to rely on what's in the `changes` field.
     if book.status in [:finished, :abandoned] do
       # Book status validation
@@ -85,19 +85,19 @@ defmodule Wspom.BookHistory do
     changeset
   end
   def validate_with_book_history(%Ecto.Changeset{} = changeset, %Book{} = book) do
-    # At this stage, we have no access to the updated history record.
+    # At this stage, we have no access to the updated reading record.
     # We have to rely on what's in the `changes` field.
 
-    # Get the BookHistory record representing the new / changed record.
-    {:ok, position} = changeset |> update()
+    # Get the ReadingRecord record representing the new / changed record.
+    {:ok, record} = changeset |> update()
 
-    monotonous = position
+    monotonous = record
     # Integrate it into the history list of the book.
     |> add_to_history(book.history)
     # Sort by position. The given function should compare two arguments, and return true if
     # the first argument precedes or is in the same place as the second one.
-    |> Enum.sort(fn h1, h2 ->
-      BookLen.to_comparable_int(h1.position) <= BookLen.to_comparable_int(h2.position) end)
+    |> Enum.sort(fn r1, r2 ->
+      BookLen.to_comparable_int(r1.position) <= BookLen.to_comparable_int(r2.position) end)
     # Check if the dates are monotonous.
     |> monotonous?()
 
@@ -109,14 +109,14 @@ defmodule Wspom.BookHistory do
     end
   end
 
-  # This gets called when a new history record is added.
-  defp add_to_history(%BookHistory{id: nil} = position, history) do
-    [position | history]
+  # This gets called when a new reading record is added.
+  defp add_to_history(%ReadingRecord{id: nil} = record, history) do
+    [record | history]
   end
-  # This gets called when a history record is edited.
-  defp add_to_history(%BookHistory{id: id} = position, history) do
+  # This gets called when a reading record is edited.
+  defp add_to_history(%ReadingRecord{id: id} = record, history) do
     idx = history |> Enum.find_index(&(&1.id == id))
-    history |> List.replace_at(idx, position)
+    history |> List.replace_at(idx, record)
   end
 
   defp monotonous?(history) do
@@ -129,10 +129,10 @@ defmodule Wspom.BookHistory do
   defp monotonous_reducer(_position, {_prev_date, false} = acc) do
     acc
   end
-  defp monotonous_reducer(%BookHistory{} = position, {prev_date, true}) do
+  defp monotonous_reducer(%ReadingRecord{} = record, {prev_date, true}) do
     # `compare` returns :gt if first date is later than the second.
     # If that happens, we'll set the second element of the tuple to `false`.
-    {position.date, Date.compare(prev_date, position.date) != :gt}
+    {record.date, Date.compare(prev_date, record.date) != :gt}
   end
 
   # Returns a new book progress object with a `nil` id and with `date`
@@ -140,48 +140,48 @@ defmodule Wspom.BookHistory do
   # to make it easier on the form. This is the data structure expected
   # by the form component - not the data structure to be saved in the database.
   def new_form_data() do
-    %BookHistory{id: nil, book_id: nil, date: Utils.date_now(),
+    %ReadingRecord{id: nil, book_id: nil, date: Utils.date_now(),
       type: :read, position: nil}
   end
 
   @doc """
-  Updates a book history record if the changeset is valid.
-  Returns {:ok, %BookHistory{}} or {:error, %Ecto.Changeset{}}.
+  Updates a reading record if the changeset is valid.
+  Returns {:ok, %ReadingRecord{}} or {:error, %Ecto.Changeset{}}.
   Notes:
-   - changeset.data contains the original record (type: %BookHistory{})
+   - changeset.data contains the original record (type: %ReadingRecord{})
    - changeset.changes contains a map containing the changes,
      e.g. %{date: "2025-05-16", type: :skipped}
   """
   def update(%Ecto.Changeset{valid?: false} = cs) do
     {:error, cs}
   end
-  def update(%Ecto.Changeset{data: book_history, changes: changes} = changeset) do
+  def update(%Ecto.Changeset{data: record, changes: changes} = changeset) do
     # Go over all changes and update the record for each of them -
     # or add an error to the changeset
-    case Enum.reduce(changes, {:continue, book_history}, &update_field/2) do
+    case Enum.reduce(changes, {:continue, record}, &update_field/2) do
       {:error, {field, error}} ->
         {:error, changeset |> Ecto.Changeset.add_error(field, error)}
-      {:continue, new_book_history} ->
-        {:ok, new_book_history}
+      {:continue, new_record} ->
+        {:ok, new_record}
     end
   end
 
   # Used by Enum.reduce() to go over a map of field changes.
   # The first argument is a tuple with {field_name, new_value}.
   # The second argument is the accumulator - one of:
-  #   {:continue, %BookHistory{}}
+  #   {:continue, %ReadingRecord{}}
   #   {:error, message} (where 'message' is a string)
   # Returns the new accumulator.
   defp update_field(_, {:error, _} = error) do
     # Once an error has been encountered, ignore all subsequent changes.
     error
   end
-  defp update_field({:type, field_value}, {:continue, %BookHistory{} = book_history}) do
+  defp update_field({:type, field_value}, {:continue, %ReadingRecord{} = record}) do
     # Safe to call `to_atom` because the values of :type have already
     # been validated
-    {:continue, book_history |> Map.put(:type, String.to_atom(field_value))}
+    {:continue, record |> Map.put(:type, String.to_atom(field_value))}
   end
-  defp update_field({field_name, field_value}, {:continue, %BookHistory{} = book_history}) do
-    {:continue, book_history |> Map.put(field_name, field_value)}
+  defp update_field({field_name, field_value}, {:continue, %ReadingRecord{} = record}) do
+    {:continue, record |> Map.put(field_name, field_value)}
   end
 end

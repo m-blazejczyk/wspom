@@ -8,7 +8,7 @@ defmodule Wspom.Book do
   # :medium can be: :book, :audiobook, :ebook, :comics.
   # :status can be: :active, :finished, :abandoned.
   # :history is a list containing the reading history.
-  # See book_history.ex for more information.
+  # See reading_pos.ex for more information.
   # The date fields are calculated, not directly editable; they can both
   # be nil; :started_date will be nil in the rare cases of books that
   # were started being read before they were added to the database.
@@ -35,11 +35,11 @@ defmodule Wspom.Book do
     %Book{title: "", short_title: "", author: "", length: nil}
   end
 
-  def find_history(%Book{} = book, hist_id) when is_binary(hist_id) do
-    find_history(book, String.to_integer(hist_id))
+  def find_reading_record(%Book{} = book, record_id) when is_binary(record_id) do
+    find_reading_record(book, String.to_integer(record_id))
   end
-  def find_history(%Book{} = book, hist_id) when is_integer(hist_id) do
-    book.history |> Enum.find(&(&1.id == hist_id))
+  def find_reading_record(%Book{} = book, record_id) when is_integer(record_id) do
+    book.history |> Enum.find(&(&1.id == record_id))
   end
 
   @doc """

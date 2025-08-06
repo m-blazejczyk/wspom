@@ -1,4 +1,4 @@
-defmodule WspomWeb.Live.BookHistoryEditForm do
+defmodule WspomWeb.Live.ReadingRecordEditForm do
 alias Wspom.BookLen
   use WspomWeb, :live_component
 
@@ -10,7 +10,7 @@ alias Wspom.BookLen
     <div class="max-w-lg mx-auto border border-gray-200 rounded shadow-md px-8 py-10 flex flex-col items-center">
       <.simple_form
         for={@form}
-        id="book-history-form"
+        id="reading-rec-form"
         class="w-full flex flex-col gap-4"
         phx-target={@myself}
         phx-change="validate"
@@ -144,8 +144,8 @@ alias Wspom.BookLen
 
 
   @impl true
-  def update(%{history: history, book: book} = assigns, socket) do
-    changeset = Context.change_book_history(history, book)
+  def update(%{record: record, book: book} = assigns, socket) do
+    changeset = Context.change_reading_record(record, book)
 
     {:ok,
       socket
@@ -155,11 +155,11 @@ alias Wspom.BookLen
   end
 
   @impl true
-  def handle_event("validate", %{"book_history" => params}, socket) do
+  def handle_event("validate", %{"reading_record" => params}, socket) do
     handle_form_change(socket, params)
   end
-  def handle_event("save", %{"book_history" => params}, socket) do
-    save_history(socket, socket.assigns.action, params)
+  def handle_event("save", %{"reading_record" => params}, socket) do
+    save_record(socket, socket.assigns.action, params)
   end
   def handle_event("day_earlier", _, socket) do
     add_days_to_date(socket, -1)
@@ -188,8 +188,8 @@ alias Wspom.BookLen
   end
 
   defp handle_form_change(socket, params) do
-    changeset = Context.change_book_history(
-      socket.assigns.history, socket.assigns.book, params)
+    changeset = Context.change_reading_record(
+      socket.assigns.record, socket.assigns.book, params)
     {:noreply, socket
       |> assign(form: to_form(changeset, action: :validate))
     }
@@ -210,11 +210,11 @@ alias Wspom.BookLen
       || BookLen.to_string(Map.get(socket.assigns.form.data, :position))
   end
 
-  defp save_history(socket, :history, params) do
-    case Context.update_book_history(
-      socket.assigns.history, socket.assigns.book, params) do
-      {:ok, history} ->
-        notify_parent({:saved, history})
+  defp save_record(socket, :history, params) do
+    case Context.update_reading_record(
+      socket.assigns.record, socket.assigns.book, params) do
+      {:ok, record} ->
+        notify_parent({:saved, record})
 
         {:noreply,
          socket
@@ -225,10 +225,10 @@ alias Wspom.BookLen
     end
   end
 
-  defp save_history(socket, :read, params) do
-    case Context.create_book_history(socket.assigns.book, params) do
-      {:ok, history} ->
-        notify_parent({:saved, history})
+  defp save_record(socket, :read, params) do
+    case Context.create_reading_record(socket.assigns.book, params) do
+      {:ok, record} ->
+        notify_parent({:saved, record})
 
         {:noreply,
          socket

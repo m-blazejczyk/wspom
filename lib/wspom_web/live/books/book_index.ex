@@ -17,7 +17,7 @@ defmodule WspomWeb.Live.Books.BookIndex do
     socket
   end
 
-  # This displays the "add reading history" popup on top of the index page,
+  # This displays the "add reading record" popup on top of the index page,
   # keeping it all clean for the most frequent operation.
   defp apply_action(socket, :read, _params) do
     socket

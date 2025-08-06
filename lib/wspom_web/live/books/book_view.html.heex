@@ -79,9 +79,9 @@
           <td class="px-6 py-4 whitespace-nowrap text-zinc-800">
             <ul class="grid grid-cols-2 gap-2">
               <WspomWeb.CardComponent.tiny_card href={~p"/books/#{@book.id}/view/history/#{record.id}/edit"}
-                img={~p"/images/edit_24.png"} label="Edit history record" />
+                img={~p"/images/edit_24.png"} label="Edit reading record" />
               <WspomWeb.CardComponent.tiny_card href={~p"/books/list"}
-                img={~p"/images/trash_24.png"} label="Delete history record" />
+                img={~p"/images/trash_24.png"} label="Delete reading record" />
             </ul>
           </td>
         </tr>
@@ -103,13 +103,13 @@
 </.modal>
 
 <.modal :if={@live_action in [:history]}
-  id="history-modal" show on_cancel={JS.patch(~p"/books/#{@book.id}")}>
+  id="reading-rec-modal" show on_cancel={JS.patch(~p"/books/#{@book.id}")}>
   <.live_component
-    module={WspomWeb.Live.BookHistoryEditForm}
+    module={WspomWeb.Live.ReadingRecordEditForm}
     title={@page_title}
     action={@live_action}
-    id={@history.id}
-    history={@history}
+    id={@reading_rec.id}
+    record={@reading_rec}
     book={@book}
     patch={~p"/books/#{@book.id}"}
   />

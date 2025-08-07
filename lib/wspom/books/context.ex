@@ -142,24 +142,9 @@ defmodule Wspom.Books.Context do
       {:error, %Ecto.Changeset{}}
   """
   def create_reading_record(%Book{} = book, params \\ %{}) do
-    case ReadingRecord.new_form_data()
+    ReadingRecord.new_form_data()
     |> ReadingRecord.changeset(book, params)
-    |> ReadingRecord.update() do
-      {:error, _changeset} = err ->
-        err
-      {:ok, updated_record, changeset} ->
-        # We are not validating if the reading position fits into the
-        # reading history every time the user types a character in the
-        # form. It's too calculation-intensive. Instead, we're doing it
-        # here, when the user clicks the Save button.
-        case updated_record |> ReadingRecord.validate_with_book_history(book) do
-          :ok ->
-            saved_record = Database.add_reading_record_and_save(updated_record)
-            {:ok, saved_record}
-          {:error, error} ->
-            {:error, changeset |> Ecto.Changeset.add_error(:position, error)}
-        end
-    end
+    |> save_reading_record(book, &Database.add_reading_record_and_save/1)
   end
 
   @doc """
@@ -178,15 +163,23 @@ defmodule Wspom.Books.Context do
 
   """
   def update_reading_record(%ReadingRecord{} = record, %Book{} = book, params) do
-    case record
+    record
     |> ReadingRecord.changeset(book, params)
-    |> ReadingRecord.update() do
+    |> save_reading_record(book, &Database.replace_reading_record_and_save/1)
+  end
+
+  defp save_reading_record(%Ecto.Changeset{} = changeset, %Book{} = book, save_fn) do
+    case changeset |> ReadingRecord.update() do
       {:error, _changeset} = err ->
         err
       {:ok, updated_record, changeset} ->
+        # We are not validating if the reading position fits into the
+        # reading history every time the user types a character in the
+        # form. It's too calculation-intensive. Instead, we're doing it
+        # here, when the user clicks the Save button.
         case updated_record |> ReadingRecord.validate_with_book_history(book) do
           :ok ->
-            saved_record = Database.replace_reading_record_and_save(updated_record)
+            saved_record = save_fn.(updated_record)
             {:ok, saved_record}
           {:error, error} ->
             {:error, changeset |> Ecto.Changeset.add_error(:position, error)}

@@ -147,9 +147,18 @@ defmodule Wspom.Books.Context do
     |> ReadingRecord.update() do
       {:error, _changeset} = err ->
         err
-      {:ok, updated_record} ->
-        saved_record = Database.add_reading_record_and_save(updated_record)
-        {:ok, saved_record}
+      {:ok, updated_record, changeset} ->
+        # We are not validating if the reading position fits into the
+        # reading history every time the user types a character in the
+        # form. It's too calculation-intensive. Instead, we're doing it
+        # here, when the user clicks the Save button.
+        case updated_record |> ReadingRecord.validate_with_book_history(book) do
+          :ok ->
+            saved_record = Database.add_reading_record_and_save(updated_record)
+            {:ok, saved_record}
+          {:error, error} ->
+            {:error, changeset |> Ecto.Changeset.add_error(:position, error)}
+        end
     end
   end
 
@@ -174,9 +183,14 @@ defmodule Wspom.Books.Context do
     |> ReadingRecord.update() do
       {:error, _changeset} = err ->
         err
-      {:ok, updated_record} ->
-        saved_record = Database.replace_reading_record_and_save(updated_record)
-        {:ok, saved_record}
+      {:ok, updated_record, changeset} ->
+        case updated_record |> ReadingRecord.validate_with_book_history(book) do
+          :ok ->
+            saved_record = Database.replace_reading_record_and_save(updated_record)
+            {:ok, saved_record}
+          {:error, error} ->
+            {:error, changeset |> Ecto.Changeset.add_error(:position, error)}
+        end
     end
   end
 end

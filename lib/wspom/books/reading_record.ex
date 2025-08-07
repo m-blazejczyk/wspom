@@ -45,13 +45,16 @@ defmodule Wspom.ReadingRecord do
     |> validate_required([:book_id, :date, :type, :position])
     |> validate_inclusion(:type, ["read", "updated", "skipped"])
     |> validate_with_book(book)
-    |> validate_with_book_history(book)
+    # We are not validating if the reading position fits into the reading
+    # history here. It's too calculation-intensive to be doing that every
+    # time the user types a character. It will be done when the user clicks
+    # the Save button.
   end
 
-  def validate_with_book(%Ecto.Changeset{valid?: false} = changeset, _) do
+  defp validate_with_book(%Ecto.Changeset{valid?: false} = changeset, _) do
     changeset
   end
-  def validate_with_book(%Ecto.Changeset{} = changeset, %Book{} = book) do
+  defp validate_with_book(%Ecto.Changeset{} = changeset, %Book{} = book) do
     # At this stage, we have no access to the updated reading position.
     # We have to rely on what's in the `changes` field.
     if book.status in [:finished, :abandoned] do
@@ -81,16 +84,9 @@ defmodule Wspom.ReadingRecord do
     end
   end
 
-  def validate_with_book_history(%Ecto.Changeset{valid?: false} = changeset, _) do
-    changeset
-  end
-  def validate_with_book_history(%Ecto.Changeset{} = changeset, %Book{} = book) do
-    # At this stage, we have no access to the updated reading record.
-    # We have to rely on what's in the `changes` field.
-
-    # Get the ReadingRecord record representing the new / changed record.
-    {:ok, record} = changeset |> update()
-
+  # The reading record (first argument) has already been updated based
+  # on the form entries.
+  def validate_with_book_history(%ReadingRecord{} = record, %Book{} = book) do
     monotonous = record
     # Integrate it into the history list of the book.
     |> add_to_history(book.history)
@@ -102,10 +98,9 @@ defmodule Wspom.ReadingRecord do
     |> monotonous?()
 
     if monotonous do
-      changeset
+      :ok
     else
-      changeset |> Ecto.Changeset.add_error(:position,
-        "Invalid date for this position.")
+      {:error, "Invalid date for this position."}
     end
   end
 
@@ -146,7 +141,8 @@ defmodule Wspom.ReadingRecord do
 
   @doc """
   Updates a reading record if the changeset is valid.
-  Returns {:ok, %ReadingRecord{}} or {:error, %Ecto.Changeset{}}.
+  Returns {:ok, %ReadingRecord{}, %Ecto.Changeset{}} or
+  {:error, %Ecto.Changeset{}}.
   Notes:
    - changeset.data contains the original record (type: %ReadingRecord{})
    - changeset.changes contains a map containing the changes,
@@ -162,7 +158,7 @@ defmodule Wspom.ReadingRecord do
       {:error, {field, error}} ->
         {:error, changeset |> Ecto.Changeset.add_error(field, error)}
       {:continue, new_record} ->
-        {:ok, new_record}
+        {:ok, new_record, changeset}
     end
   end
 

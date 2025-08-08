@@ -1,4 +1,5 @@
 defmodule Wspom.Book do
+  alias Ecto.Changeset
   alias Wspom.Book
   alias Wspom.BookPos
 
@@ -29,10 +30,49 @@ defmodule Wspom.Book do
     |> cast(attrs, [:id, :title, :short_title, :author, :length, :medium, :is_fiction])
     |> validate_required([:title, :short_title, :author, :length, :medium, :is_fiction])
     |> validate_inclusion(:medium, ["book", "audiobook", "ebook", "comics"])
+    |> validate_book_length()
+  end
+
+  # defp validate_book_length(%Ecto.Changeset{valid?: false} = cs), do: cs
+  # Validate the book length in the context of reading history:
+  # * Can't change the length of a finished / abandoned book
+  # * Can't change length to be smaller or equal than the farthest
+  #   position read
+  # * Can't change length type if there is any reading history
+  defp validate_book_length(%Ecto.Changeset{} = changeset) do
+    case changeset |> Changeset.fetch_change(:length) do
+      :error ->
+        changeset
+      {:ok, new_length} ->
+        if changeset.data.status != :active do
+          changeset |> Changeset.add_error(:length,
+            "Not allowed to modify the length of completed books")
+        else
+          if changeset.data.length.pos_type != new_length.pos_type do
+            changeset |> Changeset.add_error(:length,
+              "Not allowed to modify the length type of books with reading histories")
+          else
+            furthest_pos_int = changeset.data |> furthest_position_int()
+
+            if BookPos.to_comparable_int(new_length) <= furthest_pos_int do
+              changeset |> Changeset.add_error(:length,
+                "Length must be greater than the furthest reading position")
+            else
+              changeset
+            end
+          end
+        end
+    end
   end
 
   def new() do
     %Book{title: "", short_title: "", author: "", length: nil}
+  end
+
+  def furthest_position_int(%Book{history: []}), do: 0
+  def furthest_position_int(%Book{history: history}) do
+    history |> Enum.reduce(0,
+      fn record, max_pos -> max(max_pos, record.position |> BookPos.to_comparable_int()) end)
   end
 
   def find_reading_record(%Book{} = book, record_id) when is_binary(record_id) do

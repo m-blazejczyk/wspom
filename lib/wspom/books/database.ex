@@ -41,18 +41,18 @@ defmodule Wspom.Books.Database do
 
   defp fake_data do
     fake_history = [
-      %ReadingRecord{id: 1, book_id: 5, date: ~D[2025-03-28], type: :read,
-        position: BookPos.new_pages(12)},
-      %ReadingRecord{id: 2, book_id: 5, date: ~D[2025-03-29], type: :read,
-        position: BookPos.new_pages(18)},
-      %ReadingRecord{id: 3, book_id: 5, date: ~D[2025-03-30], type: :read,
-        position: BookPos.new_pages(29)},
-      %ReadingRecord{id: 4, book_id: 5, date: ~D[2025-04-08], type: :updated,
-        position: BookPos.new_pages(82)},
-      %ReadingRecord{id: 5, book_id: 5, date: ~D[2025-04-09], type: :read,
-        position: BookPos.new_pages(95)},
-      %ReadingRecord{id: 6, book_id: 5, date: ~D[2025-04-10], type: :read,
+      %ReadingRecord{id: 1, book_id: 5, date: ~D[2025-04-10], type: :read,
         position: BookPos.new_pages(112)},
+      %ReadingRecord{id: 2, book_id: 5, date: ~D[2025-04-09], type: :read,
+        position: BookPos.new_pages(95)},
+      %ReadingRecord{id: 3, book_id: 5, date: ~D[2025-04-08], type: :updated,
+        position: BookPos.new_pages(82)},
+      %ReadingRecord{id: 4, book_id: 5, date: ~D[2025-03-30], type: :read,
+        position: BookPos.new_pages(29)},
+      %ReadingRecord{id: 5, book_id: 5, date: ~D[2025-03-29], type: :read,
+        position: BookPos.new_pages(18)},
+      %ReadingRecord{id: 6, book_id: 5, date: ~D[2025-03-28], type: :read,
+        position: BookPos.new_pages(12)},
     ]
 
     [

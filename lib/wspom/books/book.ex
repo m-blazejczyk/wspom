@@ -10,6 +10,9 @@ defmodule Wspom.Book do
   # :status can be: :active, :finished, :abandoned.
   # :history is a list containing the reading history.
   # See reading_pos.ex for more information.
+  # It is assumed (and enforced) that the :history field is sorted by
+  # reading position, i.e. the most recently reading record is the first
+  # element of the list. The list is sorted this way when saving a book.
   # The date fields are calculated, not directly editable; they can both
   # be nil; :started_date will be nil in the rare cases of books that
   # were started being read before they were added to the database.
@@ -70,9 +73,9 @@ defmodule Wspom.Book do
   end
 
   def furthest_position_int(%Book{history: []}), do: 0
-  def furthest_position_int(%Book{history: history}) do
-    history |> Enum.reduce(0,
-      fn record, max_pos -> max(max_pos, record.position |> BookPos.to_comparable_int()) end)
+  def furthest_position_int(%Book{history: [latest | _rest]}) do
+    latest |> BookPos.to_comparable_int()
+    # Enum.reduce(0, fn record, max_pos -> max(max_pos, record.position |> BookPos.to_comparable_int()) end)
   end
 
   def find_reading_record(%Book{} = book, record_id) when is_binary(record_id) do

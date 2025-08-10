@@ -2,10 +2,10 @@
   <div class="flex justify-center items-center w-full pb-8">
     <section class="min-w-md">
       <ul class="grid grid-cols-2 gap-6">
-        <WspomWeb.CardComponent.small_card href={~p"/"} img={~p"/images/home_64.png"}
-          label="Go back to the home page" />
-        <WspomWeb.CardComponent.small_card href={~p"/books/new"} img={~p"/images/add_64.png"}
-          label="Add a book" />
+        <WspomWeb.CardComponent.small_card href={~p"/"}
+          img={~p"/images/home_64.png"} label="Go back to the home page" />
+        <WspomWeb.CardComponent.small_card href={~p"/books/new?active=#{@active}"}
+          img={~p"/images/add_64.png"} label="Add a book" />
       </ul>
     </section>
   </div>  
@@ -21,16 +21,16 @@
       <tbody class="bg-white divide-y divide-gray-200">
         <tr :for={book <- @books}>
           <td class="px-6 py-4 whitespace-nowrap">
-            <.link navigate={~p"/books/#{book.id}"}><%= book.short_title %></.link>
+            <.link navigate={~p"/books/#{book.id}?active=#{@active}"}><%= book.short_title %></.link>
           </td>
           <td class="px-6 py-4 whitespace-nowrap">
             <%= Book.percent_finished(book) |> :erlang.float_to_binary([{:decimals, 1}]) %>%
           </td>
           <td class="px-6 py-4 whitespace-nowrap">
             <ul class="grid grid-cols-2 gap-2">
-              <WspomWeb.CardComponent.tiny_card href={~p"/books/#{book.id}/edit"}
+              <WspomWeb.CardComponent.tiny_card href={~p"/books/#{book.id}/edit?active=#{@active}"}
                 img={~p"/images/edit_24.png"} label="Edit book" />
-              <WspomWeb.CardComponent.tiny_card href={~p"/books/#{book.id}/read"}
+              <WspomWeb.CardComponent.tiny_card href={~p"/books/#{book.id}/read?active=#{@active}"}
                 img={~p"/images/read_24.png"} label="Read book" />
             </ul>
           </td>
@@ -41,13 +41,13 @@
 </div>
 
 <.modal :if={@live_action in [:add, :edit]}
-  id="book-modal" show on_cancel={JS.patch(~p"/books/list")}>
+  id="book-modal" show on_cancel={JS.patch(~p"/books/list?active=#{@active}")}>
   <.live_component
     module={WspomWeb.Live.BookEditForm}
     id={@book.id || :new}
     title={@page_title}
     action={@live_action}
     book={@book}
-    patch={~p"/books/list"}
+    patch={~p"/books/list?active=#{@active}"}
   />
 </.modal>

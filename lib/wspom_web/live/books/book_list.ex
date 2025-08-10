@@ -1,4 +1,5 @@
 defmodule WspomWeb.Live.Books.BookList do
+alias Ecto.Query.BooleanExpr
   use WspomWeb, :live_view
 
   alias Wspom.Book
@@ -11,23 +12,26 @@ defmodule WspomWeb.Live.Books.BookList do
 
   @impl true
   def handle_params(params, _url, socket) do
-    {
-      :noreply,
-      apply_action(socket, socket.assigns.live_action, params)
-    }
+    socket = socket
+    |> assign(:books, Context.get_all_books())
+    |> assign(:active, params |> Map.get("active", true) |> parse_active())
+
+    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
+
+  def parse_active(b) when is_boolean(b), do: b
+  def parse_active("false"), do: false
+  def parse_active(_), do: true
 
   # This page will list all books and provide some filtering / sorting options.
   defp apply_action(socket, :list, _params) do
     socket
-    |> assign(:books, Context.get_all_books())
     |> assign(:page_title, "All Books")
   end
 
   # This displays the "add book" popup on top of the books list page.
   defp apply_action(socket, :add, _params) do
     socket
-    |> assign(:books, Context.get_all_books())
     |> assign(:book, Book.new())
     |> assign(:page_title, "New Book")
   end
@@ -35,7 +39,6 @@ defmodule WspomWeb.Live.Books.BookList do
   # This displays the "read book" popup on top of the books list page.
   defp apply_action(socket, :read, _params) do
     socket
-    |> assign(:books, Context.get_all_books())
     |> assign(:page_title, "Read Book")
   end
 
@@ -43,7 +46,6 @@ defmodule WspomWeb.Live.Books.BookList do
   defp apply_action(socket, :edit, %{"book" => id}) do
     book = Context.get_book!(id)
     socket
-    |> assign(:books, Context.get_all_books())
     |> assign(:book, book)
     |> assign(:page_title, "Edit Book")
   end

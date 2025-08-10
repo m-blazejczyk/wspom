@@ -33,7 +33,7 @@ defmodule WspomWeb.Live.BookEditForm do
         <.input field={@form[:title]} type="text" label="Title" />
         <.input field={@form[:short_title]} type="text" label="Short title" />
         <.input field={@form[:author]} type="text" label="Author" />
-        <.input field={@form[:length]} type="text" label="Length (pages or hh:mm)" />
+        <.input field={@form[:length]} type="text" label="Length (pages, % or hh:mm)" disabled={@book.status != :active}/>
         <.input field={@form[:medium]} type="select" label="Medium"
           options={[{"Printed Book", "book"},
             {"Audiobook", "audiobook"},

@@ -64,10 +64,10 @@ defmodule Wspom.ReadingRecord do
     else
       case changeset |> Changeset.fetch_change(:position) do
         {:ok, new_position} ->
-          if new_position.pos_type != book.length.pos_type do
+          if new_position.type != book.length.type do
             # Position type must be the same as the books
             changeset |> Ecto.Changeset.add_error(:position,
-              "Please enter the position as #{BookPos.type_to_string(book.length.pos_type)}.")
+              "Please enter the position as #{BookPos.type_to_string(book.length.type)}.")
           else
             if BookPos.to_comparable_int(new_position) > BookPos.to_comparable_int(book.length) do
               # Position must be less than book length

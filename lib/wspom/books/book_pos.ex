@@ -6,8 +6,8 @@ defmodule Wspom.BookPos do
 
   @parser ~r/^(?<pages>[0-9]+)$|^(?<perc>[0-9]+)%$|^(?<hours>[0-9]+):(?<minutes>[0-9]+)$/
 
-  # `pos_type` can be :pages, :time or :percent
-  defstruct [:pos_type, int_pos: nil, time_pos: nil]
+  # `type` can be :pages, :time or :percent
+  defstruct [:type, as_int: nil, as_time: nil]
 
   #####
   # `cast`, `load` and `dump` are implementing the Ecto.Type behavior.
@@ -43,17 +43,17 @@ defmodule Wspom.BookPos do
   # Constructors
   def new_pages(pages)
   when is_integer(pages) do
-    %BookPos{pos_type: :pages, int_pos: pages}
+    %BookPos{type: :pages, as_int: pages}
   end
 
   def new_time(hours, minutes)
   when is_integer(hours) and is_integer(minutes) do
-    %BookPos{pos_type: :time, time_pos: {hours, minutes}}
+    %BookPos{type: :time, as_time: {hours, minutes}}
   end
 
   def new_percent(percent)
   when is_integer(percent) do
-    %BookPos{pos_type: :percent, int_pos: percent}
+    %BookPos{type: :percent, as_int: percent}
   end
 
   def type_to_string(:pages), do: "the number of pages"
@@ -61,41 +61,41 @@ defmodule Wspom.BookPos do
   def type_to_string(:percent), do: "percent (including the percent sign)"
 
   # Expected data structures (examples):
-  # %BookPos{pos_type: :pages, int_pos: 120} - 120 pages
-  # %BookPos{pos_type: :time, time_pos: {3, 42}} - 3 hours and 42 minutes
-  # %BookPos{pos_type: :percent, int_pos: 30} - 30%
-  def to_string(%BookPos{pos_type: :pages, int_pos: pages}) do
+  # %BookPos{type: :pages, as_int: 120} - 120 pages
+  # %BookPos{type: :time, as_time: {3, 42}} - 3 hours and 42 minutes
+  # %BookPos{type: :percent, as_int: 30} - 30%
+  def to_string(%BookPos{type: :pages, as_int: pages}) do
     Integer.to_string(pages)
   end
-  def to_string(%BookPos{pos_type: :time, time_pos: {hours, minutes}}) do
+  def to_string(%BookPos{type: :time, as_time: {hours, minutes}}) do
     Integer.to_string(hours) <> ":" <> Integer.to_string(minutes)
   end
-  def to_string(%BookPos{pos_type: :percent, int_pos: percent}) do
+  def to_string(%BookPos{type: :percent, as_int: percent}) do
     Integer.to_string(percent) <> "%"
   end
 
   # Calculates the "percent completed" value
   # The first argument is the current position, the second one is the length
-  def to_percent(%BookPos{pos_type: :pages, int_pos: cur_pages},
-    %BookPos{pos_type: :pages, int_pos: len_pages}) do
+  def to_percent(%BookPos{type: :pages, as_int: cur_pages},
+    %BookPos{type: :pages, as_int: len_pages}) do
     Float.round(cur_pages / len_pages * 100.0, 1)
   end
-  def to_percent(%BookPos{pos_type: :time, time_pos: {cur_hours, cur_minutes}},
-    %BookPos{pos_type: :time, time_pos: {len_hours, len_minutes}}) do
+  def to_percent(%BookPos{type: :time, as_time: {cur_hours, cur_minutes}},
+    %BookPos{type: :time, as_time: {len_hours, len_minutes}}) do
     Float.round((cur_hours * 60 + cur_minutes) / (len_hours * 60 + len_minutes) * 100.0, 1)
   end
-  def to_percent(%BookPos{pos_type: :percent, int_pos: cur_percent}, _) do
+  def to_percent(%BookPos{type: :percent, as_int: cur_percent}, _) do
     Float.round(cur_percent / 1 * 100.0, 1)
   end
 
   # Returns an integer that can be used to compare book position records.
-  def to_comparable_int(%BookPos{pos_type: :pages, int_pos: pages}) do
+  def to_comparable_int(%BookPos{type: :pages, as_int: pages}) do
     pages
   end
-  def to_comparable_int(%BookPos{pos_type: :time, time_pos: {hours, minutes}}) do
+  def to_comparable_int(%BookPos{type: :time, as_time: {hours, minutes}}) do
     hours * 60 + minutes
   end
-  def to_comparable_int(%BookPos{pos_type: :percent, int_pos: percent}) do
+  def to_comparable_int(%BookPos{type: :percent, as_int: percent}) do
     percent
   end
 
@@ -150,14 +150,14 @@ defmodule Wspom.BookPos do
   end
 
   defp check_ranges(nil), do: {:error, "Invalid value; must be one of: p, p%, or h:mm"}
-  defp check_ranges(%BookPos{pos_type: :pages, int_pos: pages} = pos) do
+  defp check_ranges(%BookPos{type: :pages, as_int: pages} = pos) do
     if pages >= 0 and pages <= 2000 do
       {:ok, pos}
     else
       {:error, "Invalid number of pages (enter a number between 0 and 2000)"}
     end
   end
-  defp check_ranges(%BookPos{pos_type: :time, time_pos: {h, m}} = pos) do
+  defp check_ranges(%BookPos{type: :time, as_time: {h, m}} = pos) do
     if h >= 0 and h <= 50 and m >= 0 and m < 60 do
       {:ok, pos}
     else
@@ -168,7 +168,7 @@ defmodule Wspom.BookPos do
       end
     end
   end
-  defp check_ranges(%BookPos{pos_type: :percent, int_pos: percent} = pos) do
+  defp check_ranges(%BookPos{type: :percent, as_int: percent} = pos) do
     if percent >= 0 and percent <= 100 do
       {:ok, pos}
     else

@@ -74,8 +74,14 @@ defmodule Wspom.Book do
 
   def furthest_position_int(%Book{history: []}), do: 0
   def furthest_position_int(%Book{history: [latest | _rest]}) do
-    latest |> BookPos.to_comparable_int()
+    latest.position |> BookPos.to_comparable_int()
     # Enum.reduce(0, fn record, max_pos -> max(max_pos, record.position |> BookPos.to_comparable_int()) end)
+  end
+
+  def percent_finished(%Book{status: :finished}), do: 100.0
+  def percent_finished(%Book{status: :abandoned}), do: 100.0
+  def percent_finished(%Book{length: length} = book) do
+    furthest_position_int(book) / BookPos.to_comparable_int(length) * 100.0
   end
 
   def find_reading_record(%Book{} = book, record_id) when is_binary(record_id) do

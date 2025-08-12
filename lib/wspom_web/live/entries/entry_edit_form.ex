@@ -85,7 +85,7 @@ defmodule WspomWeb.Live.EntryEditForm do
     <div class="flex flex-row gap-4">
       <.input field={@form[:fuzzy]} type="number" label="Fuzzy" />
       <div class="content-center justify-items-center grow">
-        <.input field={@form[:needs_review]} type="checkbox" label="Needs review" />
+        <.input field={@form[:needs_review]} type="checkbox" label="Incomplete" />
       </div>
       <.input field={@form[:importance]} type="select" label="Importance"
         options={[{"Normal", "normal"},

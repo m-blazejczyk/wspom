@@ -45,8 +45,10 @@ defmodule WspomWeb.Live.Books.BookList do
   end
 
   # This displays the "read book" popup on top of the books list page.
-  defp apply_action(socket, :read, _params) do
+  defp apply_action(socket, :read, %{"book" => id}) do
+    book = Context.get_book!(id)
     socket
+    |> assign(:book, book)
     |> assign(:page_title, "Read Book")
   end
 

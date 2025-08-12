@@ -134,8 +134,8 @@ defmodule Wspom.ReadingRecord do
   # defaulted to today, formatted as string. The position defaults to ""
   # to make it easier on the form. This is the data structure expected
   # by the form component - not the data structure to be saved in the database.
-  def new_form_data() do
-    %ReadingRecord{id: nil, book_id: nil, date: Utils.date_now(),
+  def new_form_data(book_id) do
+    %ReadingRecord{id: nil, book_id: book_id, date: Utils.date_now(),
       type: :read, position: nil}
   end
 

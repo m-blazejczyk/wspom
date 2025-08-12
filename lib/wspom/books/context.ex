@@ -142,7 +142,7 @@ defmodule Wspom.Books.Context do
       {:error, %Ecto.Changeset{}}
   """
   def create_reading_record(%Book{} = book, params \\ %{}) do
-    ReadingRecord.new_form_data()
+    ReadingRecord.new_form_data(book.id)
     |> ReadingRecord.changeset(book, params)
     |> save_reading_record(book, &Database.add_reading_record_and_save/1)
   end

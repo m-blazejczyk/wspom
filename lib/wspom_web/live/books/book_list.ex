@@ -1,5 +1,5 @@
 defmodule WspomWeb.Live.Books.BookList do
-alias Ecto.Query.BooleanExpr
+
   use WspomWeb, :live_view
 
   alias Wspom.Book

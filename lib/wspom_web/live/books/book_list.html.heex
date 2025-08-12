@@ -8,14 +8,37 @@
           img={~p"/images/add_64.png"} label="Add a book" />
       </ul>
     </section>
-  </div>  
+  </div>
+  <div class="row flex w-3/4 mb-4">
+    <%= if @active do %>
+      <div class="italic rounded-md rounded-r-none py-2 px-4 text-center text-sm shadow-sm text-slate-600">
+        This table shows active books
+      </div>
+      <button class="rounded-md rounded-l-none border border-slate-300 py-2 px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800 hover:border-slate-800 focus:text-white focus:bg-slate-800 focus:border-slate-800 active:border-slate-800 active:text-white active:bg-slate-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+        type="button">
+        <.link patch={~p"/books/list?active=false"}>
+          Show completed books
+        </.link>
+      </button>
+    <% else %>
+      <div class="italic rounded-md rounded-r-none py-2 px-4 text-center text-sm shadow-sm text-slate-600">
+        This table shows completed and abandoned books
+      </div>
+      <button class="rounded-md rounded-l-none border border-slate-300 py-2 px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800 hover:border-slate-800 focus:text-white focus:bg-slate-800 focus:border-slate-800 active:border-slate-800 active:text-white active:bg-slate-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+        type="button">
+        <.link patch={~p"/books/list?active=true"}>
+          Show active books
+        </.link>
+      </button>
+    <% end %>
+  </div>
   <div class="flex justify-center items-center w-full">
     <table class="w-3/4 divide-y divide-gray-200">
       <thead>
         <tr>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Book</th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">%</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Act</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
         </tr>
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">

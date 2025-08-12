@@ -12,9 +12,10 @@ alias Ecto.Query.BooleanExpr
 
   @impl true
   def handle_params(params, _url, socket) do
+    show_active = params |> Map.get("active", true) |> parse_active()
     socket = socket
-    |> assign(:books, Context.get_all_books())
-    |> assign(:active, params |> Map.get("active", true) |> parse_active())
+    |> assign(:books, Context.get_all_books() |> filter_by_active(show_active))
+    |> assign(:active, show_active)
 
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
@@ -22,6 +23,13 @@ alias Ecto.Query.BooleanExpr
   def parse_active(b) when is_boolean(b), do: b
   def parse_active("false"), do: false
   def parse_active(_), do: true
+
+  defp filter_by_active(books, true = _show_active) do
+    books |> Enum.filter(&(&1.status == :active))
+  end
+  defp filter_by_active(books, false = _show_active) do
+    books |> Enum.filter(&(&1.status != :active))
+  end
 
   # This page will list all books and provide some filtering / sorting options.
   defp apply_action(socket, :list, _params) do

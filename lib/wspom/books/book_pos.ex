@@ -73,6 +73,7 @@ defmodule Wspom.BookPos do
   def to_string(%BookPos{type: :percent, as_int: percent}) do
     Integer.to_string(percent) <> "%"
   end
+  def to_string(nil), do: ""
 
   # Calculates the "percent completed" value
   # The first argument is the current position, the second one is the length

@@ -109,10 +109,17 @@ alias Wspom.BookPos
             </button>
           </div>
           <div class="w-1/3">
-            <button type="button" class="w-full h-16 text-xl text-gray-700 rounded-lg hover:bg-gray-400"
-              phx-click={JS.push("append", value: %{text: ":"})} phx-target={@myself}>
-              :
-            </button>
+            <%= if @book.length.type == :percent do %>
+              <button type="button" class="w-full h-16 text-xl text-gray-700 rounded-lg hover:bg-gray-400"
+                phx-click={JS.push("append", value: %{text: "%"})} phx-target={@myself}>
+                %
+              </button>
+            <% else %>
+              <button type="button" class="w-full h-16 text-xl text-gray-700 rounded-lg hover:bg-gray-400"
+                phx-click={JS.push("append", value: %{text: ":"})} phx-target={@myself}>
+                :
+              </button>
+            <% end %>
           </div>
           <div class="w-1/3">
             <button type="button" class="w-full h-16 text-xl text-gray-700 rounded-lg hover:bg-gray-400"

@@ -53,8 +53,10 @@
             <ul class="grid grid-cols-2 gap-2">
               <WspomWeb.CardComponent.tiny_card href={~p"/books/#{book.id}/edit?active=#{@active}"}
                 img={~p"/images/edit_24.png"} label="Edit book" />
-              <WspomWeb.CardComponent.tiny_card href={~p"/books/#{book.id}/read?active=#{@active}"}
-                img={~p"/images/read_24.png"} label="Read book" />
+              <%= if @active do %>
+                <WspomWeb.CardComponent.tiny_card href={~p"/books/#{book.id}/read?active=#{@active}"}
+                  img={~p"/images/read_24.png"} label="Read book" />
+              <% end %>
             </ul>
           </td>
         </tr>

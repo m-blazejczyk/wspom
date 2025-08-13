@@ -40,7 +40,49 @@ defmodule Wspom.Books.Database do
   end
 
   defp fake_data do
-    fake_history = [
+    singularity_history = [
+      %ReadingRecord{id: 1, book_id: 1, date: ~D[2025-02-10], type: :read,
+        position: BookPos.new_time(3, 11)},
+      %ReadingRecord{id: 2, book_id: 1, date: ~D[2025-03-17], type: :read,
+        position: BookPos.new_time(6, 25)},
+      %ReadingRecord{id: 3, book_id: 1, date: ~D[2025-04-21], type: :read,
+        position: BookPos.new_time(9, 36)},
+    ] |> Enum.reverse()
+    hope_history = [
+      %ReadingRecord{id: 1, book_id: 2, date: ~D[2025-01-10], type: :read,
+        position: BookPos.new_pages(21)},
+      %ReadingRecord{id: 2, book_id: 2, date: ~D[2025-01-12], type: :read,
+        position: BookPos.new_pages(36)},
+      %ReadingRecord{id: 3, book_id: 2, date: ~D[2025-01-15], type: :read,
+        position: BookPos.new_pages(47)},
+      %ReadingRecord{id: 4, book_id: 2, date: ~D[2025-03-06], type: :skipped,
+        position: BookPos.new_pages(228)},
+    ] |> Enum.reverse()
+    realism_history = [
+      %ReadingRecord{id: 1, book_id: 3, date: ~D[2024-12-28], type: :read,
+        position: BookPos.new_pages(18)},
+      %ReadingRecord{id: 2, book_id: 3, date: ~D[2025-01-01], type: :read,
+        position: BookPos.new_pages(27)},
+      %ReadingRecord{id: 3, book_id: 3, date: ~D[2025-01-28], type: :updated,
+        position: BookPos.new_pages(92)},
+      %ReadingRecord{id: 4, book_id: 3, date: ~D[2025-02-18], type: :updated,
+        position: BookPos.new_pages(161)},
+      %ReadingRecord{id: 5, book_id: 3, date: ~D[2025-03-02], type: :read,
+        position: BookPos.new_pages(180)},
+    ] |> Enum.reverse()
+    havana_history = [
+      %ReadingRecord{id: 1, book_id: 4, date: ~D[2025-05-02], type: :read,
+        position: BookPos.new_percent(12)},
+      %ReadingRecord{id: 2, book_id: 4, date: ~D[2025-05-03], type: :read,
+        position: BookPos.new_percent(19)},
+      %ReadingRecord{id: 3, book_id: 4, date: ~D[2025-05-04], type: :read,
+        position: BookPos.new_percent(30)},
+      %ReadingRecord{id: 4, book_id: 4, date: ~D[2025-05-05], type: :read,
+        position: BookPos.new_percent(41)},
+      %ReadingRecord{id: 5, book_id: 4, date: ~D[2025-05-07], type: :read,
+        position: BookPos.new_percent(55)},
+    ] |> Enum.reverse()
+    sad_planets_history = [
       %ReadingRecord{id: 1, book_id: 5, date: ~D[2025-04-10], type: :read,
         position: BookPos.new_pages(112)},
       %ReadingRecord{id: 2, book_id: 5, date: ~D[2025-04-09], type: :read,
@@ -59,24 +101,28 @@ defmodule Wspom.Books.Database do
       %Book{id: 1, title: "Singularity is Nearer", short_title: "Singularity",
       author: "Kurtzweil", length: BookPos.new_time(9, 36),
       medium: :audiobook, is_fiction: false, status: :finished,
-      started_date: ~D[2025-02-10], finished_date: ~D[2025-04-21]},
+      started_date: ~D[2025-02-10], finished_date: ~D[2025-04-21],
+      history: singularity_history},
       %Book{id: 2, title: "There is Hope", short_title: "There is Hope",
       author: "Chomsky", length: BookPos.new_pages(228),
       medium: :book, is_fiction: false, status: :abandoned,
-      started_date: ~D[2025-01-10], finished_date: ~D[2025-03-06]},
+      started_date: ~D[2025-01-10], finished_date: ~D[2025-03-06],
+      history: hope_history},
       %Book{id: 3, title: "Folly of Realism", short_title: "Folly of Realism",
       author: "Some Guy", length: BookPos.new_pages(180),
       medium: :book, is_fiction: false, status: :finished,
-      started_date: ~D[2024-12-28], finished_date: ~D[2025-03-21]},
+      started_date: ~D[2024-12-28], finished_date: ~D[2025-03-02],
+      history: realism_history},
       %Book{id: 4, title: "Havana Connection", short_title: "Havana",
       author: "Viau", length: BookPos.new_percent(100),
       medium: :book, is_fiction: true, status: :active,
-      started_date: ~D[2025-05-02], finished_date: nil},
+      started_date: ~D[2025-05-02], finished_date: nil,
+      history: havana_history},
       %Book{id: 5, title: "Sad Planets", short_title: "Sad Planets",
       author: "Eugene Thacker", length: BookPos.new_pages(325),
       medium: :book, is_fiction: false, status: :active,
       started_date: ~D[2025-03-28], finished_date: nil,
-      history: fake_history}
+      history: sad_planets_history}
     ]
   end
 

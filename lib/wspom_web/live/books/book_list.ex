@@ -13,8 +13,11 @@ defmodule WspomWeb.Live.Books.BookList do
   @impl true
   def handle_params(params, _url, socket) do
     show_active = params |> Map.get("active", true) |> parse_active()
+    books = Context.get_all_books()
+    |> filter_by_active(show_active)
+    |> sort_based_on_active(show_active)
     socket = socket
-    |> assign(:books, Context.get_all_books() |> filter_by_active(show_active))
+    |> assign(:books, books)
     |> assign(:active, show_active)
 
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
@@ -29,6 +32,26 @@ defmodule WspomWeb.Live.Books.BookList do
   end
   defp filter_by_active(books, false = _show_active) do
     books |> Enum.filter(&(&1.status != :active))
+  end
+
+  defp sort_based_on_active(books, true = _show_active) do
+    # The given function should compare two arguments, and return true if
+    # the first argument precedes or is in the same place as the second one.
+
+    # For active books, compare the dates when the books were last read.
+    books |> Enum.sort(&compare_active_books/2)
+  end
+  defp sort_based_on_active(books, false = _show_active) do
+    # For completed books, compare the dates when the books were completed.
+    books |> Enum.sort(&(Date.compare(&1.finished_date, &2.finished_date) != :lt))
+  end
+
+  defp compare_active_books(%Book{history: nil}, %Book{}), do: true
+  defp compare_active_books(%Book{}, %Book{history: nil}), do: false
+  defp compare_active_books(%Book{history: []}, %Book{}), do: true
+  defp compare_active_books(%Book{}, %Book{history: []}), do: false
+  defp compare_active_books(%Book{history: [last1 | _]}, %Book{history: [last2 | _]}) do
+    Date.compare(last1.date, last2.date) != :lt
   end
 
   # This page will list all books and provide some filtering / sorting options.

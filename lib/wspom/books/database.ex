@@ -83,17 +83,17 @@ defmodule Wspom.Books.Database do
         position: BookPos.new_percent(55)},
     ] |> Enum.reverse()
     sad_planets_history = [
-      %ReadingRecord{id: 1, book_id: 5, date: ~D[2025-04-10], type: :read,
+      %ReadingRecord{id: 6, book_id: 5, date: ~D[2025-04-10], type: :read,
         position: BookPos.new_pages(112)},
-      %ReadingRecord{id: 2, book_id: 5, date: ~D[2025-04-09], type: :read,
+      %ReadingRecord{id: 5, book_id: 5, date: ~D[2025-04-09], type: :read,
         position: BookPos.new_pages(95)},
-      %ReadingRecord{id: 3, book_id: 5, date: ~D[2025-04-08], type: :updated,
+      %ReadingRecord{id: 4, book_id: 5, date: ~D[2025-04-08], type: :updated,
         position: BookPos.new_pages(82)},
-      %ReadingRecord{id: 4, book_id: 5, date: ~D[2025-03-30], type: :read,
+      %ReadingRecord{id: 3, book_id: 5, date: ~D[2025-03-30], type: :read,
         position: BookPos.new_pages(29)},
-      %ReadingRecord{id: 5, book_id: 5, date: ~D[2025-03-29], type: :read,
+      %ReadingRecord{id: 2, book_id: 5, date: ~D[2025-03-29], type: :read,
         position: BookPos.new_pages(18)},
-      %ReadingRecord{id: 6, book_id: 5, date: ~D[2025-03-28], type: :read,
+      %ReadingRecord{id: 1, book_id: 5, date: ~D[2025-03-28], type: :read,
         position: BookPos.new_pages(12)},
     ]
 
@@ -122,7 +122,11 @@ defmodule Wspom.Books.Database do
       author: "Eugene Thacker", length: BookPos.new_pages(325),
       medium: :book, is_fiction: false, status: :active,
       started_date: ~D[2025-03-28], finished_date: nil,
-      history: sad_planets_history}
+      history: sad_planets_history},
+      %Book{id: 6, title: "The Secret Pilgrim", short_title: "Secret Pilgrim",
+      author: "Le Carre", length: BookPos.new_pages(278),
+      medium: :book, is_fiction: true, status: :active,
+      started_date: nil, finished_date: nil, history: []}
     ]
   end
 

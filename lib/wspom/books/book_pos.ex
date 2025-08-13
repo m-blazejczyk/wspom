@@ -86,7 +86,7 @@ defmodule Wspom.BookPos do
     Float.round((cur_hours * 60 + cur_minutes) / (len_hours * 60 + len_minutes) * 100.0, 1)
   end
   def to_percent(%BookPos{type: :percent, as_int: cur_percent}, _) do
-    Float.round(cur_percent / 1 * 100.0, 1)
+    Float.round(cur_percent * 1.0, 1)
   end
 
   # Returns an integer that can be used to compare book position records.

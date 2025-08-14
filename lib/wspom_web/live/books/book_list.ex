@@ -12,6 +12,7 @@ defmodule WspomWeb.Live.Books.BookList do
 
   @impl true
   def handle_params(params, _url, socket) do
+    # TODO: Move `active` into a cookie
     show_active = params |> Map.get("active", true) |> parse_active()
     books = Context.get_all_books()
     |> filter_by_active(show_active)

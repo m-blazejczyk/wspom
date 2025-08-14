@@ -28,13 +28,13 @@ defmodule WspomWeb.Live.Books.BookView do
     |> assign(:page_title, "Edit Book")
   end
 
-  defp apply_action(socket, :read, book, _params) do
+  defp apply_action(socket, :add_read, book, _params) do
     socket
     |> assign(:book, book)
     |> assign(:page_title, "Read Book")
   end
 
-  defp apply_action(socket, :history, book, %{"hist" => record_id}) do
+  defp apply_action(socket, :edit_read, book, %{"hist" => record_id}) do
     socket
     |> assign(:book, book)
     |> assign(:reading_rec, book |> Book.find_reading_record(record_id))

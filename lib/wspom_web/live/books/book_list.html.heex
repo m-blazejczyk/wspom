@@ -16,7 +16,7 @@
       </div>
       <.button class="rounded-md rounded-l-none py-2 px-4 text-center text-sm transition-all shadow-sm"
         type="button">
-        <.link patch={~p"/books/list?active=false"}>
+        <.link patch={~p"/books?active=false"}>
           Show completed books
         </.link>
       </.button>
@@ -26,7 +26,7 @@
       </div>
       <.button class="rounded-md rounded-l-none py-2 px-4 text-center text-sm transition-all shadow-sm"
         type="button">
-        <.link patch={~p"/books/list?active=true"}>
+        <.link patch={~p"/books?active=true"}>
           Show active books
         </.link>
       </.button>
@@ -66,19 +66,19 @@
 </div>
 
 <.modal :if={@live_action in [:add, :edit]}
-  id="book-modal" show on_cancel={JS.patch(~p"/books/list?active=#{@active}")}>
+  id="book-modal" show on_cancel={JS.patch(~p"/books?active=#{@active}")}>
   <.live_component
     module={WspomWeb.Live.BookEditForm}
     id={@book.id || :new}
     title={@page_title}
     action={@live_action}
     book={@book}
-    patch={~p"/books/list?active=#{@active}"}
+    patch={~p"/books?active=#{@active}"}
   />
 </.modal>
 
 <.modal :if={@live_action in [:read]}
-  id="reading-rec-modal" show on_cancel={JS.patch(~p"/books/list?active=#{@active}")}>
+  id="reading-rec-modal" show on_cancel={JS.patch(~p"/books?active=#{@active}")}>
   <.live_component
     module={WspomWeb.Live.ReadingRecordEditForm}
     title={@page_title}
@@ -86,6 +86,6 @@
     id={:new}
     record={Wspom.ReadingRecord.new_form_data(@book.id)}
     book={@book}
-    patch={~p"/books/list?active=#{@active}"}
+    patch={~p"/books?active=#{@active}"}
   />
 </.modal>

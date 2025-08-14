@@ -217,7 +217,7 @@ alias Wspom.BookPos
       || BookPos.to_string(Map.get(socket.assigns.form.data, :position))
   end
 
-  defp save_record(socket, :history, params) do
+  defp save_record(socket, :edit_read, params) do
     case Context.update_reading_record(
       socket.assigns.record, socket.assigns.book, params) do
       {:ok, record} ->
@@ -232,7 +232,7 @@ alias Wspom.BookPos
     end
   end
 
-  defp save_record(socket, :read, params) do
+  defp save_record(socket, :add_read, params) do
     case Context.create_reading_record(socket.assigns.book, params) do
       {:ok, record} ->
         notify_parent({:saved, record})

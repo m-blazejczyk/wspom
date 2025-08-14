@@ -29,10 +29,7 @@ defmodule WspomWeb.Router do
     live "/weight/data/add", Live.Weight.WeightData, :add
     live "/weight/charts", Live.Weight.WeightCharts, :charts
 
-    live "/books", Live.Books.BookIndex, :index
-    live "/books/read", Live.Books.BookIndex, :read
-
-    live "/books/list", Live.Books.BookList, :list
+    live "/books", Live.Books.BookList, :list
     live "/books/new", Live.Books.BookList, :add
     live "/books/:book/read", Live.Books.BookList, :read
     live "/books/:book/edit", Live.Books.BookList, :edit

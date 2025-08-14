@@ -31,6 +31,7 @@ defmodule WspomWeb.Live.Books.BookView do
   defp apply_action(socket, :add_read, book, _params) do
     socket
     |> assign(:book, book)
+    |> assign(:reading_rec, nil)
     |> assign(:page_title, "Read Book")
   end
 

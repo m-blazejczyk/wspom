@@ -232,6 +232,8 @@ alias Wspom.BookPos
     end
   end
 
+  defp save_record(socket, :read, params), do: save_record(socket, :add_read, params)
+
   defp save_record(socket, :add_read, params) do
     case Context.create_reading_record(socket.assigns.book, params) do
       {:ok, record} ->

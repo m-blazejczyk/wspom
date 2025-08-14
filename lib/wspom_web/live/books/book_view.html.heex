@@ -102,14 +102,14 @@
   />
 </.modal>
 
-<.modal :if={@live_action in [:history]}
+<.modal :if={@live_action in [:edit_read, :add_read]}
   id="reading-rec-modal" show on_cancel={JS.patch(~p"/books/#{@book.id}")}>
   <.live_component
     module={WspomWeb.Live.ReadingRecordEditForm}
     title={@page_title}
     action={@live_action}
-    id={@reading_rec.id}
-    record={@reading_rec}
+    id={if @reading_rec, do: @reading_rec.id, else: :new}
+    record={if @reading_rec, do: @reading_rec, else: Wspom.ReadingRecord.new_form_data(@book.id)}
     book={@book}
     patch={~p"/books/#{@book.id}"}
   />

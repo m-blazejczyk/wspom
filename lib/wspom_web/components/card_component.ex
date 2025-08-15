@@ -41,7 +41,7 @@ defmodule WspomWeb.CardComponent do
   def small_card(assigns) do
     ~H"""
     <li>
-      <a href={@href}
+      <.link patch={@href}
         class="block h-full transition-all duration-200 bg-white border border-gray-200 rounded group hover:shadow-lg hover:border-gray-700 hover:ring-1 hover:ring-gray-700/5">
         <div class="flex items-center p-4">
           <div
@@ -50,7 +50,7 @@ defmodule WspomWeb.CardComponent do
             <img src={@img} aria-label={@label}/>
           </div>
         </div>
-      </a>
+      </.link>
     </li>
     """
   end
@@ -58,7 +58,7 @@ defmodule WspomWeb.CardComponent do
   def tiny_card(assigns) do
     ~H"""
     <li>
-      <a href={@href}
+      <.link patch={@href}
         class="block h-full bg-white">
         <div class="flex items-center">
           <div
@@ -68,7 +68,7 @@ defmodule WspomWeb.CardComponent do
               src={@img} aria-label={@label}/>
           </div>
         </div>
-      </a>
+      </.link>
     </li>
     """
   end

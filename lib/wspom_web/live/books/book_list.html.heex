@@ -54,7 +54,7 @@
       <tbody class="bg-white divide-y divide-gray-200">
         <tr :for={book <- @books}>
           <td class="px-6 py-4 whitespace-nowrap">
-            <.link navigate={~p"/books/#{book.id}?active=#{@active}"}><%= book.short_title %></.link>
+            <.link patch={~p"/books/#{book.id}?active=#{@active}"}><%= book.short_title %></.link>
           </td>
           <td class="px-6 py-4 whitespace-nowrap">
             <%= if @active do %>

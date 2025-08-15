@@ -63,7 +63,7 @@
         </tr>
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">
-        <tr :for={record <- Enum.reverse(@book.history)}>
+        <tr :for={{record, idx} <- Enum.zip(Enum.reverse(@book.history), 1..length(@book.history))}>
           <td class="px-6 py-4 whitespace-nowrap text-zinc-800">
             <%= Date.to_string(record.date) %>
           </td>
@@ -80,8 +80,10 @@
             <ul class="grid grid-cols-2 gap-2">
               <WspomWeb.CardComponent.tiny_card href={~p"/books/#{@book.id}/view/history/#{record.id}/edit"}
                 img={~p"/images/edit_24.png"} label="Edit reading record" />
-              <WspomWeb.CardComponent.tiny_card href={~p"/books"}
-                img={~p"/images/trash_24.png"} label="Delete reading record" />
+              <%= if idx == 1 do %>
+                <WspomWeb.CardComponent.tiny_card href={~p"/books"}
+                  img={~p"/images/trash_24.png"} label="Delete reading record" />
+              <% end %>
             </ul>
           </td>
         </tr>

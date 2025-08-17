@@ -55,21 +55,38 @@ defmodule WspomWeb.CardComponent do
     """
   end
 
-  def tiny_card(assigns) do
+  def tiny_card_patch(assigns) do
     ~H"""
-    <li>
+    <li id={assigns[:id] || false} class={assigns[:class] || false}>
       <.link patch={@href}
         class="block h-full bg-white">
-        <div class="flex items-center">
-          <div
-            class="flex items-center justify-center flex-shrink-0 w-8 h-8">
-            <!-- Source: flaticon.com -->
-            <img class="transition-all duration-200 rounded group-hover:bg-orange-100 border border-gray-200 rounded group hover:shadow-lg hover:border-gray-700 hover:ring-1 hover:ring-gray-700/5"
-              src={@img} aria-label={@label}/>
-          </div>
-        </div>
+        <%= tiny_card_inside(assigns) %>
       </.link>
     </li>
+    """
+  end
+
+  def tiny_card_click(assigns) do
+    ~H"""
+    <li id={assigns[:id] || false} class={assigns[:class] || false}>
+      <.link phx-click={@click} data-confirm={@confirm}
+        class="block h-full bg-white">
+        <%= tiny_card_inside(assigns) %>
+      </.link>
+    </li>
+    """
+  end
+
+  defp tiny_card_inside(assigns) do
+    ~H"""
+    <div class="flex items-center">
+      <div
+        class="flex items-center justify-center flex-shrink-0 w-8 h-8">
+        <!-- Source: flaticon.com -->
+        <img class="transition-all duration-200 rounded group-hover:bg-orange-100 border border-gray-200 rounded group hover:shadow-lg hover:border-gray-700 hover:ring-1 hover:ring-gray-700/5"
+          src={@img} aria-label={@label} />
+      </div>
+    </div>
     """
   end
 end

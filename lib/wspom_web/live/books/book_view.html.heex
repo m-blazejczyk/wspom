@@ -63,7 +63,7 @@
         </tr>
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">
-        <tr :for={{record, idx} <- Enum.zip(Enum.reverse(@book.history), 1..length(@book.history))}>
+        <tr :for={{record, idx} <- Enum.zip(Enum.reverse(@book.history), 1..length(@book.history))} id={"row-#{idx}"}>
           <td class="px-6 py-4 whitespace-nowrap text-zinc-800">
             <%= Date.to_string(record.date) %>
           </td>
@@ -78,12 +78,14 @@
           </td>
           <td class="px-6 py-4 whitespace-nowrap text-zinc-800">
             <ul class="grid grid-cols-2 gap-2">
-              <WspomWeb.CardComponent.tiny_card href={~p"/books/#{@book.id}/view/history/#{record.id}/edit"}
+              <WspomWeb.CardComponent.tiny_card_patch href={~p"/books/#{@book.id}/view/history/#{record.id}/edit"}
                 img={~p"/images/edit_24.png"} label="Edit reading record" />
-              <%= if idx == 1 do %>
-                <WspomWeb.CardComponent.tiny_card href={~p"/books"}
-                  img={~p"/images/trash_24.png"} label="Delete reading record" />
-              <% end %>
+              <WspomWeb.CardComponent.tiny_card_click
+                click={JS.push("delete", value: %{id: record.id}) |> hide("#row-#{idx}") |> show("#del-#{idx - 1}")}
+                confirm="Delete the most recent reading record?"
+                img={~p"/images/trash_24.png"} label="Delete reading record"
+                id={"del-#{idx}"}
+                class={if idx == length(@book.history), do: "visible", else: "invisible"} />
             </ul>
           </td>
         </tr>

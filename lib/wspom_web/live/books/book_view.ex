@@ -42,6 +42,12 @@ defmodule WspomWeb.Live.Books.BookView do
     |> assign(:page_title, "Edit Book Reading Record")
   end
 
+  @impl true
+  def handle_event("delete", %{"id" => _record_id}, socket) do
+    # TODO...
+    {:noreply, socket}
+  end
+
   # These are helper functions for the HEEX template
   # (That's why they are `defp`).
   defp format_type(:read), do: ""

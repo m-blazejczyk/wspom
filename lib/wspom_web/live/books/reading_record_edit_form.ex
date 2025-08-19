@@ -140,9 +140,19 @@ alias Wspom.BookPos
             {"Bulk update", "updated"},
             {"Skipped to position", "skipped"}]} />
 
-        <:actions>
           <.button phx-disable-with="Saving…" class="w-full">Save</.button>
-        </:actions>
+          <.button phx-disable-with="Saving…"
+            class="w-full" bg_class="bg-green-700 hover:bg-green-500"
+            name="action" value="finish"
+            data-confirm="Finish this book? (Cannot be undone!)">
+            Finish
+          </.button>
+          <.button phx-disable-with="Saving…"
+            class="w-full" bg_class="bg-red-700 hover:bg-red-500"
+            name="action" value="abandon"
+            data-confirm="Abandon this book? (Cannot be undone!)">
+            Abandon
+          </.button>
 
       </.simple_form>
     </div>
@@ -164,6 +174,20 @@ alias Wspom.BookPos
   @impl true
   def handle_event("validate", %{"reading_record" => params}, socket) do
     handle_form_change(socket, params)
+  end
+  def handle_event("save", %{"reading_record" => params, "action" => "finish"}, socket) do
+    params = params
+    |> Map.put("position", socket.assigns.book.length |> BookPos.to_string())
+    |> Map.put("type", "read")
+
+    save_record(socket, socket.assigns.action, params)
+  end
+  def handle_event("save", %{"reading_record" => params, "action" => "abandon"}, socket) do
+    params = params
+    |> Map.put("position", socket.assigns.book.length |> BookPos.to_string())
+    |> Map.put("type", "skipped")
+
+    save_record(socket, socket.assigns.action, params)
   end
   def handle_event("save", %{"reading_record" => params}, socket) do
     save_record(socket, socket.assigns.action, params)

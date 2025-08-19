@@ -144,7 +144,7 @@ defmodule Wspom.Books.Context do
   def create_reading_record(%Book{} = book, params \\ %{}) do
     ReadingRecord.new_form_data(book.id)
     |> ReadingRecord.changeset(book, params)
-    |> save_reading_record(book, &Database.add_reading_record_and_save/1)
+    |> save_reading_record(book, &Database.add_reading_record_and_save/2)
   end
 
   @doc """
@@ -165,7 +165,7 @@ defmodule Wspom.Books.Context do
   def update_reading_record(%ReadingRecord{} = record, %Book{} = book, params) do
     record
     |> ReadingRecord.changeset(book, params)
-    |> save_reading_record(book, &Database.replace_reading_record_and_save/1)
+    |> save_reading_record(book, &Database.replace_reading_record_and_save/2)
   end
 
   defp save_reading_record(%Ecto.Changeset{} = changeset, %Book{} = book, save_fn) do
@@ -179,7 +179,7 @@ defmodule Wspom.Books.Context do
         # here, when the user clicks the Save button.
         case updated_record |> ReadingRecord.validate_with_book_history(book) do
           :ok ->
-            saved_record = save_fn.(updated_record)
+            saved_record = save_fn.(updated_record, book)
             {:ok, saved_record}
           {:error, error} ->
             {:error, changeset |> Ecto.Changeset.add_error(:position, error)}

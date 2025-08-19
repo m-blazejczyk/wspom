@@ -2,10 +2,7 @@ defmodule Wspom.Books.Database do
   use Agent
   require Logger
 
-  alias Wspom.ReadingRecord
-  alias Wspom.DbBase
-  alias Wspom.Book
-  alias Wspom.BookPos
+  alias Wspom.{ReadingRecord, DbBase, Book, BookPos}
 
   @db_file "books.dat"
   @db_file_backup "books.bak.dat"
@@ -157,8 +154,8 @@ defmodule Wspom.Books.Database do
     Agent.get(__MODULE__, fn %{books: books} -> books end)
   end
 
-  def add_book_and_save(created_book) do
-    Logger.notice("Saving a new book…")
+  def add_book_and_save(%Book{} = created_book) do
+    Logger.notice("Saving a new book (#{created_book.title})…")
     modify_and_save_data(created_book, fn books, book ->
       max_id = DbBase.find_max_id(books)
       new_book = %{book | id: max_id + 1}
@@ -166,26 +163,24 @@ defmodule Wspom.Books.Database do
     end)
   end
 
-  def replace_book_and_save(updated_book) do
-    Logger.notice("Saving the modified book…")
+  def replace_book_and_save(%Book{} = updated_book) do
+    Logger.notice("Saving the modified book (#{updated_book.title}, id=#{updated_book.id})…")
     modify_and_save_data(updated_book, fn books, book ->
       {books |> DbBase.find_and_replace([], book), book}
     end)
   end
 
-  def add_reading_record_and_save(new_record) do
-    Logger.notice("Saving the new reading record…")
-    IO.inspect(new_record, label: "NEW READING RECORD")
-    # modify_and_save_data(new_record, fn records, record ->
-    #   max_id = DbBase.find_max_id(records)
-    #   new_record = %{record | id: max_id + 1}
-    #   {[new_record | records], new_record}
-    # end)
+  def add_reading_record_and_save(%ReadingRecord{} = new_record, %Book{} = book) do
+    Logger.notice("Saving the new reading record for book with id=#{book.id}…")
+    max_id = DbBase.find_max_id(book.history)
+    new_record = %{new_record | id: max_id + 1}
+    new_book = %{book | history: [new_record | book.history]}
+    replace_book_and_save(new_book)
+    new_record  # This is what needs to be returned
   end
 
-  def replace_reading_record_and_save(updated_record) do
+  def replace_reading_record_and_save(%ReadingRecord{} = updated_record, %Book{} = book) do
     Logger.notice("Saving the modified reading record…")
-    IO.inspect(updated_record, label: "UPDATED READING RECORD")
     # modify_and_save_data(updated_record, fn records, record ->
     #   {records |> DbBase.find_and_replace([], record), record}
     # end)

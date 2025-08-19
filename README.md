@@ -52,13 +52,7 @@ Get latest:
 git pull
 ```
 
-Change the version on the top of this file:
-
-```
-vi mix.exs
-```
-
-Then, rebuild:
+Rebuild:
 
 ```
 MIX_ENV=prod mix compile
@@ -66,8 +60,6 @@ MIX_ENV=prod mix assets.deploy
 mix phx.gen.release
 MIX_ENV=prod mix release 
 ```
-
-If everything was fine, commit the changes made to `mix.exs`.
 
 # Run the application
 

@@ -180,10 +180,13 @@ defmodule Wspom.Books.Database do
   end
 
   def replace_reading_record_and_save(%ReadingRecord{} = updated_record, %Book{} = book) do
-    Logger.notice("Saving the modified reading record…")
-    # modify_and_save_data(updated_record, fn records, record ->
-    #   {records |> DbBase.find_and_replace([], record), record}
-    # end)
+    Logger.notice("Saving the modified reading record #{updated_record.id} for book with id=#{book.id}…")
+    new_history = book.history
+    |> DbBase.find_and_replace([], updated_record)
+    |> Enum.reverse()
+    new_book = %{book | history: new_history}
+    replace_book_and_save(new_book)
+    updated_record  # This is what needs to be returned
   end
 
   def modify_and_save_data(book, update_fun) do

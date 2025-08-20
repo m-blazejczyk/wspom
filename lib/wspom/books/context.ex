@@ -186,4 +186,32 @@ defmodule Wspom.Books.Context do
         end
     end
   end
+
+  @doc """
+  Deletes an existing reading record from the given book and saves the  book
+  in the database.
+  `record_id` is the id of the record (can be a string or an integer).
+  `book` is the book that this record is a part of.
+
+  ## Examples
+
+      iex> update_reading_record(record_id, book)
+      {:ok, %Book{}}
+
+      iex> update_reading_record(record_id, book)
+      {:error, "Error message"}
+
+  """
+  def delete_reading_record(record_id, %Book{} = book) when is_binary(record_id) do
+    delete_reading_record(String.to_integer(record_id), book)
+  end
+  def delete_reading_record(record_id, %Book{} = book) when is_integer(record_id) do
+    case book |> Book.delete_reading_record(record_id) do
+      {:ok, updated_book} ->
+        saved_book = Database.replace_book_and_save(updated_book)
+        {:ok, saved_book}
+      {:error, _msg} = error ->
+        error
+    end
+  end
 end

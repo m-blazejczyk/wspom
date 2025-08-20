@@ -43,9 +43,9 @@ defmodule WspomWeb.Live.Books.BookView do
   end
 
   @impl true
-  def handle_event("delete", %{"id" => _record_id}, socket) do
-    # TODO...
-    {:noreply, socket}
+  def handle_event("delete", %{"id" => record_id}, socket) do
+    {:ok, changed_book} = Context.delete_reading_record(record_id, socket.assigns.book)
+    {:noreply, socket |> assign(:book, changed_book)}
   end
 
   # These are helper functions for the HEEX template

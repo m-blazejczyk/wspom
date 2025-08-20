@@ -129,4 +129,16 @@ defmodule Wspom.Book do
   defp update_field({field_name, field_value}, {:continue, %Book{} = book}) do
     {:continue, book |> Map.put(field_name, field_value)}
   end
+
+  def delete_reading_record(%Book{history: []}, _record_id) do
+    {:error, "Can't delete a reading record from a book with no reading history ;)"}
+  end
+  def delete_reading_record(%Book{history: [last | rest]} = book, record_id) do
+    # Check if this record id exists and if it's the last one in the book
+    if last.id == record_id do
+      {:ok, %{book | history: rest}}
+    else
+      {:error, "Only allowed to delete the last record from the reading history"}
+    end
+  end
 end

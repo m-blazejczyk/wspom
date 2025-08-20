@@ -7,7 +7,6 @@ defmodule Wspom.Books.Database do
   @db_file "books.dat"
   @db_file_backup "books.bak.dat"
 
-
   def start_link([is_production: is_production]) do
     Agent.start_link(fn -> init_state(is_production) end, name: __MODULE__)
   end

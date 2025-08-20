@@ -51,7 +51,7 @@ defmodule Wspom.Book do
           changeset |> Changeset.add_error(:length,
             "Not allowed to modify the length of completed books")
         else
-          if changeset.data.length.type != new_length.type do
+          if changeset.data.length && changeset.data.length.type != new_length.type do
             changeset |> Changeset.add_error(:length,
               "Not allowed to modify the length type of books with reading histories")
           else

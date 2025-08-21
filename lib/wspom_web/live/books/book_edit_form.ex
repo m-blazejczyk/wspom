@@ -35,10 +35,10 @@ defmodule WspomWeb.Live.BookEditForm do
         <.input field={@form[:author]} type="text" label="Author" />
         <.input field={@form[:length]} type="text" label="Length (pages, % or hh:mm)" disabled={@book.status != :active}/>
         <.input field={@form[:medium]} type="select" label="Medium"
-          options={[{"Printed Book", "book"},
+          options={[{"Printed book", "book"},
             {"Audiobook", "audiobook"},
             {"E-book", "ebook"},
-            {"Comics / Graphic Novel", "comics"}]} />
+            {"Comics / Graphic novel", "comics"}]} />
         <.input field={@form[:is_fiction]} type="checkbox" label="Fiction?" />
 
       </.simple_form>

@@ -53,4 +53,16 @@ defmodule WspomWeb.Live.Books.BookView do
   defp format_type(:read), do: ""
   defp format_type(:updated), do: "Bulk update"
   defp format_type(:skipped), do: "Skipped to:"
+
+  defp format_status(:active), do: "Active"
+  defp format_status(:finished), do: "Finished"
+  defp format_status(:abandoned), do: "Abandoned"
+
+  defp format_medium(:book), do: "Printed book"
+  defp format_medium(:audiobook), do: "Audiobook"
+  defp format_medium(:ebook), do: "E-book"
+  defp format_medium(:comics), do: "Comics / Graphic novel"
+
+  defp format_is_fiction(true), do: "Fiction"
+  defp format_is_fiction(false), do: "Non-fiction"
 end

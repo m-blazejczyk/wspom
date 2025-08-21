@@ -174,6 +174,8 @@ defmodule Wspom.Books.Database do
     max_id = DbBase.find_max_id(book.history)
     new_record = %{new_record | id: max_id + 1}
     new_book = %{book | history: [new_record | book.history]}
+    |> Book.maybe_start_book()
+    |> Book.maybe_complete_book()
     replace_book_and_save(new_book)
     new_record  # This is what needs to be returned
   end
@@ -184,6 +186,8 @@ defmodule Wspom.Books.Database do
     |> DbBase.find_and_replace([], updated_record)
     |> Enum.reverse()
     new_book = %{book | history: new_history}
+    |> Book.maybe_start_book()
+    |> Book.maybe_complete_book()
     replace_book_and_save(new_book)
     updated_record  # This is what needs to be returned
   end

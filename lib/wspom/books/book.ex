@@ -141,4 +141,25 @@ defmodule Wspom.Book do
       {:error, "Only allowed to delete the last record from the reading history"}
     end
   end
+
+  def maybe_complete_book(%Book{history: []} = book), do: book
+  def maybe_complete_book(%Book{status: status} = book)
+    when status != :active, do: book
+  def maybe_complete_book(%Book{history: [last | _rest]} = book) do
+    if BookPos.to_comparable_int(last.position) >= BookPos.to_comparable_int(book.length) do
+      new_status = case last.type do
+        :read -> :finished
+        :updated -> :finished
+        :skipped -> :abandoned
+      end
+      %{book | status: new_status, finished_date: last.date}
+    else
+      book
+    end
+  end
+
+  def maybe_start_book(%Book{status: :active, history: [first]} = book) do
+    %{book | started_date: first.date}
+  end
+  def maybe_start_book(%Book{} = book), do: book
 end

@@ -4,8 +4,13 @@
       <ul class="grid grid-cols-3 gap-6">
         <WspomWeb.CardComponent.small_card href={~p"/books"} img={~p"/images/books_64.png"}
           label="Go back to books" />
-        <WspomWeb.CardComponent.small_card href={~p"/books/#{@book.id}/view/read"} img={~p"/images/read_64.png"}
-          label="Read this book" />
+        <%= if @book.status == :active do %>
+          <WspomWeb.CardComponent.small_card href={~p"/books/#{@book.id}/view/read"} img={~p"/images/read_64.png"}
+            label="Read this book" />
+        <% else %>
+          <WspomWeb.CardComponent.small_card_disabled img={~p"/images/read_64.png"}
+            label="Read this book ‒ UNAVAILABLE" />
+        <% end %>
         <WspomWeb.CardComponent.small_card href={~p"/books/#{@book.id}/view/edit"} img={~p"/images/edit_64.png"}
           label="Edit this book" />
       </ul>
@@ -57,9 +62,11 @@
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
             %
           </th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-            &nbsp;
-          </th>
+          <%= if @book.status == :active do %>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              &nbsp;
+            </th>
+          <% end %>
         </tr>
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">
@@ -76,18 +83,20 @@
           <td class="px-6 py-4 whitespace-nowrap text-xs text-zinc-500">
             <%= Wspom.BookPos.to_percent(record.position, @book.length) %>%
           </td>
-          <td class="px-6 py-4 whitespace-nowrap text-zinc-800">
-            <ul class="grid grid-cols-2 gap-2">
-              <WspomWeb.CardComponent.tiny_card_patch href={~p"/books/#{@book.id}/view/history/#{record.id}/edit"}
-                img={~p"/images/edit_24.png"} label="Edit reading record" />
-              <WspomWeb.CardComponent.tiny_card_click
-                click={JS.push("delete", value: %{id: record.id}) |> hide("#row-#{idx}") |> show("#del-#{idx - 1}")}
-                confirm="Delete the most recent reading record?"
-                img={~p"/images/trash_24.png"} label="Delete reading record"
-                id={"del-#{idx}"}
-                class={if idx == length(@book.history), do: "visible", else: "invisible"} />
-            </ul>
-          </td>
+          <%= if @book.status == :active do %>
+            <td class="px-6 py-4 whitespace-nowrap text-zinc-800">
+              <ul class="grid grid-cols-2 gap-2">
+                <WspomWeb.CardComponent.tiny_card_patch href={~p"/books/#{@book.id}/view/history/#{record.id}/edit"}
+                  img={~p"/images/edit_24.png"} label="Edit reading record" />
+                <WspomWeb.CardComponent.tiny_card_click
+                  click={JS.push("delete", value: %{id: record.id}) |> hide("#row-#{idx}") |> show("#del-#{idx - 1}")}
+                  confirm="Delete the most recent reading record?"
+                  img={~p"/images/trash_24.png"} label="Delete reading record"
+                  id={"del-#{idx}"}
+                  class={if idx == length(@book.history), do: "visible", else: "invisible"} />
+              </ul>
+            </td>
+          <% end %>
         </tr>
       </tbody>
     </table>

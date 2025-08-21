@@ -55,6 +55,23 @@ defmodule WspomWeb.CardComponent do
     """
   end
 
+  def small_card_disabled(assigns) do
+    ~H"""
+    <li>
+      <span
+        class="block h-full transition-all duration-200 bg-white border border-gray-200 rounded group">
+        <div class="flex items-center p-4">
+          <div
+            class="flex items-center justify-center flex-shrink-0 w-8 sm:w-16 h-8 sm:h-16 transition-colors duration-200 rounded">
+            <!-- Source: flaticon.com -->
+            <img src={@img} aria-label={@label}/>
+          </div>
+        </div>
+      </span>
+    </li>
+    """
+  end
+
   def tiny_card_patch(assigns) do
     ~H"""
     <li id={assigns[:id] || false} class={assigns[:class] || false}>

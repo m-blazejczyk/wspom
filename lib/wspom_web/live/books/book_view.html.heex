@@ -2,7 +2,7 @@
   <div class="flex justify-center items-center w-full pb-8">
     <section class="min-w-md">
       <ul class="grid grid-cols-3 gap-6">
-        <WspomWeb.CardComponent.small_card href={~p"/books"} img={~p"/images/books_64.png"}
+        <WspomWeb.CardComponent.small_card href={~p"/books?active=#{@book.status == :active}"} img={~p"/images/books_64.png"}
           label="Go back to books" />
         <%= if @book.status == :active do %>
           <WspomWeb.CardComponent.small_card href={~p"/books/#{@book.id}/view/read"} img={~p"/images/read_64.png"}

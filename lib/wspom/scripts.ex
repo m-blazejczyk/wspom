@@ -1,4 +1,5 @@
 defmodule Wspom.Scripts do
+alias Wspom.{Book, ReadingRecord, BookPos}
 
   @doc """
   The code in this module should be executed from inside an iex session (iex -S mix)
@@ -162,4 +163,88 @@ defmodule Wspom.Scripts do
 
   defp find_errors({:error, _}), do: true
   defp find_errors(_), do: false
+
+  def load_books() do
+    f = File.read!("books.json")
+    {:ok, data} = Jason.decode(f)
+
+    data |> Enum.map(fn raw ->
+      %Book{
+        id: raw["id"],
+        title: raw["title"],
+        short_title: raw["short_title"],
+        author: raw["author"],
+        length: handle_pos(raw["length"]),
+        medium: handle_medium(raw["type"]),
+        is_fiction: handle_bool(raw["is_fiction"]),
+        status: handle_status(raw["status"]),
+        started_date: handle_date(raw["start_date"]),
+        finished_date: handle_date(raw["finish_date"])}
+      end)
+  end
+
+  defp handle_date(""), do: nil
+  defp handle_date(date_str), do: Date.from_iso8601!(date_str)
+
+  defp handle_bool("TRUE"), do: true
+  defp handle_bool("FALSE"), do: false
+
+  defp handle_status("abandoned"), do: :abandoned
+  defp handle_status("finished"), do: :finished
+  defp handle_status("active"), do: :active
+
+  defp handle_medium("Audiobook"), do: :audiobook
+  defp handle_medium("Graphic Novel"), do: :comics
+  defp handle_medium("Book"), do: :book
+  defp handle_medium("Ebook"), do: :ebook
+
+  defp handle_pos(pos) when is_integer(pos), do: BookPos.new_pages(pos)
+  defp handle_pos(pos) when is_binary(pos) do
+    {:ok, pos} = BookPos.parse_str(pos)
+    pos
+  end
+
+  def load_reading_records() do
+    f = File.read!("books-reading.json")
+    {:ok, data} = Jason.decode(f)
+
+    data
+    |> Enum.map(fn raw ->
+      %ReadingRecord{
+        id: raw["record_id"],
+        book_id: raw["book_id"],
+        date: handle_date(raw["date"]),
+        type: handle_type(raw["type"]),
+        position: handle_pos(raw["position"])}
+      end)
+    |> Enum.group_by(&(&1.book_id))
+  end
+
+  # -  - :position should contain the current position in the book
+  # -  - same as above but this one is used to bulk-advance the
+  #   current reading position in situations when detailed reading history
+  #   is not available; in other words, the pages were read but not
+  #   on the date indicated but over time
+  # -  - same as above but to advance the current reading position
+  defp handle_type("read"), do: :read
+  defp handle_type("abandoned"), do: :skipped
+  defp handle_type("skipped"), do: :updated
+
+  def process_books() do
+    books = load_books()
+    rrs = load_reading_records()
+
+    books_with_histories = books
+    |> Enum.map(fn book ->
+      %{book | history: Enum.reverse(rrs[book.id])}
+    end)
+
+    state = %{
+      books: books_with_histories,
+      version: 1,
+      is_production: true,
+    }
+
+    File.write!("books.dat", :erlang.term_to_binary(state))
+  end
 end

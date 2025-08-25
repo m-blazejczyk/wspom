@@ -33,15 +33,25 @@ scp weight.dat michal@rpi:/home/michal/wspom
 
 # Deploy or re-deploy
 
+SSH into the server:
+```
+ssh rpi
+```
+
 Go to the `wspom` folder:
 ```
 cd wspom
 ```
 
-First, kill the running process and exit the screen. After the first command, do `CTRL+C A` to stop the Elixir process, and then continue with `-ls` and `-X -S`.
+First, enter the screen:
 
 ```
 screen -r
+```
+
+You shouls see the Phoenix log. Kill the running process with `CTRL+C A`, as usual. You will now be in the screen session which is still active. Kill it with the following (the session / sockett id will be different every time):
+
+```
 screen -ls
 screen -X -S 2967.pts-1.malina quit 
 ```

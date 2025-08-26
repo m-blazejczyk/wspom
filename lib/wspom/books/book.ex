@@ -91,6 +91,9 @@ defmodule Wspom.Book do
     book.history |> Enum.find(&(&1.id == record_id))
   end
 
+  def last_read_date(%Book{history: []}), do: "Never"
+  def last_read_date(%Book{history: [last | _]}), do: last.date
+
   @doc """
   Updates a book if the changeset is valid.
   Returns {:ok, %Book{}} or {:error, %Ecto.Changeset{}}.

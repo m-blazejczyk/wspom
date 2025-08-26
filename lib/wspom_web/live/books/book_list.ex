@@ -83,4 +83,8 @@ defmodule WspomWeb.Live.Books.BookList do
     |> assign(:book, book)
     |> assign(:page_title, "Edit Book")
   end
+
+  defp format_status(:active), do: "Active"
+  defp format_status(:finished), do: "Finished"
+  defp format_status(:abandoned), do: "Abandoned"
 end

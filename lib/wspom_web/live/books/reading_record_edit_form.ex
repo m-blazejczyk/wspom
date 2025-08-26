@@ -27,7 +27,7 @@ alias Wspom.BookPos
 
         <.input :if={@book != nil}
           field={@form[:book_id]} type="text" label="Book"
-          value={@book.title}
+          value={@book.short_title}
           disabled
           class="text-xl text-center"
           class_text="text-zinc-500"

@@ -15,12 +15,13 @@ More icons: https://tailwindcss-generator.com/icon
 scp michal@rpi:/home/michal/wspom/tags.dat .
 scp michal@rpi:/home/michal/wspom/wspom.dat .
 scp michal@rpi:/home/michal/wspom/weight.dat .
+scp michal@rpi:/home/michal/wspom/books.dat .
 ```
 
 # Restore from backup (Local ==> Server)
 
 ```
-scp tags.dat weight.dat wspom.dat michal@rpi:/home/michal/wspom
+scp tags.dat weight.dat wspom.dat books.dat michal@rpi:/home/michal/wspom
 ```
 
 or:
@@ -29,6 +30,7 @@ or:
 scp wspom.dat michal@rpi:/home/michal/wspom
 scp tags.dat michal@rpi:/home/michal/wspom
 scp weight.dat michal@rpi:/home/michal/wspom
+scp books.dat michal@rpi:/home/michal/wspom
 ```
 
 # Deploy or re-deploy

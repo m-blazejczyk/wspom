@@ -37,7 +37,8 @@ alias Wspom.BookPos
           <div>
             <.input field={@form[:date]} type="text" label="Date"
               class="text-xl text-center"
-              class_container="flex items-start flex-col justify-start"/>
+              class_container="flex items-start flex-col justify-start"
+              autocomplete="off"/>
           </div>
           <div>
             <.button type="button" class="float-left w-16" phx-click={JS.push("day_earlier")} phx-target={@myself}>
@@ -51,7 +52,8 @@ alias Wspom.BookPos
 
         <.input field={@form[:position]} type="text" label="Position"
           class="text-xl text-center"
-          class_container="flex items-start flex-col justify-start"/>
+          class_container="flex items-start flex-col justify-start"
+          autocomplete="off"/>
 
         <div class="flex flex-wrap rounded-lg bg-gray-300 max-w-sm mx-auto mt-24">
           <div class="w-1/3">

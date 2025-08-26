@@ -21,7 +21,7 @@ defmodule WspomWeb.Live.WeightEditForm do
 
         <.input field={@form[:weight]} type="text" class="text-xl text-center"
           class_container="flex items-start flex-col justify-start"
-          formatter={&weight_formatter/2}/>
+          formatter={&weight_formatter/2} autocomplete="off"/>
 
         <div class="flex flex-wrap rounded-lg bg-gray-300 max-w-sm mx-auto mt-24">
           <div class="w-1/3">
@@ -101,7 +101,8 @@ defmodule WspomWeb.Live.WeightEditForm do
         <div class="grid grid-cols-1 gap-2">
           <div>
             <.input field={@form[:date]} type="text" class="text-xl text-center"
-              class_container="flex items-start flex-col justify-start"/>
+              class_container="flex items-start flex-col justify-start"
+              autocomplete="off"/>
           </div>
           <div>
             <.button type="button" class="float-left w-16" phx-click={JS.push("day_earlier")} phx-target={@myself}>

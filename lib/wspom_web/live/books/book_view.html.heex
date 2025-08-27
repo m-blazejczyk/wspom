@@ -72,7 +72,7 @@
         </tr>
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">
-        <tr :for={{record, idx} <- Enum.zip(Enum.reverse(@book.history), 1..length(@book.history))} id={"row-#{idx}"}>
+        <tr :for={{record, idx} <- Enum.zip(@book.history, 1..length(@book.history))} id={"row-#{idx}"}>
           <td class="px-6 py-4 whitespace-nowrap text-zinc-800">
             <%= Date.to_string(record.date) %>
           </td>

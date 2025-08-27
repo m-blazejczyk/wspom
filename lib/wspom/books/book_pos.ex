@@ -68,7 +68,8 @@ defmodule Wspom.BookPos do
     Integer.to_string(pages)
   end
   def to_string(%BookPos{type: :time, as_time: {hours, minutes}}) do
-    Integer.to_string(hours) <> ":" <> Integer.to_string(minutes)
+    Integer.to_string(hours) <> ":" <>
+      (if minutes < 10, do: "0", else: "") <> Integer.to_string(minutes)
   end
   def to_string(%BookPos{type: :percent, as_int: percent}) do
     Integer.to_string(percent) <> "%"

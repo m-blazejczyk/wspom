@@ -1,4 +1,4 @@
-<div class="max-w-[1000px] mx-auto border border-gray-200 rounded shadow-md px-8 py-10 flex flex-col items-center">
+<div class="max-w-[1000px] mx-auto border border-gray-200 rounded shadow-md sm:px-0 md:px-8 py-10 flex flex-col items-center">
   <div class="flex justify-center items-center w-full pb-8">
     <section class="min-w-md">
       <ul class="grid grid-cols-3 gap-6">
@@ -55,7 +55,7 @@
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
             Date
           </th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-sm:hidden">
             Type
           </th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -76,7 +76,7 @@
           <td class="px-6 py-4 whitespace-nowrap text-zinc-800">
             <%= Date.to_string(record.date) %>
           </td>
-          <td class="px-6 py-4 whitespace-nowrap text-zinc-500 italic">
+          <td class="px-6 py-4 whitespace-nowrap text-zinc-500 italic max-sm:hidden">
             <%= format_type(record.type) %>
           </td>
           <td class="px-6 py-4 whitespace-nowrap text-zinc-800">

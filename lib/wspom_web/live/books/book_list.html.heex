@@ -1,4 +1,4 @@
-<div class="max-w-[800px] mx-auto border border-gray-200 rounded shadow-md px-8 py-10 flex flex-col items-center">
+<div class="max-w-[800px] mx-auto border border-gray-200 rounded shadow-md sm:px-0 md:px-8 py-10 flex flex-col items-center">
   <div class="flex justify-center items-center w-full pb-8">
     <section class="min-w-md">
       <ul class="grid grid-cols-2 gap-6">
@@ -40,11 +40,11 @@
             Book
           </th>
           <%= if @active do %>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider invisible md:visible">
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-sm:hidden">
               Last on
             </th>
           <% else %>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider invisible md:visible">
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider max-sm:hidden">
               Status
             </th>
           <% end %>
@@ -66,11 +66,11 @@
             <.link patch={~p"/books/#{book.id}"}><%= book.short_title %></.link>
           </td>
           <%= if @active do %>
-            <td class="px-6 py-4 whitespace-nowrap invisible md:visible">
+            <td class="px-6 py-4 whitespace-nowrap max-sm:hidden">
               <%= book |> Book.last_read_date() %>
             </td>
           <% else %>
-            <td class="px-6 py-4 whitespace-nowrap invisible md:visible">
+            <td class="px-6 py-4 whitespace-nowrap max-sm:hidden">
               <%= format_status(book.status) %>
             </td>
           <% end %>

@@ -101,6 +101,17 @@ defmodule Wspom.BookPos do
     percent
   end
 
+  # Multiplies the given position by the second argument (expected to be an int).
+  def multiply(%BookPos{type: :time, as_time: {hours, minutes}}, factor)
+    when is_integer(factor) do
+    total_minutes = (hours * 60 + minutes) * factor
+    BookPos.new_time(div(total_minutes, 60), rem(total_minutes, 60))
+  end
+  def multiply(%BookPos{type: type, as_int: pos}, factor)
+    when is_integer(factor) do
+    %BookPos{type: type, as_int: pos * factor}
+  end
+
   # Validates a form field representing a BookPos, entered as a string.
   # To be used in changeset() functions.
   def validate(%Ecto.Changeset{} = changeset, field) do

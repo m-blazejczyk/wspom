@@ -8,6 +8,9 @@ defmodule Wspom.ReadingChartData do
   alias Wspom.{ChartTick}, warn: false
 
   def make_from_book(%Book{length: length, history: history}, x, y, w, h) do
+    # We always create three ticks, at intervals that are roughly
+    # "good looking" to a human. We don't need massive precision because
+    # this is not a scientific chart.
     first_tick = book_pos_at_first_tick(length)
     [first_tick,
       first_tick |> BookPos.multiply(2),
@@ -25,6 +28,8 @@ defmodule Wspom.ReadingChartData do
   end
 
   def book_pos_at_first_tick(%BookPos{type: :pages, as_int: pages} = _length) do
+    # This is a heuristic that I came up with using Google Sheets.
+    # The first tick will be roughly at 25%-30% of the book length.
     scale = if pages < 300, do: 5, else: 10
     tick_pages = div(trunc(pages / 3.5), scale) * scale
     BookPos.new_pages(tick_pages)

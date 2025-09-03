@@ -18,6 +18,12 @@ scp michal@rpi:/home/michal/wspom/weight.dat .
 scp michal@rpi:/home/michal/wspom/books.dat .
 ```
 
+or all the files at once, including backups:
+
+```
+scp -r michal@rpi:'"/home/michal/wspom"/*.dat' .
+```
+
 # Restore from backup (Local ==> Server)
 
 ```

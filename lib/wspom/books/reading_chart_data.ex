@@ -1,36 +1,56 @@
-defmodule Wspom.ChartYTick do
+defmodule Wspom.ReadingChart.TickY do
+  # `pos` should be an integer, the Y position within the chart (in pixels).
+  # `text` is the string to draw next to the tick (the label).
   defstruct [:pos, :text]
 end
 
-defmodule Wspom.ChartXTick do
+defmodule Wspom.ReadingChart.TickX do
+  # `pos` should be an integer, the X position within the chart (in pixels).
   # Both `text_xxx` fields may be nil.
   defstruct [:pos, :text_date, :text_year]
 end
 
-defmodule Wspom.ReadingChartData do
+defmodule Wspom.ReadingChart.ReadingMarker do
+  # Either `date` or `x` should be nil at all times. Initially, `date`
+  # will be provided to enable some date-based calculations. Later,
+  # it will be converted into the X position on the chart (in pixels).
+  # The reading marker's line extends between `y_from` and `y_to`.
+  # `type` is the same as in ReadingRecord.
+  defstruct [:date, :x, :y_from, :y_to, :type]
+end
+
+defmodule Wspom.ReadingChart.Data do
 
   alias Wspom.{ReadingRecord, BookPos, Book}, warn: false
-  alias Wspom.{ChartYTick, ChartXTick}, warn: false
+  alias Wspom.ReadingChart.{TickY, TickX, ReadingMarker}, warn: false
 
-  # r Wspom.ReadingChartData
-  # Wspom.ReadingChartData.make_from_book(Wspom.Books.Database.get_book(41), 0, 0, 1000, 400)
+  # r Wspom.ReadingChart.Data
+  # Wspom.ReadingChart.Data.make_from_book(Wspom.Books.Database.get_book(41), 0, 0, 1000, 400)
   def make_from_book(%Book{length: length, history: history}, x, y, w, h) do
     # We always create three ticks, at intervals that are roughly
     # "good looking" to a human. We don't need massive precision because
     # this is not a scientific chart.
+
+    book_len = BookPos.to_comparable_int(length)
 
     # first_tick = book_pos_at_first_tick(length)
     # ticks = [first_tick,
     #   first_tick |> BookPos.multiply(2),
     #   first_tick |> BookPos.multiply(3)]
     # |> Enum.map(fn pos ->
-    #   pos_perc = BookPos.to_comparable_int(pos) / BookPos.to_comparable_int(length)
-    #   %ChartYTick{
+    #   pos_perc = BookPos.to_comparable_int(pos) / book_len
+    #   %TickY{
     #     pos: round(h * (1.0 - pos_perc)) + y,
     #     text: pos |> BookPos.to_string()}
     # end)
 
-    oldest_read = history |> List.last()
+    {markers, _} = history
+    |> Enum.reverse()
+    |> Enum.map_reduce(0, fn rec, pos ->
+      reading_record_to_marker(rec, pos, book_len, y, h)
+    end)
+
+    oldest_read = markers |> hd()
     # Days of week start from Monday, but Monday is a 1
     shift = Date.day_of_week(oldest_read.date) - 1
     # first_date is the Monday of the week when I started reading this book
@@ -47,9 +67,10 @@ defmodule Wspom.ReadingChartData do
     #   ~D[2025-03-22], ~D[2025-03-21], ~D[2025-03-20], ~D[2025-03-19],
     #   ~D[2025-03-17]]
     # }
-    segments_raw = history
-    |> Enum.group_by(fn pos -> div(Date.diff(pos.date, first_date), 14) end,
-      fn pos -> pos.date end)
+    segments_raw = markers
+    |> Enum.group_by(
+      fn marker -> div(Date.diff(marker.date, first_date), 14) end,
+      fn marker -> marker end)
 
     # This will be `19` in the example above
     last_biweek_period = div(Date.diff((history |> List.first()).date, first_date), 14)
@@ -70,9 +91,10 @@ defmodule Wspom.ReadingChartData do
     |> Enum.sort(fn {p1, _}, {p2, _} -> p1 < p2 end)
 
     {list, total_width} = segments_mid
-    |> Enum.map_reduce(0, fn {period_idx, history}, acc ->
-      {xtick, new_acc} = make_x_tick(period_idx, first_date, history, acc)
-      {{xtick, history}, new_acc} end)
+    |> Enum.map_reduce(0, fn {period_idx, marker_list}, acc ->
+      {xtick, new_marker_list, new_acc} =
+        make_x_tick(period_idx, first_date, marker_list, acc)
+      {{xtick, new_marker_list}, new_acc} end)
 
     {list, _} = list
     |> Enum.map_reduce("dummy", &fix_years/2)
@@ -82,6 +104,17 @@ defmodule Wspom.ReadingChartData do
     |> Enum.map_reduce(width_shift, &shift_segments/2)
 
     list
+  end
+
+  def reading_record_to_marker(%ReadingRecord{} = record, prev_pos, book_len, y, h) do
+    pos_to = BookPos.to_comparable_int(record.position)
+    {
+      %ReadingMarker{
+        date: record.date, type: record.type, x: nil,
+        y_to: round(h * (1.0 - (prev_pos / book_len))) + y,
+        y_from: round(h * (1.0 - (pos_to / book_len))) + y},
+      pos_to
+    }
   end
 
   # No reading history for this period and we already added an empty segment
@@ -99,34 +132,50 @@ defmodule Wspom.ReadingChartData do
 
   # `acc` is the x position of this segment.
   # `period_id` is reflects the time progression.
-  # This function should return `{%ChartXTick{}, new_acc}`.
+  # This function should return `{%TickX{}, new_acc}`.
   def make_x_tick(_period_idx, _first_date, [], acc) do
-    {%ChartXTick{pos: acc, text_date: nil, text_year: nil},
-      acc + 15}
+    {
+      %TickX{pos: acc, text_date: nil, text_year: nil},
+      [],
+      acc + 15
+    }
   end
-  def make_x_tick(period_idx, first_date, [_hd | _rest], acc) do
+  def make_x_tick(period_idx, first_date, marker_list, acc) do
     date = Date.add(first_date, period_idx * 14)
     date_str = Calendar.strftime(date, "%b %-d")
-    {%ChartXTick{pos: acc,
-      text_date: date_str,
-      text_year: Integer.to_string(date.year)},
-      acc + 5 * 14}
+    {
+      %TickX{pos: acc,
+        text_date: date_str,
+        text_year: Integer.to_string(date.year)},
+      marker_list |> Enum.map(fn marker ->
+        %{marker | date: nil, x: acc + 5 * Date.diff(marker.date, date)}
+      end),
+      acc + 5 * 14
+    }
   end
 
-  def fix_years({%ChartXTick{text_year: nil}, _history} = elem, prev_year) do
+  def fix_years({%TickX{text_year: nil}, _marker_list} = elem, prev_year) do
     {elem, prev_year}
   end
-  def fix_years({%ChartXTick{text_year: year}, _history} = elem, prev_year)
+  def fix_years({%TickX{text_year: year}, _marker_list} = elem, prev_year)
     when year != prev_year do
     {elem, year}
   end
-  def fix_years({%ChartXTick{text_year: year} = xtick, history}, prev_year)
+  def fix_years({%TickX{text_year: year} = xtick, marker_list}, prev_year)
     when year == prev_year do
-    {{%{xtick | text_year: nil}, history}, prev_year}
+    {{%{xtick | text_year: nil}, marker_list}, prev_year}
   end
 
-  def shift_segments({%ChartXTick{pos: pos} = xtick, history}, shift) do
-    {{%{xtick | pos: pos + shift}, history}, shift}
+  def shift_segments({%TickX{pos: pos} = xtick, marker_list}, shift) do
+    {
+      {
+        %{xtick | pos: pos + shift},
+        marker_list |> Enum.map(fn marker ->
+          %{marker | x: marker.x + shift}
+        end)
+      },
+      shift
+    }
   end
 
   def book_pos_at_first_tick(%BookPos{type: :pages, as_int: pages} = _length) do

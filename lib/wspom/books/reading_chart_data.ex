@@ -100,8 +100,24 @@ defmodule Wspom.ReadingChart.Data do
     width_shift = div(w - total_width, 2) + x
     {segments, _} = segments
     |> Enum.map_reduce(width_shift, &shift_segments/2)
-    # At the end, `segments` contains a list of tuples:
-    # [{%TickX{}, [%ReadingMarker{}, …]}, …]
+
+    # At the end, `segments` contains a list of tuples; example:
+    # {%Wspom.ReadingChart.TickX{pos: 542, text_date: "Mar 17", text_year: nil},
+    #   [
+    #     %Wspom.ReadingChart.ReadingMarker{
+    #       date: nil,
+    #       x: 542,
+    #       y_from: 199,
+    #       y_to: 221,
+    #       type: :read
+    #     }, …]
+
+    # `yticks` will look like this:
+    # [
+    #    %Wspom.ReadingChart.TickY{pos: 297, text: "80"},
+    #    %Wspom.ReadingChart.TickY{pos: 195, text: "160"},
+    #    %Wspom.ReadingChart.TickY{pos: 92, text: "240"}
+    # ]
 
     {yticks, segments}
   end

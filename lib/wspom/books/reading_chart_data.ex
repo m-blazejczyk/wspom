@@ -33,16 +33,16 @@ defmodule Wspom.ReadingChart.Data do
 
     book_len = BookPos.to_comparable_int(length)
 
-    # first_tick = book_pos_at_first_tick(length)
-    # ticks = [first_tick,
-    #   first_tick |> BookPos.multiply(2),
-    #   first_tick |> BookPos.multiply(3)]
-    # |> Enum.map(fn pos ->
-    #   pos_perc = BookPos.to_comparable_int(pos) / book_len
-    #   %TickY{
-    #     pos: round(h * (1.0 - pos_perc)) + y,
-    #     text: pos |> BookPos.to_string()}
-    # end)
+    first_ytick = book_pos_at_first_ytick(length)
+    yticks = [first_ytick,
+      first_ytick |> BookPos.multiply(2),
+      first_ytick |> BookPos.multiply(3)]
+    |> Enum.map(fn pos ->
+      pos_perc = BookPos.to_comparable_int(pos) / book_len
+      %TickY{
+        pos: round(h * (1.0 - pos_perc)) + y,
+        text: pos |> BookPos.to_string()}
+    end)
 
     {markers, _} = history
     |> Enum.reverse()
@@ -58,14 +58,12 @@ defmodule Wspom.ReadingChart.Data do
 
     # Segments are two-week periods that begin on the Monday of the week
     # when I started reading this book.
-    # The keys of this map are the indices of two-week periods.
+    # The keys of `segments_raw` are the indices of two-week periods.
     # This map of segments will have gaps. Example:
     # %{
     #   0 => [~D[2024-06-30]],
     #   18 => [~D[2025-03-16]],
-    #   19 => [~D[2025-03-28], ~D[2025-03-27], ~D[2025-03-26], ~D[2025-03-23],
-    #   ~D[2025-03-22], ~D[2025-03-21], ~D[2025-03-20], ~D[2025-03-19],
-    #   ~D[2025-03-17]]
+    #   19 => [~D[2025-03-21], ~D[2025-03-20], ~D[2025-03-19], ~D[2025-03-17]]
     # }
     segments_raw = markers
     |> Enum.group_by(
@@ -90,20 +88,22 @@ defmodule Wspom.ReadingChart.Data do
     end
     |> Enum.sort(fn {p1, _}, {p2, _} -> p1 < p2 end)
 
-    {list, total_width} = segments_mid
+    {segments, total_width} = segments_mid
     |> Enum.map_reduce(0, fn {period_idx, marker_list}, acc ->
       {xtick, new_marker_list, new_acc} =
         make_x_tick(period_idx, first_date, marker_list, acc)
       {{xtick, new_marker_list}, new_acc} end)
 
-    {list, _} = list
+    {segments, _} = segments
     |> Enum.map_reduce("dummy", &fix_years/2)
 
-    width_shift = div(w - total_width, 2)
-    {list, _} = list
+    width_shift = div(w - total_width, 2) + x
+    {segments, _} = segments
     |> Enum.map_reduce(width_shift, &shift_segments/2)
+    # At the end, `segments` contains a list of tuples:
+    # [{%TickX{}, [%ReadingMarker{}, …]}, …]
 
-    list
+    {yticks, segments}
   end
 
   def reading_record_to_marker(%ReadingRecord{} = record, prev_pos, book_len, y, h) do
@@ -178,20 +178,20 @@ defmodule Wspom.ReadingChart.Data do
     }
   end
 
-  def book_pos_at_first_tick(%BookPos{type: :pages, as_int: pages} = _length) do
+  def book_pos_at_first_ytick(%BookPos{type: :pages, as_int: pages} = _length) do
     # This is a heuristic that I came up with using Google Sheets.
     # The first tick will be roughly at 25%-30% of the book length.
     scale = if pages < 300, do: 5, else: 10
     tick_pages = div(trunc(pages / 3.5), scale) * scale
     BookPos.new_pages(tick_pages)
   end
-  def book_pos_at_first_tick(%BookPos{type: :time, as_time: {hours, minutes}}) do
+  def book_pos_at_first_ytick(%BookPos{type: :time, as_time: {hours, minutes}}) do
     total_minutes = hours * 60 + minutes
     scale = 30
     tick_minutes = div(trunc(total_minutes / 3.5), scale) * scale
     BookPos.new_time(div(tick_minutes, 60), rem(tick_minutes, 60))
   end
-  def book_pos_at_first_tick(%BookPos{type: :percent}) do
+  def book_pos_at_first_ytick(%BookPos{type: :percent}) do
     BookPos.new_percent(25)
   end
 end

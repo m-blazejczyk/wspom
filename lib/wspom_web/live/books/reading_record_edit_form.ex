@@ -1,7 +1,8 @@
 defmodule WspomWeb.Live.ReadingRecordEditForm do
-alias Wspom.BookPos
+
   use WspomWeb, :live_component
 
+  alias Wspom.{BookPos, Book}
   alias Wspom.Books.Context
 
   @impl true
@@ -32,6 +33,15 @@ alias Wspom.BookPos
           class="text-xl text-center"
           class_text="text-zinc-500"
           class_container="flex items-start flex-col justify-start"/>
+
+        <div class="w-full">
+          <div class="text-sm font-semibold leading-6 text-zinc-800">
+            Last position
+          </div>
+          <div class="w-full text-zinc-500 mt-2">
+            <%= last_pos(@book) %>
+          </div>
+        </div>
 
         <div class="grid grid-cols-1 gap-2">
           <div>
@@ -161,6 +171,12 @@ alias Wspom.BookPos
     """
   end
 
+  defp last_pos(%Book{history: []}) do
+    "N/A"
+  end
+  defp last_pos(%Book{history: [last | _rest]}) do
+    BookPos.to_string(last.position) <> " on "  <> Date.to_string(last.date)
+  end
 
   @impl true
   def update(%{record: record, book: book} = assigns, socket) do

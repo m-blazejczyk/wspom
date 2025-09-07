@@ -86,14 +86,14 @@ defmodule WspomWeb.Live.Books.BookView do
         <line x1={tick.pos} x2={tick.pos} y1="10" y2="390" style="stroke:rgb(220,220,220);stroke-width:1" />
 
         <!-- Y tick labels -->
-        <%= if tick.text_date do %>
+        <%= if tick.text_up do %>
           <text x={tick.pos + 4} y="406" fill="gray" font-size="16" text-anchor="start">
-            <%= tick.text_date %>
+            <%= tick.text_up %>
           </text>
         <% end %>
-        <%= if tick.text_year do %>
+        <%= if tick.text_down do %>
           <text x={tick.pos + 4} y="425" fill="gray" font-size="16" text-anchor="start">
-            <%= tick.text_year %>
+            <%= tick.text_down %>
           </text>
         <% end %>
 

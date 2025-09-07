@@ -1,15 +1,3 @@
-defmodule Wspom.ReadingChart.TickY do
-  # `pos` should be an integer, the Y position within the chart (in pixels).
-  # `text` is the string to draw next to the tick (the label).
-  defstruct [:pos, :text]
-end
-
-defmodule Wspom.ReadingChart.TickX do
-  # `pos` should be an integer, the X position within the chart (in pixels).
-  # Both `text_xxx` fields may be nil.
-  defstruct [:pos, :text_date, :text_year]
-end
-
 defmodule Wspom.ReadingChart.ReadingMarker do
   # Either `date` or `x` should be nil at all times. Initially, `date`
   # will be provided to enable some date-based calculations. Later,
@@ -22,7 +10,8 @@ end
 defmodule Wspom.ReadingChart.Data do
 
   alias Wspom.{ReadingRecord, BookPos, Book}, warn: false
-  alias Wspom.ReadingChart.{TickY, TickX, ReadingMarker}, warn: false
+  alias Wspom.ReadingChart.ReadingMarker, warn: false
+  alias Wspom.Charts.{TickY, TickX}, warn: false
 
   # r Wspom.ReadingChart.Data
   # Wspom.ReadingChart.Data.make_from_book(Wspom.Books.Database.get_book(41), 0, 0, 1000, 400)
@@ -102,7 +91,7 @@ defmodule Wspom.ReadingChart.Data do
     |> Enum.map_reduce(width_shift, &shift_segments/2)
 
     # At the end, `segments` contains a list of tuples; example:
-    # {%Wspom.ReadingChart.TickX{pos: 542, text_date: "Mar 17", text_year: nil},
+    # {%Wspom.ReadingChart.TickX{pos: 542, text_up: "Mar 17", text_down: nil},
     #   [
     #     %Wspom.ReadingChart.ReadingMarker{
     #       date: nil,
@@ -151,7 +140,7 @@ defmodule Wspom.ReadingChart.Data do
   # This function should return `{%TickX{}, new_acc}`.
   def make_x_tick(_period_idx, _first_date, [], acc) do
     {
-      %TickX{pos: acc, text_date: nil, text_year: nil},
+      %TickX{pos: acc, text_up: nil, text_down: nil},
       [],
       acc + 15
     }
@@ -161,8 +150,8 @@ defmodule Wspom.ReadingChart.Data do
     date_str = Calendar.strftime(date, "%b %-d")
     {
       %TickX{pos: acc,
-        text_date: date_str,
-        text_year: Integer.to_string(date.year)},
+        text_up: date_str,
+        text_down: Integer.to_string(date.year)},
       marker_list |> Enum.map(fn marker ->
         %{marker | date: nil, x: acc + 5 * Date.diff(marker.date, date)}
       end),
@@ -170,16 +159,16 @@ defmodule Wspom.ReadingChart.Data do
     }
   end
 
-  def fix_years({%TickX{text_year: nil}, _marker_list} = elem, prev_year) do
+  def fix_years({%TickX{text_down: nil}, _marker_list} = elem, prev_year) do
     {elem, prev_year}
   end
-  def fix_years({%TickX{text_year: year}, _marker_list} = elem, prev_year)
+  def fix_years({%TickX{text_down: year}, _marker_list} = elem, prev_year)
     when year != prev_year do
     {elem, year}
   end
-  def fix_years({%TickX{text_year: year} = xtick, marker_list}, prev_year)
+  def fix_years({%TickX{text_down: year} = xtick, marker_list}, prev_year)
     when year == prev_year do
-    {{%{xtick | text_year: nil}, marker_list}, prev_year}
+    {{%{xtick | text_down: nil}, marker_list}, prev_year}
   end
 
   def shift_segments({%TickX{pos: pos} = xtick, marker_list}, shift) do

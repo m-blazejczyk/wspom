@@ -11,6 +11,9 @@
       </ul>
     </section>
   </div>  
+  <div class="w-full my-6">
+    <%= make_chart(assigns) %>
+  </div>
   <div class="flex justify-center items-center w-full mt-8">
     <table class="w-3/4 divide-y divide-gray-200">
       <thead>
@@ -20,7 +23,7 @@
         </tr>
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">
-        <tr :for={record <- @records}>
+        <tr :for={record <- @records |> Enum.take(30)}>
           <td class="px-6 py-4 whitespace-nowrap">
             <%= format_date(record.date) %>
           </td>

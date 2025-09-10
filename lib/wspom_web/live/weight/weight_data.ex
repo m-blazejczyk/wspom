@@ -60,11 +60,11 @@ defmodule WspomWeb.Live.Weight.WeightData do
       </text>
 
       <%= for tick <- @xticks do %>
-        <!-- Y ticks -->
+        <!-- X ticks -->
         <line x1={tick.pos} x2={tick.pos} y1="390" y2="400" style="stroke:grey;stroke-width:1" />
         <line x1={tick.pos} x2={tick.pos} y1="10" y2="390" style="stroke:rgb(220,220,220);stroke-width:1" />
 
-        <!-- Y tick labels -->
+        <!-- X tick labels -->
         <%= if tick.text_up do %>
           <text x={tick.pos + 4} y="406" fill="gray" font-size="16" text-anchor="start">
             <%= tick.text_up %>
@@ -76,6 +76,12 @@ defmodule WspomWeb.Live.Weight.WeightData do
           </text>
         <% end %>
       <% end %>
+
+      <!-- Data points -->
+      <%= for {x, y} <- @points do %>
+        <circle r="4" cx={x} cy={y} fill="rgb(208,62,62)" />
+      <% end %>
+
     </svg>
     """
   end

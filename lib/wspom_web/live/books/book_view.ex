@@ -81,11 +81,11 @@ defmodule WspomWeb.Live.Books.BookView do
       </text>
 
       <%= for {tick, markers} <- @segments do %>
-        <!-- Y ticks -->
+        <!-- X ticks -->
         <line x1={tick.pos} x2={tick.pos} y1="390" y2="400" style="stroke:grey;stroke-width:1" />
         <line x1={tick.pos} x2={tick.pos} y1="10" y2="390" style="stroke:rgb(220,220,220);stroke-width:1" />
 
-        <!-- Y tick labels -->
+        <!-- X tick labels -->
         <%= if tick.text_up do %>
           <text x={tick.pos + 4} y="406" fill="gray" font-size="16" text-anchor="start">
             <%= tick.text_up %>

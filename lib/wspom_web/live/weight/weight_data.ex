@@ -13,10 +13,17 @@ defmodule WspomWeb.Live.Weight.WeightData do
     {
       :noreply,
       socket
+      |> assign(:chart_days, nil)
       |> assign(:records,
         Context.get_all_records
         |> Enum.sort(&(Date.before?(&2.date, &1.date))))
     }
+  end
+
+  @impl true
+  def handle_event("chart_days", %{"value" => chart_days}, socket)
+    when (chart_days == nil) or (is_integer(chart_days) and chart_days > 0 and chart_days < 5000) do
+    {:noreply, socket |> assign(:chart_days, chart_days)}
   end
 
   # These are helper functions for the HEEX template
@@ -26,9 +33,23 @@ defmodule WspomWeb.Live.Weight.WeightData do
 
   defp format_date(d), do: Date.to_string(d)
 
+  defp chart_days_switch_class(button_days, chart_days) do
+    base_class = "border-r border-stroke px-4 py-1 font-medium last-of-type:border-r-0"
+    if button_days == chart_days do
+      "bg-green-700 text-gray-100 " <> base_class
+    else
+      "text-gray-500 " <> base_class
+    end
+  end
+
   defp make_chart(assigns) do
+    data = if assigns.chart_days == nil do
+      assigns.records
+    else
+      assigns.records |> Enum.take(assigns.chart_days)
+    end
     {xticks, yticks, points} = Wspom.WeightChart.Data.make_from_weights(
-      assigns.records |> Enum.take(90), 50, 10, 740, 380)
+      data, 50, 10, 740, 380)
     assigns = assigns
     |> assign(:xticks, xticks)
     |> assign(:yticks, yticks)

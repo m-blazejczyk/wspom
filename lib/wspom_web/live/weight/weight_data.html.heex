@@ -10,8 +10,27 @@
           label="View weight charts" />
       </ul>
     </section>
-  </div>  
+  </div>
   <div class="w-full my-6">
+    <div class="flex justify-center">
+      <div class="inline-flex items-center overflow-hidden rounded-lg border border-stroke">
+        <button
+          class={chart_days_switch_class(90, @chart_days)}
+          phx-click={JS.push("chart_days", value: %{value: 90})}>
+          90 Days
+        </button>
+        <button
+          class={chart_days_switch_class(365, @chart_days)}
+          phx-click={JS.push("chart_days", value: %{value: 365})}>
+          1 Year
+        </button>
+        <button
+          class={chart_days_switch_class(nil, @chart_days)}
+          phx-click={JS.push("chart_days", value: %{value: nil})}>
+          All Data
+        </button>
+      </div>
+    </div>
     <%= make_chart(assigns) %>
   </div>
   <div class="flex justify-center items-center w-full mt-8">

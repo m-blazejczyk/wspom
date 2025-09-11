@@ -42,22 +42,24 @@ defmodule WspomWeb.Live.Weight.WeightData do
     end
   end
 
-  defp make_chart(assigns) do
+  # 740 - 815
+  defp make_chart(assigns, width) do
     data = if assigns.chart_days == nil do
       assigns.records
     else
       assigns.records |> Enum.take(assigns.chart_days)
     end
     {xticks, yticks, points} = Wspom.WeightChart.Data.make_from_weights(
-      data, 50, 10, 740, 380)
+      data, 50, 10, width - 75, 380)
     assigns = assigns
     |> assign(:xticks, xticks)
     |> assign(:yticks, yticks)
     |> assign(:points, points)
+    |> assign(:width, width)
 
     ~H"""
-    <svg width="1000" height="435" xmlns="http://www.w3.org/2000/svg">
-      <rect x="50" y="10" width="740" height="380" style="fill:rgba(255, 255, 255, 0);stroke-width:1;stroke:gray"/>
+    <svg width={@width} height="435" xmlns="http://www.w3.org/2000/svg">
+      <rect x="50" y="10" width={@width - 75} height="380" style="fill:rgba(255, 255, 255, 0);stroke-width:1;stroke:gray"/>
 
       <!-- Top of the box: value of 90 -->
       <line x1="42" y1="10" x2="50" y2="10" style="stroke:grey;stroke-width:1" />
@@ -68,7 +70,7 @@ defmodule WspomWeb.Live.Weight.WeightData do
       <!-- Y ticks -->
       <%= for tick <- @yticks do %>
         <line x1="42" x2="50" y1={tick.pos} y2={tick.pos} style="stroke:grey;stroke-width:1" />
-        <line x1="50" x2="790" y1={tick.pos} y2={tick.pos} style="stroke:rgb(220,220,220);stroke-width:1" />
+        <line x1="50" x2={@width - 25} y1={tick.pos} y2={tick.pos} style="stroke:rgb(220,220,220);stroke-width:1" />
         <text x="38" y={tick.pos + 5} fill="gray" font-size="16" text-anchor="end">
           <%= tick.text %>
         </text>

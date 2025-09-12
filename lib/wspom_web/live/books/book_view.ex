@@ -69,7 +69,7 @@ defmodule WspomWeb.Live.Books.BookView do
       <!-- Y ticks -->
       <%= for tick <- @yticks do %>
         <line x1="42" x2="50" y1={tick.pos} y2={tick.pos} style="stroke:grey;stroke-width:1" />
-        <line x1="50" x2={width - 10} y1={tick.pos} y2={tick.pos} style="stroke:rgb(220,220,220);stroke-width:1" />
+        <line x1="50" x2={@width - 10} y1={tick.pos} y2={tick.pos} style="stroke:rgb(220,220,220);stroke-width:1" />
         <text x="38" y={tick.pos + 5} fill="gray" font-size="16" text-anchor="end">
           <%= tick.text %>
         </text>

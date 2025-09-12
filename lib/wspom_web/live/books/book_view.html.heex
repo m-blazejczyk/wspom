@@ -48,9 +48,17 @@
       </div>
     </header>
   </div>
-  <div class="w-full my-6">
-    <%= make_chart(assigns) %>
+
+  <div class="w-full my-6 sm:hidden">
+    <%= make_chart(assigns, 415) %>
   </div>
+  <div class="w-full my-6 max-sm:hidden lg:hidden">
+    <%= make_chart(assigns, 650) %>
+  </div>
+  <div class="w-full my-6 max-lg:hidden">
+    <%= make_chart(assigns, 1000) %>
+  </div>
+
   <div class="flex justify-center items-center w-full">
     <table class="w-full divide-y divide-gray-200">
       <thead>

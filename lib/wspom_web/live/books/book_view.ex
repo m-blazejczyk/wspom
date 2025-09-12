@@ -48,16 +48,17 @@ defmodule WspomWeb.Live.Books.BookView do
     {:noreply, socket |> assign(:book, changed_book)}
   end
 
-  defp make_chart(assigns) do
+  defp make_chart(assigns, width) do
     {yticks, segments} = Wspom.ReadingChart.Data.make_from_book(
-      assigns.book, 50, 10, 940, 380)
+      assigns.book, 50, 10, width - 60, 380)
     assigns = assigns
     |> assign(:yticks, yticks)
     |> assign(:segments, segments)
+    |> assign(:width, width)
 
     ~H"""
-    <svg width="1000" height="435" xmlns="http://www.w3.org/2000/svg">
-      <rect x="50" y="10" width="940" height="380" style="fill:rgba(255, 255, 255, 0);stroke-width:1;stroke:gray"/>
+    <svg width={@width} height="435" xmlns="http://www.w3.org/2000/svg">
+      <rect x="50" y="10" width={@width - 60} height="380" style="fill:rgba(255, 255, 255, 0);stroke-width:1;stroke:gray"/>
 
       <!-- Top of the box: length of the book -->
       <line x1="42" y1="10" x2="50" y2="10" style="stroke:grey;stroke-width:1" />
@@ -68,7 +69,7 @@ defmodule WspomWeb.Live.Books.BookView do
       <!-- Y ticks -->
       <%= for tick <- @yticks do %>
         <line x1="42" x2="50" y1={tick.pos} y2={tick.pos} style="stroke:grey;stroke-width:1" />
-        <line x1="50" x2="990" y1={tick.pos} y2={tick.pos} style="stroke:rgb(220,220,220);stroke-width:1" />
+        <line x1="50" x2={width - 10} y1={tick.pos} y2={tick.pos} style="stroke:rgb(220,220,220);stroke-width:1" />
         <text x="38" y={tick.pos + 5} fill="gray" font-size="16" text-anchor="end">
           <%= tick.text %>
         </text>

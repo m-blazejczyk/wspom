@@ -11,7 +11,7 @@
       </ul>
     </section>
   </div>
-  <div class="w-full my-6 max-sm:hidden">
+  <div class="w-full my-6"> <!-- max-sm:hidden -->
     <div class="flex justify-center">
       <div class="inline-flex items-center overflow-hidden rounded-lg border border-stroke">
         <button
@@ -31,8 +31,11 @@
         </button>
       </div>
     </div>
-    <div class="lg:hidden">
-      <%= make_chart(assigns, 515) %>
+    <div class="sm:hidden">
+      <%= make_chart(assigns, 415) %>
+    </div>
+    <div class="max-sm:hidden lg:hidden">
+      <%= make_chart(assigns, 650) %>
     </div>
     <div class="max-lg:hidden">
       <%= make_chart(assigns, 815) %>

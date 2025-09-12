@@ -59,7 +59,9 @@ defmodule Wspom.WeightChart.Data do
     # taken on the first day of a month.
     tick_dates = if earliest.day == 1, do: tick_dates, else: remaining_dates
 
-    xticks = tick_dates
+    IO.inspect(w, label: "WIDTH")
+
+    {xticks, _} = tick_dates
     |> Enum.map(fn tick_date ->
       w_perc = Date.diff(tick_date, earliest) / date_range
       %TickX{
@@ -67,6 +69,7 @@ defmodule Wspom.WeightChart.Data do
         text_up: Calendar.strftime(tick_date, "%b"),
         text_down: Integer.to_string(tick_date.year)}
     end)
+    |> Enum.map_reduce("dummy", &fix_years/2)
 
     points = weights
     |> Enum.map(fn %{date: date, weight: weight} ->
@@ -99,4 +102,17 @@ defmodule Wspom.WeightChart.Data do
       Date.new!(date.year, date.month + tick_every_x_months, 1)
     end
   end
+
+  def fix_years(%TickX{text_down: nil} = xtick, prev_year) do
+    {xtick, prev_year}
+  end
+  def fix_years(%TickX{text_down: year} = xtick, prev_year)
+    when year != prev_year do
+    {xtick, year}
+  end
+  def fix_years(%TickX{text_down: year} = xtick, prev_year)
+    when year == prev_year do
+    {%{xtick | text_down: nil}, prev_year}
+  end
+
 end

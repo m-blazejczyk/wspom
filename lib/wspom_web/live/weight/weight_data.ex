@@ -42,7 +42,6 @@ defmodule WspomWeb.Live.Weight.WeightData do
     end
   end
 
-  # 740 - 815
   defp make_chart(assigns, width) do
     data = if assigns.chart_days == nil do
       assigns.records

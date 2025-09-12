@@ -59,8 +59,6 @@ defmodule Wspom.WeightChart.Data do
     # taken on the first day of a month.
     tick_dates = if earliest.day == 1, do: tick_dates, else: remaining_dates
 
-    IO.inspect(w, label: "WIDTH")
-
     {xticks, _} = tick_dates
     |> Enum.map(fn tick_date ->
       w_perc = Date.diff(tick_date, earliest) / date_range

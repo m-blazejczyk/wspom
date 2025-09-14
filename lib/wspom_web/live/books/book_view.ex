@@ -48,38 +48,47 @@ defmodule WspomWeb.Live.Books.BookView do
     {:noreply, socket |> assign(:book, changed_book)}
   end
 
-  defp make_chart(assigns, width) do
+  defp make_chart(assigns, width, ylabels?) do
+    chartx = if ylabels?, do: 50, else: 10
     {yticks, segments} = Wspom.ReadingChart.Data.make_from_book(
-      assigns.book, 50, 10, width - 60, 380)
+      assigns.book, chartx, 10, width - chartx - 10, 380)
     assigns = assigns
     |> assign(:yticks, yticks)
     |> assign(:segments, segments)
     |> assign(:width, width)
+    |> assign(:chartx, chartx)
+    |> assign(:ylabels?, ylabels?)
 
     ~H"""
     <svg width={@width} height="435" xmlns="http://www.w3.org/2000/svg">
-      <rect x="50" y="10" width={@width - 60} height="380" style="fill:rgba(255, 255, 255, 0);stroke-width:1;stroke:gray"/>
+      <rect x={@chartx} y="10" width={@width - @chartx - 10} height="380" style="fill:rgba(255, 255, 255, 0);stroke-width:1;stroke:gray"/>
 
       <!-- Top of the box: length of the book -->
-      <line x1="42" y1="10" x2="50" y2="10" style="stroke:grey;stroke-width:1" />
-      <text x="38" y="15" fill="gray" font-size="16" text-anchor="end">
-        <%= BookPos.to_string(@book.length) %>
-      </text>
-
-      <!-- Y ticks -->
-      <%= for tick <- @yticks do %>
-        <line x1="42" x2="50" y1={tick.pos} y2={tick.pos} style="stroke:grey;stroke-width:1" />
-        <line x1="50" x2={@width - 10} y1={tick.pos} y2={tick.pos} style="stroke:rgb(220,220,220);stroke-width:1" />
-        <text x="38" y={tick.pos + 5} fill="gray" font-size="16" text-anchor="end">
-          <%= tick.text %>
+      <%= if @ylabels? do %>
+        <line x1={@chartx - 8} x2={@chartx} y1="10" y2="10" style="stroke:grey;stroke-width:1" />
+        <text x={@chartx - 12} y="15" fill="gray" font-size="16" text-anchor="end">
+          <%= BookPos.to_string(@book.length) %>
         </text>
       <% end %>
 
+      <!-- Y ticks -->
+      <%= for tick <- @yticks do %>
+        <line x1={@chartx - 8} x2={@chartx} y1={tick.pos} y2={tick.pos} style="stroke:grey;stroke-width:1" />
+        <line x1={@chartx} x2={@width - 10} y1={tick.pos} y2={tick.pos} style="stroke:rgb(220,220,220);stroke-width:1" />
+        <%= if @ylabels? do %>
+          <text x={@chartx - 12} y={tick.pos + 5} fill="gray" font-size="16" text-anchor="end">
+            <%= tick.text %>
+          </text>
+        <% end %>
+      <% end %>
+
       <!-- Bottom of the box: start of the book -->
-      <line x1="42" y1="390" x2="50" y2="390" style="stroke:grey;stroke-width:1" />
-      <text x="38" y="395" fill="gray" font-size="16" text-anchor="end">
-        <%= BookPos.zero_to_string(@book.length) %>
-      </text>
+      <%= if @ylabels? do %>
+        <line x1={@chartx - 8} x2={@chartx} y1="390" y2="390" style="stroke:grey;stroke-width:1" />
+        <text x={@chartx - 12} y="395" fill="gray" font-size="16" text-anchor="end">
+          <%= BookPos.zero_to_string(@book.length) %>
+        </text>
+      <% end %>
 
       <%= for {tick, markers} <- @segments do %>
         <!-- X ticks -->

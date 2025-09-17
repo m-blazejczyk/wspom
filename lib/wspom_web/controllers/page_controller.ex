@@ -11,7 +11,8 @@ defmodule WspomWeb.PageController do
       layout: false,
       entries: "#{entry_stats.entries} entries",
       days: "#{weight_stats.days} days",
-      books: "#{books_stats.books} books"
+      books: "#{books_stats.books} books",
+      weather: "Nothing yet"
     )
   end
 end

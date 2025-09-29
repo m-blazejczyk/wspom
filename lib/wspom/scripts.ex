@@ -247,4 +247,42 @@ alias Wspom.{Book, ReadingRecord, BookPos}
 
     File.write!("books.dat", :erlang.term_to_binary(state))
   end
+
+  def download_weather_data() do
+    api_key = System.get_env("WL_KEY")
+    api_secret = System.get_env("WL_SECRET")
+    # {list, i} = Enum.map_reduce(1758340800..1758599999//86400, 1, fn ts, i ->
+    {list, i} = Enum.map_reduce(1621031400..1758855600//86400, 1, fn ts, i ->
+      data = HTTPoison.get!(
+        "https://api.weatherlink.com/v2/historic/111045?api-key=" <> api_key
+          <> "&start-timestamp=#{ts}&end-timestamp=#{ts + 86400}",
+        [{"X-Api-Secret", api_secret}])
+      {:ok, json} = Poison.decode(data.body)
+      data = atomize(json)
+
+      :timer.sleep(150)
+      if rem(i, 10) == 0, do: IO.write(".")
+      {data, i + 1}
+    end)
+    IO.puts("")
+    IO.puts("Data for #{i - 1} days was downloaded successfully.")
+    list
+  end
+  # File.write!("../weather_raw.dat", :erlang.term_to_binary(data))
+
+  def get_dates(day) do
+    data = hd(day.sensors).data
+    {hd(data).ts |> DateTime.from_unix!(),
+      List.last(data).ts |> DateTime.from_unix!()}
+  end
+
+  def atomize(m) when is_map(m) do
+    for {key, val} <- m, into: %{} do
+      {String.to_atom(key), atomize(val)}
+    end
+  end
+  def atomize(l) when is_list(l) do
+    for item <- l, do: atomize(item)
+  end
+  def atomize(v), do: v
 end

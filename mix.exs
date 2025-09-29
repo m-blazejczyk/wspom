@@ -52,6 +52,7 @@ defmodule Wspom.MixProject do
       {:tzdata, "~> 1.1"},
       {:timex, "~> 3.7"},
       {:poison, "~> 6.0"},
+      {:httpoison, "~> 2.2"},
     ]
   end
 

@@ -14,16 +14,17 @@ defmodule WspomWeb.Live.Weather.Main do
     |> :erlang.binary_to_term()
     |> Enum.take(-(24*7))
     series = data |> get_all_series
-    subcharts = series |> make_subcharts
+    {subcharts, total_height} = series |> make_subcharts |> set_chart_positions
     {:ok, socket
-      |> assign(:data, data)
-      |> assign(:series, series)
-      |> assign(:subcharts, subcharts),
+      |> assign(:subcharts, subcharts)
+      |> assign(:total_height, total_height + 45),
       layout: {WspomWeb.Layouts, :data_app}}
   end
 
   @impl true
   def handle_params(params, _url, socket) do
+    IO.inspect(socket.assigns.total_height)
+    IO.inspect(socket.assigns.subcharts)
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
@@ -86,35 +87,31 @@ defmodule WspomWeb.Live.Weather.Main do
 
   def make_subcharts(series) do
     # The input here is the output from get_all_series()
-    %{
-      temperature: make_one_subchart(
-        [series.temp_avg, series.temp_hi, series.temp_lo,
-          series.dew_point_avg, series.thsw_index_avg, series.wind_chill_lo],
-        "Temperature"),
-
-      indoor_temp: make_one_subchart(
-        [series.temp_in], "Indoor temperature"),
-
-      humidity: make_one_subchart(
-        [series.hum_avg, series.hum_in], "Humidity"),
-
-      pressure: make_one_subchart(
-        [series.pressure], "Barometric pressure"),
-
-      rainfall: make_one_subchart(
-        [series.rainfall_mm], "Rainfall"),
-
-      solar_rad: make_one_subchart(
-        [series.solar_rad_avg, series.solar_rad_hi], "Solar radiation"),
-
-      wind_dir: make_one_subchart(
-        [series.wind_dir_of_prevail], "Prevailing wind direction"),
-
-      wind_speed: make_one_subchart(
-        [series.wind_speed_avg, series.wind_speed_hi], "Wind speed")
-    }
+    [
+      make_one_subchart(
+        [ series.thsw_index_avg, series.wind_chill_lo, series.dew_point_avg,
+          series.temp_hi, series.temp_lo, series.temp_avg],
+        "Temperature", 5, 10),
+      make_one_subchart([series.hum_avg],
+        "Humidity", 10, 20),
+      make_one_subchart([series.pressure],
+        "Barometric pressure", 10, 20),
+      make_one_subchart([series.rainfall_mm],
+        "Rainfall", 2, 10),
+      make_one_subchart([series.solar_rad_hi, series.solar_rad_avg],
+        "Solar radiation", 200, 400),
+      make_one_subchart([series.wind_speed_hi, series.wind_speed_avg],
+        "Wind speed", 10, 20),
+      %Subchart{series: [series.wind_dir_of_prevail],
+        name: "Prevailing wind direction", height: 60},
+      make_one_subchart([series.temp_in],
+        "Indoor temperature", 5, 10),
+      make_one_subchart([series.hum_in],
+        "Indoor humidity", 10, 20)
+    ]
   end
 
+  # segment height: 30?
   # [
   #   {"Humidity", 36.4875, 94.3125},           20, 10  -> [25, 50, 75, 100] - 3 section
   #   {"Indoor temperature", 19.25, 23.125},    10, 5   -> [15, 25] - 1
@@ -126,13 +123,16 @@ defmodule WspomWeb.Live.Weather.Main do
   #   {"Wind speed", 0.0, 28.9}                 20, 10  ->
   # ]
 
-  defp make_one_subchart(series, name) do
+  defp make_one_subchart(series, name, minor_tick, major_tick) do
     {min, max} = series
     |> Enum.reduce({nil, nil},
       fn %Series{min: this_min, max: this_max}, {old_min, old_max} ->
         {new_min(old_min, this_min), new_max(old_max, this_max)}
       end)
-    %Subchart{name: name, series: series, min: min, max: max}
+    y_ticks = ticks(min, max, major_tick, minor_tick)
+    %Subchart{name: name, series: series, min: min, max: max,
+      minor_tick: minor_tick, major_tick: major_tick,
+      ticks: y_ticks, height: length(y_ticks) * 30}
   end
 
   def axis_limits(min, max, tick_len) do
@@ -166,5 +166,12 @@ defmodule WspomWeb.Live.Weather.Main do
     else
       build_ticks(next_val, step, stop, [next_val | acc])
     end
+  end
+
+  def set_chart_positions(subcharts) do
+    subcharts
+    |> Enum.map_reduce(0, fn sc, cur_pos ->
+      {%{sc | y_pos: cur_pos}, cur_pos + sc.height}
+    end)
   end
 end

@@ -22,5 +22,13 @@ defmodule Wspom.Charts.Subchart do
   # `min` and `max` are the minimum and maximum values of all the series
   # belonging to this subchart
   # `series` is a list of Series structs
-  defstruct [:name, :min, :max, :series, :major_tick, :minor_tick, :ticks]
+  # `major_tick` and `minor_tick` are the "lengths" of those ticks, in chart units
+  # `ticks` is a list of TickY structs
+  # `height` is the height of the chart in pixels, and `y_pos` - its Y position,
+  # in pixels as well
+  defstruct [
+    :name, :min, :max, :series,
+    :major_tick, :minor_tick, :ticks,
+    :height, :y_pos
+  ]
 end

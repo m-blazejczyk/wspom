@@ -125,11 +125,18 @@ defmodule Wspom.Weather.ChartData do
   def ticks(min, max, major_tick, minor_tick) do
     {min_limit, max_limit} = axis_limits(min, max, minor_tick)
 
-    build_ticks(min_limit, minor_tick, max_limit, [min_limit])
+    temp = build_ticks(min_limit, minor_tick, max_limit, [min_limit])
     |> Enum.reverse
+
+    height = (length(temp) - 1) * 30
+
+    temp
     |> Enum.map(fn tick_pos ->
+      pixel_perc = (tick_pos - min_limit) / (max_limit - min_limit)
+      pixel_pos = round(height * (1.0 - pixel_perc))
       %TickY{
-        pos: tick_pos,
+        pos: pixel_pos,
+        raw_pos: tick_pos,
         text: if tick_pos / major_tick == Float.floor(tick_pos / major_tick) do
             Integer.to_string(trunc(tick_pos))
           else

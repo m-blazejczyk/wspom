@@ -2,6 +2,7 @@ defmodule WspomWeb.Live.Weather.Main do
 
   use WspomWeb, :live_view
 
+  alias Wspom.Charts.Subchart
   alias Wspom.Weather.ChartData
 
   # API documentation: https://weatherlink.github.io/v2-api/tutorial
@@ -37,10 +38,40 @@ defmodule WspomWeb.Live.Weather.Main do
     """
   end
 
-  defp make_subchart(assigns, subchart) do
+  defp make_subchart(assigns, %Subchart{ticks: ticks} = subchart)
+  when ticks != nil do
+    # IO.inspect(subchart.ticks, label: subchart.name)
     assigns = assigns |> assign(subchart: subchart)
 
     ~H"""
+    <text x="50" y={@subchart.y_pos + 25} fill="black" font-size="22">
+      <%= @subchart.name %>
+    </text>
+    <rect x="50" y={@subchart.y_pos + 30} width="965" height={@subchart.height - 30} style="fill:rgba(255, 255, 255, 0);stroke-width:1;stroke:gray"/>
+
+    <%= for tick <- @subchart.ticks do %>
+      <line x1={50 - 8} x2={50} y1={tick.pos + @subchart.y_pos + 30} y2={tick.pos + @subchart.y_pos + 30} style="stroke:grey;stroke-width:1" />
+
+      <%= if tick.text != nil do %>
+        <text x={50 - 12} y={tick.pos + @subchart.y_pos + 30 + 5} fill="gray" font-size="16" text-anchor="end">
+          <%= tick.text %>
+        </text>
+      <% end %>
+    <% end %>
+
+    <%= for tick <- (@subchart.ticks |> Enum.drop(1) |> Enum.drop(-1)) do %>
+      <line x1={50} x2={1005} y1={tick.pos + @subchart.y_pos + 30} y2={tick.pos + @subchart.y_pos + 30} style="stroke:rgb(220,220,220);stroke-width:1" />
+    <% end %>
+    """
+  end
+  defp make_subchart(assigns, subchart) do
+    # This variant will draw the wind direction chart
+    assigns = assigns |> assign(subchart: subchart)
+
+    ~H"""
+    <text x="50" y={@subchart.y_pos + 25} fill="black" font-size="22">
+      <%= @subchart.name %> (special chart)
+    </text>
     <rect x="50" y={@subchart.y_pos + 30} width="965" height={@subchart.height - 30} style="fill:rgba(255, 255, 255, 0);stroke-width:1;stroke:gray"/>
     """
   end

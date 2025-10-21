@@ -1,7 +1,8 @@
 defmodule Wspom.Charts.TickY do
   # `pos` should be an integer, the Y position within the chart (in pixels).
+  # `raw_pos` is the position in chart units (for reference only).
   # `text` is the string to draw next to the tick (the label); may be nil.
-  defstruct [:pos, :text]
+  defstruct [:pos, :raw_pos, :text]
 end
 
 defmodule Wspom.Charts.TickX do

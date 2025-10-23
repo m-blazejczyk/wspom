@@ -44,23 +44,23 @@ defmodule WspomWeb.Live.Weather.Main do
     assigns = assigns |> assign(subchart: subchart)
 
     ~H"""
-    <text x="50" y={@subchart.y_pos + 25} fill="black" font-size="22">
+    <text x="50" y={@subchart.graph_pos - 5} fill="black" font-size="22">
       <%= @subchart.name %>
     </text>
-    <rect x="50" y={@subchart.y_pos + 30} width="965" height={@subchart.height - 30} style="fill:rgba(255, 255, 255, 0);stroke-width:1;stroke:gray"/>
+    <rect x="50" y={@subchart.graph_pos} width="965" height={@subchart.graph_height} style="fill:rgba(255, 255, 255, 0);stroke-width:1;stroke:gray"/>
 
     <%= for tick <- @subchart.ticks do %>
-      <line x1={50 - 8} x2={50} y1={tick.pos + @subchart.y_pos + 30} y2={tick.pos + @subchart.y_pos + 30} style="stroke:grey;stroke-width:1" />
+      <line x1={50 - 8} x2={50} y1={tick.pos + @subchart.graph_pos} y2={tick.pos + @subchart.graph_pos} style="stroke:grey;stroke-width:1" />
 
       <%= if tick.text != nil do %>
-        <text x={50 - 12} y={tick.pos + @subchart.y_pos + 30 + 5} fill="gray" font-size="16" text-anchor="end">
+        <text x={50 - 12} y={tick.pos + @subchart.graph_pos + 5} fill="gray" font-size="16" text-anchor="end">
           <%= tick.text %>
         </text>
       <% end %>
     <% end %>
 
     <%= for tick <- (@subchart.ticks |> Enum.drop(1) |> Enum.drop(-1)) do %>
-      <line x1={50} x2={1005} y1={tick.pos + @subchart.y_pos + 30} y2={tick.pos + @subchart.y_pos + 30} style="stroke:rgb(220,220,220);stroke-width:1" />
+      <line x1={50} x2={1010} y1={tick.pos + @subchart.graph_pos} y2={tick.pos + @subchart.graph_pos} style="stroke:rgb(220,220,220);stroke-width:1" />
     <% end %>
     """
   end
@@ -69,10 +69,10 @@ defmodule WspomWeb.Live.Weather.Main do
     assigns = assigns |> assign(subchart: subchart)
 
     ~H"""
-    <text x="50" y={@subchart.y_pos + 25} fill="black" font-size="22">
+    <text x="50" y={@subchart.graph_pos - 5} fill="black" font-size="22">
       <%= @subchart.name %> (special chart)
     </text>
-    <rect x="50" y={@subchart.y_pos + 30} width="965" height={@subchart.height - 30} style="fill:rgba(255, 255, 255, 0);stroke-width:1;stroke:gray"/>
+    <rect x="50" y={@subchart.graph_pos} width="965" height={@subchart.graph_height} style="fill:rgba(255, 255, 255, 0);stroke-width:1;stroke:gray"/>
     """
   end
 end

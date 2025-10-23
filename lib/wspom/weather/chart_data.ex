@@ -10,6 +10,7 @@ defmodule Wspom.Weather.ChartData do
     |> Enum.take(-(24*7))
     series = data |> get_all_series
     {subcharts, total_height} = series |> make_subcharts |> set_chart_positions
+    # 45 will be the bottom margin under the last subchart
     {subcharts, total_height + 45}
   end
 
@@ -71,48 +72,40 @@ defmodule Wspom.Weather.ChartData do
       make_one_subchart(
         [ series.thsw_index_avg, series.wind_chill_lo, series.dew_point_avg,
           series.temp_hi, series.temp_lo, series.temp_avg],
-        "Temperature", 5, 10),
+        "Temperature", :top, 5, 10),
       make_one_subchart([series.hum_avg],
-        "Humidity", 10, 20),
+        "Humidity", :middle, 10, 20),
       make_one_subchart([series.pressure],
-        "Barometric pressure", 10, 20),
+        "Barometric pressure", :middle, 10, 20),
       make_one_subchart([series.rainfall_mm],
-        "Rainfall", 2, 10),
+        "Rainfall", :middle, 2, 10),
       make_one_subchart([series.solar_rad_hi, series.solar_rad_avg],
-        "Solar radiation", 200, 400),
+        "Solar radiation", :middle, 200, 400),
       make_one_subchart([series.wind_speed_hi, series.wind_speed_avg],
-        "Wind speed", 10, 20),
+        "Wind speed", :middle, 10, 20),
       %Subchart{series: [series.wind_dir_of_prevail],
-        name: "Prevailing wind direction", height: 60},
+        name: "Prevailing wind direction", position: :middle,
+        chart_height: 90, graph_height: 30},
       make_one_subchart([series.temp_in],
-        "Indoor temperature", 5, 10),
+        "Indoor temperature", :middle, 5, 10),
       make_one_subchart([series.hum_in],
-        "Indoor humidity", 10, 20)
+        "Indoor humidity", :bottom, 10, 20)
     ]
   end
 
-  # segment height: 30?
-  # [
-  #   {"Humidity", 36.4875, 94.3125},           20, 10  -> [25, 50, 75, 100] - 3 section
-  #   {"Indoor temperature", 19.25, 23.125},    10, 5   -> [15, 25] - 1
-  #   {"Barometric pressure", 1004.3, 1028.6},  20, 10  -> [1000, 1020, 1040] - 2
-  #   {"Rainfall", 0, 7.2},                     6,  2   -> [0, 5, 10] - 2
-  #   {"Solar radiation", 0.0, 603},            400,200 -> [0, 250, 500, 750] - 3
-  #   {"Temperature", 0.7, 26.9},               10, 5   -> [0, 10, 20, 30] - 4
-  #   {"Prevailing wind direction", 0.0, 355.75}, --
-  #   {"Wind speed", 0.0, 28.9}                 20, 10  ->
-  # ]
-
-  defp make_one_subchart(series, name, minor_tick, major_tick) do
+  defp make_one_subchart(series, name, position, minor_tick, major_tick) do
     {min, max} = series
     |> Enum.reduce({nil, nil},
       fn %Series{min: this_min, max: this_max}, {old_min, old_max} ->
         {new_min(old_min, this_min), new_max(old_max, this_max)}
       end)
     y_ticks = ticks(min, max, major_tick, minor_tick)
-    %Subchart{name: name, series: series, min: min, max: max,
-      minor_tick: minor_tick, major_tick: major_tick,
-      ticks: y_ticks, height: length(y_ticks) * 30}
+    graph_height = (length(y_ticks) - 1) * 30
+    %Subchart{name: name, position: position, series: series,
+      min: min, max: max,
+      minor_tick: minor_tick, major_tick: major_tick, ticks: y_ticks,
+      graph_height: graph_height,
+      chart_height: graph_height + 30 + padding(position)}
   end
 
   def axis_limits(min, max, tick_len) do
@@ -137,14 +130,14 @@ defmodule Wspom.Weather.ChartData do
       %TickY{
         pos: pixel_pos,
         raw_pos: tick_pos,
-        text: if tick_pos / major_tick == Float.floor(tick_pos / major_tick) do
-            Integer.to_string(trunc(tick_pos))
-          else
-            nil
-          end
+        text: Integer.to_string(trunc(tick_pos))
       }
     end)
   end
+
+  defp padding(:top), do: 0
+  defp padding(:bottom), do: 30
+  defp padding(:middle), do: 30
 
   def build_ticks(val, step, stop, acc) do
     next_val = val + step
@@ -158,7 +151,12 @@ defmodule Wspom.Weather.ChartData do
   def set_chart_positions(subcharts) do
     subcharts
     |> Enum.map_reduce(0, fn sc, cur_pos ->
-      {%{sc | y_pos: cur_pos}, cur_pos + sc.height}
+      {
+        %{sc |
+          chart_pos: cur_pos,
+          graph_pos: cur_pos + sc.chart_height - sc.graph_height},
+        cur_pos + sc.chart_height
+      }
     end)
   end
 end

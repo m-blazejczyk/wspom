@@ -52,15 +52,18 @@ defmodule WspomWeb.Live.Weather.Main do
     <%= for tick <- @subchart.ticks do %>
       <line x1={50 - 8} x2={50} y1={tick.pos + @subchart.graph_pos} y2={tick.pos + @subchart.graph_pos} style="stroke:grey;stroke-width:1" />
 
-      <%= if tick.text != nil do %>
-        <text x={50 - 12} y={tick.pos + @subchart.graph_pos + 5} fill="gray" font-size="16" text-anchor="end">
-          <%= tick.text %>
-        </text>
-      <% end %>
+      <text x={50 - 12} y={tick.pos + @subchart.graph_pos + 5} fill="gray" font-size="16" text-anchor="end">
+        <%= tick.text %>
+      </text>
     <% end %>
 
-    <%= for tick <- (@subchart.ticks |> Enum.drop(1) |> Enum.drop(-1)) do %>
-      <line x1={50} x2={1010} y1={tick.pos + @subchart.graph_pos} y2={tick.pos + @subchart.graph_pos} style="stroke:rgb(220,220,220);stroke-width:1" />
+    <line :for={tick <- (@subchart.ticks |> Enum.drop(1) |> Enum.drop(-1))}
+      x1={50} x2={1015} y1={tick.pos + @subchart.graph_pos} y2={tick.pos + @subchart.graph_pos} style="stroke:rgb(220,220,220);stroke-width:1" />
+
+    <!-- Data points -->
+    <%= for series <- @subchart.series do %>
+      <circle :for={{x, y} <- series.data}
+        r="3" cx={x} cy={y} fill="rgb(208,62,62)" />
     <% end %>
     """
   end

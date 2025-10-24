@@ -10,6 +10,7 @@ defmodule Wspom.Weather.ChartData do
     |> Enum.take(-(24*7))
     series = data |> get_all_series
     {subcharts, total_height} = series |> make_subcharts |> set_chart_positions
+    subcharts = subcharts |> Enum.map(&position_points/1)
     # 45 will be the bottom margin under the last subchart
     {subcharts, total_height + 45}
   end
@@ -99,11 +100,12 @@ defmodule Wspom.Weather.ChartData do
       fn %Series{min: this_min, max: this_max}, {old_min, old_max} ->
         {new_min(old_min, this_min), new_max(old_max, this_max)}
       end)
-    y_ticks = ticks(min, max, major_tick, minor_tick)
+    {y_ticks, min_limit, max_limit} = ticks(min, max, major_tick, minor_tick)
     graph_height = (length(y_ticks) - 1) * 30
     %Subchart{name: name, position: position, series: series,
       min: min, max: max,
       minor_tick: minor_tick, major_tick: major_tick, ticks: y_ticks,
+      min_limit: min_limit, max_limit: max_limit,
       graph_height: graph_height,
       chart_height: graph_height + 30 + padding(position)}
   end
@@ -123,7 +125,7 @@ defmodule Wspom.Weather.ChartData do
 
     height = (length(temp) - 1) * 30
 
-    temp
+    tick_list = temp
     |> Enum.map(fn tick_pos ->
       pixel_perc = (tick_pos - min_limit) / (max_limit - min_limit)
       pixel_pos = round(height * (1.0 - pixel_perc))
@@ -133,6 +135,8 @@ defmodule Wspom.Weather.ChartData do
         text: Integer.to_string(trunc(tick_pos))
       }
     end)
+
+    {tick_list, min_limit, max_limit}
   end
 
   defp padding(:top), do: 0
@@ -158,5 +162,36 @@ defmodule Wspom.Weather.ChartData do
         cur_pos + sc.chart_height
       }
     end)
+  end
+
+  def position_points(%Subchart{ticks: ticks} = subchart)
+  when ticks != nil do
+    %{subchart | series: subchart.series |> Enum.map(fn s ->
+      position_points_one_series(s, subchart)
+    end)}
+  end
+  def position_points(%Subchart{} = subchart) do
+    # This variant will be called for the "prevailing wind direction" subchart
+    subchart
+  end
+
+  defp position_points_one_series(series, subchart) do
+    data_len = length(series.data)
+    %{series |
+      data: series.data
+        |> Enum.zip(0..(data_len - 1))
+        |> Enum.map(fn pt_with_idx ->
+          position_one_point(pt_with_idx, subchart, data_len)
+        end)}
+  end
+
+  defp position_one_point({nil, _idx}, _subchart, _data_len), do: nil
+  defp position_one_point({pt, idx}, subchart, data_len) do
+    {
+      55 + (idx * 955 / (data_len - 1)),
+      subchart.graph_pos + subchart.graph_height -
+        (pt - subchart.min_limit) / (subchart.max_limit - subchart.min_limit) *
+        subchart.graph_height
+    }
   end
 end

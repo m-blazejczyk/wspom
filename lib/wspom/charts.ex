@@ -15,6 +15,7 @@ defmodule Wspom.Charts.Series do
   # `name` is the name to be displayed on the legend
   # `min` and `max` are the minimum and maximum values of the series
   # `data` is a list of numbers that may contain `nil` values
+  # In later stages, `data` will be a list of tuples: {x, y}, or nil values
   defstruct [:name, :min, :max, :data]
 end
 
@@ -32,6 +33,7 @@ defmodule Wspom.Charts.Subchart do
   defstruct [
     :name, :position, :min, :max, :series,
     :major_tick, :minor_tick, :ticks,
+    :min_limit, :max_limit,
     :chart_height, :chart_pos, :graph_height, :graph_pos
   ]
 end

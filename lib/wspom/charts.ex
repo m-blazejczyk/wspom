@@ -25,14 +25,14 @@ defmodule Wspom.Charts.Subchart do
   # `min` and `max` are the minimum and maximum values of all the series
   # belonging to this subchart
   # `series` is a list of Series structs
-  # `major_tick` and `minor_tick` are the "lengths" of those ticks, in chart units
+  # `tick_len` is the distance between ticks, in chart units
   # `ticks` is a list of TickY structs
   # `chart_height` is the height of the entire chart in pixels
   # `chart_pos` is its Y position, in pixels as well (including the title etc.)
   # `graph_xxx` are the same but for the graph box
   defstruct [
     :name, :position, :min, :max, :series,
-    :major_tick, :minor_tick, :ticks,
+    :tick_len, :ticks,
     :min_limit, :max_limit,
     :chart_height, :chart_pos, :graph_height, :graph_pos
   ]

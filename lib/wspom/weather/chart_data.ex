@@ -73,38 +73,38 @@ defmodule Wspom.Weather.ChartData do
       make_one_subchart(
         [ series.thsw_index_avg, series.wind_chill_lo, series.dew_point_avg,
           series.temp_hi, series.temp_lo, series.temp_avg],
-        "Temperature", :top, 5, 10),
+        "Temperature", :top, 5),
       make_one_subchart([series.hum_avg],
-        "Humidity", :middle, 10, 20),
+        "Humidity", :middle, 20),
       make_one_subchart([series.pressure],
-        "Barometric pressure", :middle, 10, 20),
+        "Barometric pressure", :middle, 10),
       make_one_subchart([series.rainfall_mm],
-        "Rainfall", :middle, 2, 10),
+        "Rainfall", :middle, 2),
       make_one_subchart([series.solar_rad_hi, series.solar_rad_avg],
-        "Solar radiation", :middle, 200, 400),
+        "Solar radiation", :middle, 200),
       make_one_subchart([series.wind_speed_hi, series.wind_speed_avg],
-        "Wind speed", :middle, 10, 20),
+        "Wind speed", :middle, 10),
       %Subchart{series: [series.wind_dir_of_prevail],
         name: "Prevailing wind direction", position: :middle,
         chart_height: 90, graph_height: 30},
       make_one_subchart([series.temp_in],
-        "Indoor temperature", :middle, 5, 10),
+        "Indoor temperature", :middle, 5),
       make_one_subchart([series.hum_in],
-        "Indoor humidity", :bottom, 10, 20)
+        "Indoor humidity", :bottom, 20)
     ]
   end
 
-  defp make_one_subchart(series, name, position, minor_tick, major_tick) do
+  defp make_one_subchart(series, name, position, tick_len) do
     {min, max} = series
     |> Enum.reduce({nil, nil},
       fn %Series{min: this_min, max: this_max}, {old_min, old_max} ->
         {new_min(old_min, this_min), new_max(old_max, this_max)}
       end)
-    {y_ticks, min_limit, max_limit} = ticks(min, max, major_tick, minor_tick)
+    {y_ticks, min_limit, max_limit} = ticks(min, max, tick_len)
     graph_height = (length(y_ticks) - 1) * 30
     %Subchart{name: name, position: position, series: series,
       min: min, max: max,
-      minor_tick: minor_tick, major_tick: major_tick, ticks: y_ticks,
+      tick_len: tick_len, ticks: y_ticks,
       min_limit: min_limit, max_limit: max_limit,
       graph_height: graph_height,
       chart_height: graph_height + 30 + padding(position)}
@@ -117,10 +117,10 @@ defmodule Wspom.Weather.ChartData do
     }
   end
 
-  def ticks(min, max, major_tick, minor_tick) do
-    {min_limit, max_limit} = axis_limits(min, max, minor_tick)
+  def ticks(min, max, tick_len) do
+    {min_limit, max_limit} = axis_limits(min, max, tick_len)
 
-    temp = build_ticks(min_limit, minor_tick, max_limit, [min_limit])
+    temp = build_ticks(min_limit, tick_len, max_limit, [min_limit])
     |> Enum.reverse
 
     height = (length(temp) - 1) * 30

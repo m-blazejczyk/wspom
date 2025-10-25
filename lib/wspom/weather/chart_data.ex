@@ -44,7 +44,7 @@ defmodule Wspom.Weather.ChartData do
 
   def get_one_series(data, index, name) do
     starting_series = %Series{name: name, min: nil, max: nil, data: []}
-    data
+    series_with_data = data
     |> Enum.reduce(starting_series,
       fn record, %Series{name: name, min: old_min, max: old_max, data: old_data} ->
         val = Map.get(record, index)
@@ -55,6 +55,7 @@ defmodule Wspom.Weather.ChartData do
           data: [val | old_data]
         }
       end)
+    %{series_with_data | data: series_with_data.data |> Enum.reverse}
   end
 
   defp new_min(nil, nil), do: nil
@@ -71,7 +72,7 @@ defmodule Wspom.Weather.ChartData do
     # The input here is the output from get_all_series()
     [
       make_one_subchart(
-        [ series.thsw_index_avg, series.wind_chill_lo, series.dew_point_avg,
+        [series.thsw_index_avg, series.wind_chill_lo, series.dew_point_avg,
           series.temp_hi, series.temp_lo, series.temp_avg],
         "Temperature", :top, 5),
       make_one_subchart([series.hum_avg],

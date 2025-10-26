@@ -1,6 +1,6 @@
 defmodule Wspom.Weather.ChartData do
 
-  alias Wspom.Charts.{TickY, Series, Subchart}
+  alias Wspom.Charts.{TickX, TickY, Series, Subchart}
 
   def process_data() do
     # The test dataset happens to include full days at the end
@@ -9,8 +9,11 @@ defmodule Wspom.Weather.ChartData do
     |> :erlang.binary_to_term()
     |> Enum.take(-(24*7))
     series = data |> get_all_series
-    {subcharts, total_height} = series |> make_subcharts |> set_chart_positions
-    subcharts = subcharts |> Enum.map(&position_points/1)
+    {subcharts, total_height} = series |> make_subcharts_test |> set_chart_positions
+    subcharts = subcharts
+    |> Enum.map(&test_x_axis/1)
+    |> Enum.map(&position_points/1)
+    IO.inspect(subcharts |> hd)
     # 45 will be the bottom margin under the last subchart
     {subcharts, total_height + 45}
   end
@@ -92,6 +95,42 @@ defmodule Wspom.Weather.ChartData do
         "Indoor temperature", :middle, 5),
       make_one_subchart([series.hum_in],
         "Indoor humidity", :bottom, 20)
+    ]
+  end
+
+  def make_subcharts_test(series) do
+    # The input here is the output from get_all_series()
+    [
+      make_one_subchart([series.thsw_index_avg],
+        "thsw_index_avg", :top, 5),
+      make_one_subchart([series.wind_chill_lo],
+        "wind_chill_lo", :middle, 5),
+      make_one_subchart([series.dew_point_avg],
+        "dew_point_avg", :middle, 5),
+      make_one_subchart([series.temp_hi],
+        "temp_hi", :middle, 5),
+      make_one_subchart([series.temp_lo],
+        "temp_lo", :middle, 5),
+      make_one_subchart([series.temp_avg],
+        "temp_avg", :middle, 5),
+      make_one_subchart([series.hum_avg],
+        "hum_avg", :middle, 20),
+      make_one_subchart([series.pressure],
+        "pressure", :middle, 10),
+      make_one_subchart([series.rainfall_mm],
+        "rainfall_mm", :middle, 2),
+      make_one_subchart([series.solar_rad_hi],
+        "solar_rad_hi", :middle, 200),
+      make_one_subchart([series.solar_rad_avg],
+        "solar_rad_avg", :middle, 200),
+      make_one_subchart([series.wind_speed_hi],
+        "wind_speed_hi", :middle, 10),
+      make_one_subchart([series.wind_speed_avg],
+        "wind_speed_avg", :middle, 10),
+      make_one_subchart([series.temp_in],
+        "temp_in", :middle, 5),
+      make_one_subchart([series.hum_in],
+        "hum_in", :bottom, 20)
     ]
   end
 
@@ -194,5 +233,20 @@ defmodule Wspom.Weather.ChartData do
         (pt - subchart.min_limit) / (subchart.max_limit - subchart.min_limit) *
         subchart.graph_height
     }
+  end
+
+  defp test_x_axis(%Subchart{series: series} = subchart) do
+    %{subchart | xticks: get_xticks(hd(series), subchart)}
+  end
+
+  defp get_xticks(series, subchart) do
+    data_len = length(series.data)
+    series.data
+    |> Enum.zip(0..(data_len - 1))
+    |> Enum.take_every(10)
+    |> Enum.map(fn {pt, _idx} = pt_with_idx ->
+      {posx, _posy} = position_one_point(pt_with_idx, subchart, data_len)
+      %TickX{pos: posx, text_up: :erlang.float_to_binary(pt * 1.0, [decimals: 1]), text_down: nil}
+    end)
   end
 end

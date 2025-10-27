@@ -21,29 +21,39 @@ defmodule Wspom.Weather.ChartData do
     # Output is a map of tuples: {name, min, max, data}, keys being series ids
     # `data` is just a list of numbers or nil values for now
     %{
-      dew_point_avg: get_one_series(data, :dew_point_avg, "Dew point"),
+      temp_hi: get_one_series(data, :temp_hi, "Max temp", "rgba(188, 82, 82, 1)"),
+      temp_lo: get_one_series(data, :temp_lo, "Min temp", "rgba(82, 126, 188, 1)"),
+      temp_avg: get_one_series(data, :temp_avg, "Temp", "rgba(82, 188, 121, 1)"),
+      dew_point_avg: get_one_series(data, :dew_point_avg, "Dew point", "rgba(236, 180, 153, 1)"),
+
+      thsw_index_avg: get_one_series(data, :thsw_index_avg, "THSW", "rgba(188, 82, 82, 1)"),
+      wind_chill_lo: get_one_series(data, :wind_chill_lo, "Min wind chill", "rgba(82, 126, 188, 1)"),
+
+      temp_in: get_one_series(data, :temp_in, "Indoor temp", "rgba(188, 82, 82, 1)"),
+
+      hum_avg: get_one_series(data, :hum_avg, "Humidity", "rgba(82, 126, 188, 1)"),
+
+      hum_in: get_one_series(data, :hum_in, "Indoor humidity", "rgba(82, 126, 188, 1)"),
+
+      pressure: get_one_series(data, :pressure, "Air pressure", "rgba(114, 114, 114, 1)"),
+
+      rainfall_mm: get_one_series(data, :rainfall_mm, "Rainfall [mm]", "rgba(18, 95, 202, 1)"),
+
+      solar_rad_avg: get_one_series(data, :solar_rad_avg, "Avg solar rad", "rgba(188, 154, 82, 1)"),
+      solar_rad_hi: get_one_series(data, :solar_rad_hi, "Max solar rad", "rgba(186, 127, 0, 1)"),
+
+      wind_dir_of_prevail: get_one_series(data, :wind_dir_of_prevail, "Prev ailing wind dir", ""),
+
+      wind_speed_avg: get_one_series(data, :wind_speed_avg, "Avg wind speed", "rgba(176, 176, 176, 1)"),
+      wind_speed_hi: get_one_series(data, :wind_speed_hi, "Max wind speed", "rgba(42, 42, 42, 1)")
+
       # heat_index_hi: get_one_series(data, :heat_index_hi, "Max heat index"),
-      hum_avg: get_one_series(data, :hum_avg, "Humidity"),
-      hum_in: get_one_series(data, :hum_in, "Indoor humidity"),
-      pressure: get_one_series(data, :pressure, "Air pressure"),
-      rainfall_mm: get_one_series(data, :rainfall_mm, "Rainfall [mm]"),
-      solar_rad_avg: get_one_series(data, :solar_rad_avg, "Avg solar rad"),
-      solar_rad_hi: get_one_series(data, :solar_rad_hi, "Max solar rad"),
-      temp_avg: get_one_series(data, :temp_avg, "Temp"),
-      temp_hi: get_one_series(data, :temp_hi, "Max temp"),
-      temp_lo: get_one_series(data, :temp_lo, "Min temp"),
-      temp_in: get_one_series(data, :temp_in, "Indoor temp"),
-      thsw_index_avg: get_one_series(data, :thsw_index_avg, "THSW"),
       # thw_index_avg: get_one_series(data, :thw_index_avg, "THW"),
-      # wet_bulb_avg: get_one_series(data, :wet_bulb_avg, "Wet bulb"),
-      wind_chill_lo: get_one_series(data, :wind_chill_lo, "Min wind chill"),
-      wind_dir_of_prevail: get_one_series(data, :wind_dir_of_prevail, "Prev ailing wind dir"),
-      wind_speed_avg: get_one_series(data, :wind_speed_avg, "Avg wind speed"),
-      wind_speed_hi: get_one_series(data, :wind_speed_hi, "Max wind speed")
+      # wet_bulb_avg: get_one_series(data, :wet_bulb_avg, "Wet bulb")
     }
   end
 
-  def get_one_series(data, index, name) do
+  def get_one_series(data, index, name, color) do
     starting_series = %Series{name: name, min: nil, max: nil, data: []}
     series_with_data = data
     |> Enum.reduce(starting_series,
@@ -53,7 +63,8 @@ defmodule Wspom.Weather.ChartData do
           name: name,
           min: new_min(old_min, val),
           max: new_max(old_max, val),
-          data: [val | old_data]
+          data: [val | old_data],
+          color: color
         }
       end)
     %{series_with_data | data: series_with_data.data |> Enum.reverse}

@@ -16,7 +16,8 @@ defmodule Wspom.Charts.Series do
   # `min` and `max` are the minimum and maximum values of the series
   # `data` is a list of numbers that may contain `nil` values
   # In later stages, `data` will be a list of tuples: {x, y}, or nil values
-  defstruct [:name, :min, :max, :data]
+  # `color` is suitable for SVN
+  defstruct [:name, :min, :max, :data, :color]
 end
 
 defmodule Wspom.Charts.Subchart do

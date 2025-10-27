@@ -63,7 +63,7 @@ defmodule WspomWeb.Live.Weather.Main do
     <!-- Data points -->
     <%= for series <- @subchart.series do %>
       <circle :for={{x, y} <- series.data}
-        r="3" cx={x} cy={y} fill="rgb(208,62,62)" />
+        r="3" cx={x} cy={y} fill={series.color} />
     <% end %>
     """
   end

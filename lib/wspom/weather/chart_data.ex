@@ -21,15 +21,15 @@ defmodule Wspom.Weather.ChartData do
     # Output is a map of tuples: {name, min, max, data}, keys being series ids
     # `data` is just a list of numbers or nil values for now
     %{
-      temp_hi: get_one_series(data, :temp_hi, "Max temp", "rgba(188, 82, 82, 1)"),
-      temp_lo: get_one_series(data, :temp_lo, "Min temp", "rgba(82, 126, 188, 1)"),
-      temp_avg: get_one_series(data, :temp_avg, "Temp", "rgba(82, 188, 121, 1)"),
-      dew_point_avg: get_one_series(data, :dew_point_avg, "Dew point", "rgba(236, 180, 153, 1)"),
+      temp_hi: get_one_series(data, :temp_hi, "Max temp", "rgba(255, 27, 27, 1)"),
+      temp_lo: get_one_series(data, :temp_lo, "Min temp", "rgba(255, 174, 174, 1)"),
+      temp_avg: get_one_series(data, :temp_avg, "Temp", "rgba(255, 110, 110, 1)"),
+      dew_point_avg: get_one_series(data, :dew_point_avg, "Dew point", "rgba(34, 138, 28, 1)"),
 
-      thsw_index_avg: get_one_series(data, :thsw_index_avg, "THSW", "rgba(188, 82, 82, 1)"),
+      thsw_index_avg: get_one_series(data, :thsw_index_avg, "THSW", "rgba(255, 27, 27, 1)"),
       wind_chill_lo: get_one_series(data, :wind_chill_lo, "Min wind chill", "rgba(82, 126, 188, 1)"),
 
-      temp_in: get_one_series(data, :temp_in, "Indoor temp", "rgba(188, 82, 82, 1)"),
+      temp_in: get_one_series(data, :temp_in, "Indoor temp", "rgba(255, 110, 110, 1)"),
 
       hum_avg: get_one_series(data, :hum_avg, "Humidity", "rgba(82, 126, 188, 1)"),
 
@@ -39,8 +39,8 @@ defmodule Wspom.Weather.ChartData do
 
       rainfall_mm: get_one_series(data, :rainfall_mm, "Rainfall [mm]", "rgba(18, 95, 202, 1)"),
 
-      solar_rad_avg: get_one_series(data, :solar_rad_avg, "Avg solar rad", "rgba(188, 154, 82, 1)"),
-      solar_rad_hi: get_one_series(data, :solar_rad_hi, "Max solar rad", "rgba(186, 127, 0, 1)"),
+      solar_rad_avg: get_one_series(data, :solar_rad_avg, "Avg solar rad", "rgba(255, 226, 164, 1)"),
+      solar_rad_hi: get_one_series(data, :solar_rad_hi, "Max solar rad", "rgba(255, 178, 11, 1)"),
 
       wind_dir_of_prevail: get_one_series(data, :wind_dir_of_prevail, "Prev ailing wind dir", ""),
 

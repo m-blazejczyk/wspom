@@ -18,8 +18,6 @@ defmodule WspomWeb.Live.Weather.Main do
 
   @impl true
   def handle_params(params, _url, socket) do
-    # IO.inspect(socket.assigns.total_height)
-    # IO.inspect(socket.assigns.subcharts)
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 

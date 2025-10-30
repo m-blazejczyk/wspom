@@ -22,7 +22,6 @@ end
 
 defmodule Wspom.Charts.Subchart do
   # `name` is the name to be displayed on the Y axis
-  # `position` is one of: :top, :middle, :bottom
   # `min` and `max` are the minimum and maximum values of all the series
   # belonging to this subchart
   # `series` is a list of Series structs
@@ -33,7 +32,7 @@ defmodule Wspom.Charts.Subchart do
   # `chart_pos` is its Y position, in pixels as well (including the title etc.)
   # `graph_xxx` are the same but for the graph box
   defstruct [
-    :name, :position, :min, :max, :series,
+    :name, :min, :max, :series,
     :tick_len, :ticks, :xticks?,
     :min_limit, :max_limit,
     :chart_height, :chart_pos, :graph_height, :graph_pos

@@ -23,7 +23,30 @@ import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}})
+let liveSocket = new LiveSocket("/live", Socket, {
+  params: {_csrf_token: csrfToken},
+  hooks: {
+    AutoClearFlash: {
+      mounted() {
+        let ignoredIDs = ["client-error", "server-error"];
+        if (ignoredIDs.includes(this.el.id)) return;
+
+        let hideElementAfter = 3000; // ms
+        let clearFlashAfter = hideElementAfter + 500; // ms
+
+        // first hide the element
+        setTimeout(() => {
+          this.el.style.opacity = 0;
+        }, hideElementAfter);
+
+        // then clear the flash
+        setTimeout(() => {
+          this.pushEvent("lv:clear-flash");
+        }, clearFlashAfter);
+      },
+    },
+  },
+})
 
 // Show progress bar on live navigation and form submits
 topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})

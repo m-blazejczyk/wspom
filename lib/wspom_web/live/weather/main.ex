@@ -9,11 +9,15 @@ defmodule WspomWeb.Live.Weather.Main do
 
   @impl true
   def mount(_params, _session, socket) do
-    {subcharts, total_height} = ChartData.process_data
-    {:ok, socket
+    {subcharts, total_height, xticks} = ChartData.process_data
+    {
+      :ok,
+      socket
       |> assign(:subcharts, subcharts)
-      |> assign(:total_height, total_height),
-      layout: {WspomWeb.Layouts, :data_app}}
+      |> assign(:total_height, total_height)
+      |> assign(:xticks, xticks),
+      layout: {WspomWeb.Layouts, :data_app}
+    }
   end
 
   @impl true
@@ -55,8 +59,28 @@ defmodule WspomWeb.Live.Weather.Main do
       </text>
     <% end %>
 
+    <!-- Y tick lines -->
     <line :for={tick <- (@subchart.ticks |> Enum.drop(1) |> Enum.drop(-1))}
       x1={50} x2={1015} y1={tick.pos + @subchart.graph_pos} y2={tick.pos + @subchart.graph_pos} style="stroke:rgb(220,220,220);stroke-width:1" />
+
+    <!-- X tick lines -->
+    <line :for={tick <- @xticks}
+      x1={tick.pos} x2={tick.pos} y1={@subchart.graph_pos} y2={@subchart.graph_pos + @subchart.graph_height} style="stroke:rgb(220,220,220);stroke-width:1" />
+
+    <%= if @subchart.xticks? do %>
+      <%= for tick <- @xticks do %>
+        <!-- X ticks -->
+        <line x1={tick.pos} x2={tick.pos} y1={@subchart.graph_pos + @subchart.graph_height} y2={@subchart.graph_pos + @subchart.graph_height + 5} style="stroke:grey;stroke-width:1" />
+
+        <!-- X tick labels -->
+        <text :if={tick.text_up} x={tick.pos + 4} y={@subchart.graph_pos + @subchart.graph_height + 20} fill="gray" font-size="16" text-anchor="start">
+          <%= tick.text_up %>
+        </text>
+        <text :if={tick.text_down} x={tick.pos + 4} y={@subchart.graph_pos + @subchart.graph_height + 35} fill="gray" font-size="16" text-anchor="start">
+          <%= tick.text_down %>
+        </text>
+      <% end %>
+    <% end %>
 
     <!-- Data points -->
     <%= for series <- @subchart.series do %>

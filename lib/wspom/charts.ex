@@ -28,13 +28,13 @@ defmodule Wspom.Charts.Subchart do
   # `series` is a list of Series structs
   # `tick_len` is the distance between ticks, in chart units
   # `ticks` is a list of TickY structs
-  # `xticks` is only used for testing
+  # `xticks?` - true if x-ticks should be drawn
   # `chart_height` is the height of the entire chart in pixels
   # `chart_pos` is its Y position, in pixels as well (including the title etc.)
   # `graph_xxx` are the same but for the graph box
   defstruct [
     :name, :position, :min, :max, :series,
-    :tick_len, :ticks, :xticks,
+    :tick_len, :ticks, :xticks?,
     :min_limit, :max_limit,
     :chart_height, :chart_pos, :graph_height, :graph_pos
   ]

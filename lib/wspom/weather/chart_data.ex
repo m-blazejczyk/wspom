@@ -10,10 +10,10 @@ defmodule Wspom.Weather.ChartData do
     |> Enum.take(-(24*7))
     series = data |> get_all_series
     {subcharts, total_height} = series |> make_subcharts |> set_chart_positions
-    subcharts = subcharts
-    |> Enum.map(&position_points/1)
+    subcharts = subcharts |> Enum.map(&position_points/1)
+    xticks = make_xticks(series.timestamps)
     # 45 will be the bottom margin under the last subchart
-    {subcharts, total_height + 45}
+    {subcharts, total_height + 45, xticks}
   end
 
   def get_all_series(data) do
@@ -42,11 +42,12 @@ defmodule Wspom.Weather.ChartData do
       solar_rad_avg: get_one_series(data, :solar_rad_avg, "Avg solar rad", "rgba(255, 226, 164, 1)"),
       solar_rad_hi: get_one_series(data, :solar_rad_hi, "Max solar rad", "rgba(255, 178, 11, 1)"),
 
-      wind_dir_of_prevail: get_one_series(data, :wind_dir_of_prevail, "Prev ailing wind dir", ""),
+      wind_dir_of_prevail: get_one_series_basic(data, :wind_dir_of_prevail, "Prevailing wind dir"),
 
       wind_speed_avg: get_one_series(data, :wind_speed_avg, "Avg wind speed", "rgba(176, 176, 176, 1)"),
-      wind_speed_hi: get_one_series(data, :wind_speed_hi, "Max wind speed", "rgba(42, 42, 42, 1)")
+      wind_speed_hi: get_one_series(data, :wind_speed_hi, "Max wind speed", "rgba(42, 42, 42, 1)"),
 
+      timestamps: get_one_series_basic(data, :time, "Time")
       # heat_index_hi: get_one_series(data, :heat_index_hi, "Max heat index"),
       # thw_index_avg: get_one_series(data, :thw_index_avg, "THW"),
       # wet_bulb_avg: get_one_series(data, :wet_bulb_avg, "Wet bulb")
@@ -54,18 +55,28 @@ defmodule Wspom.Weather.ChartData do
   end
 
   def get_one_series(data, index, name, color) do
-    starting_series = %Series{name: name, min: nil, max: nil, data: []}
+    starting_series = %Series{name: name, min: nil, max: nil, data: [], color: color}
     series_with_data = data
     |> Enum.reduce(starting_series,
-      fn record, %Series{name: name, min: old_min, max: old_max, data: old_data} ->
+      fn record, %Series{min: old_min, max: old_max, data: old_data} = series ->
         val = Map.get(record, index)
-        %Series{
-          name: name,
+        %{
+          series |
           min: new_min(old_min, val),
           max: new_max(old_max, val),
-          data: [val | old_data],
-          color: color
+          data: [val | old_data]
         }
+      end)
+    %{series_with_data | data: series_with_data.data |> Enum.reverse}
+  end
+
+  def get_one_series_basic(data, index, name) do
+    starting_series = %Series{name: name, data: []}
+    series_with_data = data
+    |> Enum.reduce(starting_series,
+      fn record, %Series{data: old_data} = series ->
+        val = Map.get(record, index)
+        %{series | data: [val | old_data]}
       end)
     %{series_with_data | data: series_with_data.data |> Enum.reverse}
   end
@@ -102,7 +113,7 @@ defmodule Wspom.Weather.ChartData do
       make_one_subchart([series.temp_in],
         "Indoor temperature", :middle, 5),
       make_one_subchart([series.hum_in],
-        "Indoor humidity", :bottom, 20)
+        "Indoor humidity", :bottom, 20) |> add_xticks
     ]
   end
 
@@ -191,6 +202,10 @@ defmodule Wspom.Weather.ChartData do
   defp padding(:bottom), do: 30
   defp padding(:middle), do: 30
 
+  defp add_xticks(%Subchart{} = subchart) do
+    %{subchart | xticks?: true}
+  end
+
   def build_ticks(val, step, stop, acc) do
     next_val = val + step
     if next_val == stop do
@@ -236,25 +251,36 @@ defmodule Wspom.Weather.ChartData do
   defp position_one_point({nil, _idx}, _subchart, _data_len), do: nil
   defp position_one_point({pt, idx}, subchart, data_len) do
     {
-      55 + (idx * 955 / (data_len - 1)),
+      calculate_x(idx, data_len),
       subchart.graph_pos + subchart.graph_height -
         (pt - subchart.min_limit) / (subchart.max_limit - subchart.min_limit) *
         subchart.graph_height
     }
   end
 
-  defp get_xticks(%Subchart{series: series} = subchart) do
-    %{subchart | xticks: get_xticks(hd(series), subchart)}
-  end
+  defp calculate_x(idx, data_len), do: 55 + (idx * 955 / (data_len - 1))
 
-  defp get_xticks(series, subchart) do
-    data_len = length(series.data)
-    series.data
+  defp make_xticks(timestamps) do
+    # Timestamps should be a list looking like this:
+    # [
+    #   {#DateTime<2025-09-20 00:00:00-04:00 EDT America/Montreal>, 0},
+    #   {#DateTime<2025-09-20 12:00:00-04:00 EDT America/Montreal>, 12},
+    #   {#DateTime<2025-09-21 00:00:00-04:00 EDT America/Montreal>, 24},
+    #   ...
+    #   {#DateTime<2025-09-26 12:00:00-04:00 EDT America/Montreal>, 156}
+    # ]
+    data_len = length(timestamps.data)
+    timestamps.data
     |> Enum.zip(0..(data_len - 1))
-    |> Enum.take_every(10)
-    |> Enum.map(fn {pt, _idx} = pt_with_idx ->
-      {posx, _posy} = position_one_point(pt_with_idx, subchart, data_len)
-      %TickX{pos: posx, text_up: :erlang.float_to_binary(pt * 1.0, [decimals: 1]), text_down: nil}
+    |> Enum.take_every(12)
+    |> Enum.map(fn {time, idx} ->
+      x = calculate_x(idx, data_len)
+      text = if time.hour == 0 do
+        Calendar.strftime(time, "%a %b %-d")  # e.g. Mon, Jan 1
+      else
+        nil
+      end
+      %TickX{pos: x, text_up: text, text_down: nil}
     end)
   end
 end

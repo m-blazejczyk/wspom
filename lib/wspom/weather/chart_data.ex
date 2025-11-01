@@ -1,13 +1,11 @@
 defmodule Wspom.Weather.ChartData do
 
+  alias Wspom.Weather.Context
   alias Wspom.Charts.{TickX, TickY, Series, Subchart}
 
   def process_data() do
     # The test dataset happens to include full days at the end
-    IO.puts("Loading weather data from weather_6.dat...")
-    data = File.read!("../weather_6.dat")
-    |> :erlang.binary_to_term()
-    |> Enum.take(-(24*7))
+    data = Context.get_hourly_data |> Enum.take(-(24*7))
     series = data |> get_all_series
     {subcharts, total_height} = series |> make_subcharts |> set_chart_positions
     subcharts = subcharts |> Enum.map(&position_points/1)

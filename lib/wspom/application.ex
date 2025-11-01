@@ -23,6 +23,7 @@ defmodule Wspom.Application do
       {Wspom.Entries.Database, is_production: is_production},
       {Wspom.Weight.Database, is_production: is_production},
       {Wspom.Books.Database, is_production: is_production},
+      {Wspom.Weather.Database, is_production: is_production},
 
       # Start to serve requests, typically the last entry
       WspomWeb.Endpoint

@@ -1,11 +1,10 @@
 defmodule Wspom.Weather.ChartData do
 
-  alias Wspom.Weather.Context
+  alias Wspom.Weather.{Context, Hourly}, warn: false
   alias Wspom.Charts.{TickX, TickY, Series, Subchart}
 
-  def process_data() do
-    # The test dataset happens to include full days at the end
-    data = Context.get_hourly_data |> Enum.take(-(24*7))
+  def process_data(start) do
+    data = Hourly.get_hourly_from(start)
     series = data |> get_all_series
     {subcharts, total_height} = series |> make_subcharts |> set_chart_positions
     subcharts = subcharts |> Enum.map(&position_points/1)

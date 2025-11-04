@@ -52,7 +52,23 @@ defmodule Wspom.Weather.Database do
     end)
   end
 
-  def get_hourly_data() do
+  def get_hourly_all() do
     Agent.get(__MODULE__, fn %{hourly: hourly} -> hourly end)
+  end
+
+  def get_hourly_filtered(func) do
+    Agent.get(__MODULE__, fn %{hourly: hourly} -> hourly |> Enum.filter(func) end)
+  end
+
+  def get_hourly_count() do
+    Agent.get(__MODULE__, fn %{hourly: hourly} -> length(hourly) end)
+  end
+
+  def get_hourly_earliest() do
+    Agent.get(__MODULE__, fn %{hourly: hourly} -> hd(hourly) end)
+  end
+
+  def get_hourly_latest() do
+    Agent.get(__MODULE__, fn %{hourly: hourly} -> List.last(hourly) end)
   end
 end

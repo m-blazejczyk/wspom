@@ -3,19 +3,16 @@ defmodule WspomWeb.Live.Weather.Main do
   use WspomWeb, :live_view
 
   alias Wspom.Charts.Subchart
-  alias Wspom.Weather.ChartData
+  alias Wspom.Weather.{Context, Hourly, ChartData}
 
   # API documentation: https://weatherlink.github.io/v2-api/tutorial
 
   @impl true
   def mount(_params, _session, socket) do
-    {subcharts, total_height, xticks} = ChartData.process_data
     {
       :ok,
       socket
-      |> assign(:subcharts, subcharts)
-      |> assign(:total_height, total_height)
-      |> assign(:xticks, xticks),
+      |> assign(:start_date, Hourly.get_initial_weekly_start),
       layout: {WspomWeb.Layouts, :data_app}
     }
   end
@@ -26,8 +23,14 @@ defmodule WspomWeb.Live.Weather.Main do
   end
 
   defp apply_action(socket, :main, _params) do
+    {subcharts, total_height, xticks} =
+      ChartData.process_data(socket.assigns.start_date)
+
     socket
     |> assign(:page_title, "Weather")
+    |> assign(:subcharts, subcharts)
+    |> assign(:total_height, total_height)
+    |> assign(:xticks, xticks)
   end
 
   defp make_chart(assigns) do

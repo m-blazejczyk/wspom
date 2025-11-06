@@ -149,8 +149,12 @@ defmodule Wspom.Weather.ChartData do
     ]
   end
 
+  defp add_xticks(%Subchart{} = subchart) do
+    %{subchart | xticks?: true}
+  end
+
   defp make_one_subchart(series, name, tick_len, top_padding) do
-    {min, max} = series
+    {min, max} = mm = series
     |> Enum.reduce({nil, nil},
       fn %Series{min: this_min, max: this_max}, {old_min, old_max} ->
         {new_min(old_min, this_min), new_max(old_max, this_max)}
@@ -165,15 +169,14 @@ defmodule Wspom.Weather.ChartData do
       chart_height: graph_height + 30 + top_padding}
   end
 
-  def axis_limits(min, max, tick_len) do
-    {
-      Float.floor(min / tick_len) * tick_len,
-      Float.ceil(max / tick_len) * tick_len
-    }
-  end
-
   def ticks(min, max, tick_len) do
     {min_limit, max_limit} = axis_limits(min, max, tick_len)
+
+    {min_limit, max_limit} = if min_limit == max_limit do
+      {min_limit - tick_len, max_limit + tick_len}
+    else
+      {min_limit, max_limit}
+    end
 
     temp = build_ticks(min_limit, tick_len, max_limit, [min_limit])
     |> Enum.reverse
@@ -194,8 +197,11 @@ defmodule Wspom.Weather.ChartData do
     {tick_list, min_limit, max_limit}
   end
 
-  defp add_xticks(%Subchart{} = subchart) do
-    %{subchart | xticks?: true}
+  def axis_limits(min, max, tick_len) do
+    {
+      Float.floor(min / tick_len) * tick_len,
+      Float.ceil(max / tick_len) * tick_len
+    }
   end
 
   def build_ticks(val, step, stop, acc) do

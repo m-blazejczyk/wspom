@@ -3,16 +3,32 @@ defmodule Wspom.Weather.Hourly do
   alias Wspom.Weather.Context
 
   @doc """
-  Returns the start date of the last full week's range of data.
+  Returns the start date & time of the first full week's range of data.
   The returned DateTime is at midnight in our local time zone.
 
   ## Example
 
-      iex> get_initial_weekly_start()
+      iex> get_first_weekly_start()
       #DateTime<2025-09-20 00:00:00-04:00 EDT America/Montreal>
   """
-  def get_initial_weekly_start() do
+  def get_first_weekly_start() do
+    Context.get_hourly_earliest().time
+    |> DateTime.to_date
+    |> DateTime.new!(Time.new!(0, 0, 0), "America/Montreal")
+  end
+
+  @doc """
+  Returns the start date & time of the last full week's range of data.
+  The returned DateTime is at midnight in our local time zone.
+
+  ## Example
+
+      iex> get_last_weekly_start()
+      #DateTime<2025-09-20 00:00:00-04:00 EDT America/Montreal>
+  """
+  def get_last_weekly_start() do
     Context.get_hourly_latest().time
+    |> DateTime.to_date
     |> Date.add(-6)
     |> DateTime.new!(Time.new!(0, 0, 0), "America/Montreal")
   end

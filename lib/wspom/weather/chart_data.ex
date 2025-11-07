@@ -93,7 +93,7 @@ defmodule Wspom.Weather.ChartData do
     [
       make_one_subchart(
         [series.dew_point_avg, series.temp_hi, series.temp_lo, series.temp_avg],
-        "Temperature", 5, 0),
+        "Temperature", 5, 0) |> add_xticks,
       make_one_subchart([series.hum_avg],
         "Humidity", 20, 30),
       make_one_subchart([series.pressure],
@@ -101,9 +101,9 @@ defmodule Wspom.Weather.ChartData do
       make_one_subchart([series.rainfall_mm],
         "Rainfall", 2, 30),
       make_one_subchart([series.solar_rad_hi, series.solar_rad_avg],
-        "Solar radiation", 200, 30),
+        "Solar radiation", 200, 30) |> add_xticks,
       make_one_subchart([series.wind_speed_hi, series.wind_speed_avg],
-        "Wind speed", 10, 30) |> add_xticks,
+        "Wind speed", 10, 30),
       %Subchart{series: [series.wind_dir_of_prevail],
         name: "Prevailing wind direction", chart_height: 90, graph_height: 30},
       make_one_subchart([series.temp_in],

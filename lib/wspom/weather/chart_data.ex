@@ -154,7 +154,7 @@ defmodule Wspom.Weather.ChartData do
   end
 
   defp make_one_subchart(series, name, tick_len, top_padding) do
-    {min, max} = mm = series
+    {min, max} = series
     |> Enum.reduce({nil, nil},
       fn %Series{min: this_min, max: this_max}, {old_min, old_max} ->
         {new_min(old_min, this_min), new_max(old_max, this_max)}

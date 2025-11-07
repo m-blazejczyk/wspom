@@ -273,7 +273,7 @@ defmodule Wspom.Weather.ChartData do
     |> Enum.take_every(12)
     |> Enum.map(fn {time, idx} ->
       x = calculate_x(idx, data_len)
-      text = if time.hour == 0 do
+      text = if time.hour == 12 do
         Calendar.strftime(time, "%a %b %-d")  # e.g. Mon, Jan 1
       else
         nil

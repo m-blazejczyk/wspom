@@ -79,6 +79,12 @@ defmodule WspomWeb.Live.Weather.Main do
   defp apply_shift(start_date, "+1m"), do: Timex.shift(start_date, months: +1)
   defp apply_shift(start_date, "+1y"), do: Timex.shift(start_date, years: +1)
 
+  defp page_header(start_date) do
+    part1 = Calendar.strftime(start_date, "%b %-d")
+    part2 = Calendar.strftime(start_date |> DateTime.add(6, :day), "%b %-d")
+    "#{part1} ‒ #{part2}"
+  end
+
   defp make_chart(assigns) do
     ~H"""
     <svg viewBox={"0 0 1015 #{@total_height}"} role="img" xmlns="http://www.w3.org/2000/svg">

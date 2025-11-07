@@ -7,13 +7,16 @@ defmodule WspomWeb.Live.EntryView do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, socket
+    {
+      :ok,
+      socket
       # Do not initialize the data here - it will happen in handle_params below
       |> stream(:entries, [])
       |> assign(:filter, nil)
       |> assign(:entry, nil)
       |> assign(:tags, nil)
-      |> assign(:cascades, nil)
+      |> assign(:cascades, nil),
+      layout: {WspomWeb.Layouts, :entries_app}
     }
   end
 

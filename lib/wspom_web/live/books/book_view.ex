@@ -60,7 +60,7 @@ defmodule WspomWeb.Live.Books.BookView do
     |> assign(:ylabels?, ylabels?)
 
     ~H"""
-    <svg width={@width} height="435" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox={"0 0 #{@width} 435"} role="img" xmlns="http://www.w3.org/2000/svg">
       <rect x={@chartx} y="10" width={@width - @chartx - 10} height="380" style="fill:rgba(255, 255, 255, 0);stroke-width:1;stroke:gray"/>
 
       <!-- Top of the box: length of the book -->

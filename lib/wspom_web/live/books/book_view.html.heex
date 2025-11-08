@@ -39,6 +39,7 @@
       <:item title="Type"><%= format_is_fiction(@book.is_fiction) %></:item>
     </.list>
   </div>
+
   <div class="w-3/4 flex justify-center items-center w-full mt-12">
     <header class="items-center justify-between gap-6">
       <div>
@@ -49,14 +50,8 @@
     </header>
   </div>
 
-  <div class="w-full my-6 sm:hidden">
-    <%= make_chart(assigns, 350, false) %>
-  </div>
-  <div class="w-full my-6 max-sm:hidden lg:hidden">
+  <div class="border-gray-200 w-full">
     <%= make_chart(assigns, 650, true) %>
-  </div>
-  <div class="w-full my-6 max-lg:hidden">
-    <%= make_chart(assigns, 1000, true) %>
   </div>
 
   <div class="flex justify-center items-center w-full">

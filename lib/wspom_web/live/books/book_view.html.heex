@@ -101,7 +101,7 @@
                   confirm="Delete the most recent reading record?"
                   img={~p"/images/trash_24.png"} label="Delete reading record"
                   id={"del-#{idx}"}
-                  class={if idx == length(@book.history), do: "visible", else: "invisible"} />
+                  class={if idx == 1, do: "visible", else: "invisible"} />
               </ul>
             </td>
           <% end %>

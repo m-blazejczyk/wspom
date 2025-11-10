@@ -46,6 +46,14 @@ defmodule Wspom.Entries.Database do
     }
   end
 
+  defp generate_entry(id) do
+    now = DateTime.utc_now() |> Timex.shift(days: -(id - 1))
+
+    %Entry{description: "This is the description of entry #{id}", title: "Entry #{id}",
+      id: id, year: now.year, month: now.month, day: now.day,
+      weekday: now |> Timex.weekday(), date: now |> DateTime.to_date()}
+  end
+
   defp create_test_tags_cascades() do
     %{
       tags: MapSet.new(["t1", "t2", "c", "t3"]),
@@ -89,14 +97,6 @@ defmodule Wspom.Entries.Database do
     log_notice("### #{MapSet.size(tags)} tags ###")
     log_notice("### #{map_size(cascades)} cascades ###")
     state
-  end
-
-  defp generate_entry(id) do
-    now = DateTime.utc_now() |> Timex.shift(days: -(id - 1))
-
-    %Entry{description: "This is the description of entry #{id}", title: "Entry #{id}",
-      id: id, year: now.year, month: now.month, day: now.day,
-      weekday: now |> Timex.weekday(), date: now |> DateTime.to_date()}
   end
 
   defp save_all({entries_db, tags_db} = state) do
@@ -345,6 +345,30 @@ defmodule Wspom.Entries.Database do
   end
 
   @doc """
+  Deletes the given entry and saves the entries database.
+
+  ## Examples
+
+      iex> delete_entry_and_save(%Entry{})
+      :ok
+
+  """
+  def delete_entry_and_save(entry) do
+    log_notice("Deleting entry with id #{entry.id} and saving the database…")
+
+    Agent.get_and_update(__MODULE__,
+      fn {%{entries: db_entries} = entries_state, %{} = tags} ->
+        new_entries = db_entries
+        |> Enum.reject(&(&1.id == entry.id))
+
+        new_entries_state =
+          %{entries_state | entries: new_entries}
+          |> DbBase.save_db_file(@db_file, @db_file_backup)
+        {:ok, {new_entries_state, tags}}
+      end)
+  end
+
+  @doc """
   Returns the number of entries that are tagged with the given tag.
 
   ## Examples
@@ -396,58 +420,4 @@ defmodule Wspom.Entries.Database do
 
     :ok
   end
-
-  # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  # All the functions below have been copied from older code.
-  # They are not used at the moment and may not work as intended.
-
-  # def modify_tags_cascades_and_save(data) do
-  #   log_notice("Making requested changes to tags and/or cascades…")
-  #   Agent.update(__MODULE__, fn {entries, tags, cascades, version} ->
-  #     {entries |> rename_tag_in_entries(data),
-  #       tags |> rename_tag_in_tags(data),
-  #       cascades |> rename_tag_in_cascades(data) |> remove_cascade(data),
-  #       version}
-  #     |> save()
-  #   end)
-  # end
-
-  # defp rename_tag_in_entries(entries, %{rename_tag: _} = data) do
-  #   entries
-  #   |> Enum.map(fn entry ->
-  #     if entry |> Map.has_key?(:tags) do
-  #       %{entry | tags: rename_tag_in_tags(entry.tags, data)}
-  #     else
-  #       entry
-  #     end
-  #   end)
-  # end
-  # defp rename_tag_in_entries(entries, _), do: entries
-
-  # defp rename_tag_in_tags(tags, %{rename_tag: {old_name, new_name}}) do
-  #   if tags |> MapSet.member?(old_name) do
-  #     tags
-  #     |> MapSet.delete(old_name)
-  #     |> MapSet.put(new_name)
-  #   else
-  #     tags
-  #   end
-  # end
-  # defp rename_tag_in_tags(tags, _), do: tags
-
-  # defp rename_tag_in_cascades(cascades, %{rename_tag: {old_name, new_name}} = data) do
-  #   cascades
-  #   |> Enum.map(fn {name, tags} ->
-  #     {if(name == old_name, do: new_name, else: name),
-  #       rename_tag_in_tags(tags, data)}
-  #   end)
-  #   |> Map.new()
-  # end
-  # defp rename_tag_in_cascades(cascades, _), do: cascades
-
-  # defp remove_cascade(cascades, %{remove_cascade: cascade_name}) do
-  #   cascades
-  #   |> Map.delete(cascade_name)
-  # end
-  # defp remove_cascade(cascades, _), do: cascades
 end

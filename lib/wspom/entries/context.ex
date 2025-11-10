@@ -152,16 +152,13 @@ end
 
   ## Examples
 
-      iex> delete_entry(entry)
-      {:ok, %Entry{}}
-
-      iex> delete_entry(entry)
-      {:error, %Ecto.Changeset{}}
+      iex> delete_entry(%Entry{})
+      :ok
 
   """
-  def delete_entry(%Entry{}) do
-    # Repo.delete(entry)
-    {:ok, %Entry{}}
+  def delete_entry(entry) do
+    Database.delete_entry_and_save(entry)
+    :ok
   end
 
   @doc """

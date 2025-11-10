@@ -88,12 +88,11 @@ defmodule WspomWeb.Live.EntryView do
   end
 
   @impl true
-  def handle_event("delete", %{"id" => _id}, socket) do
-    # entry = Context.get_entry!(id)
-    # {:ok, _} = Context.delete_entry(entry)
+  def handle_event("delete", %{"id" => id}, socket) do
+    entry = Context.get_entry!(id)
+    :ok = Context.delete_entry(entry)
 
-    # {:noreply, stream_delete(socket, :entries, entry)}
-    {:noreply, socket}
+    {:noreply, stream_delete(socket, :entries, entry)}
   end
   def handle_event("clone", %{"id" => id}, socket) do
     {:ok, cloned_entry} = Context.get_entry!(id)

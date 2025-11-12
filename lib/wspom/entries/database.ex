@@ -420,4 +420,29 @@ defmodule Wspom.Entries.Database do
 
     :ok
   end
+
+  @doc """
+  Cleans up and saves the tags database. "Clean up" means removing tags and
+  cascades that are not used in any entries.
+
+  ## Examples
+
+      iex> cleanup_tags_and_save()
+      {:ok, "Deleted 2 tags and 0 cascades"}
+
+  """
+  def cleanup_tags_and_save() do
+    Agent.get_and_update(__MODULE__, fn {%{} = entries_db, %{} = tags_db} ->
+      {new_tags_db, message} = TnC.cleanup_tags(entries_db, tags_db)
+
+      {
+        {:ok, message},
+        {
+          entries_db,
+          new_tags_db
+          |> DbBase.save_db_file(@tags_file, @tags_file_backup)
+        }
+      }
+    end)
+  end
 end

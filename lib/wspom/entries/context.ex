@@ -178,4 +178,18 @@ end
     cloned_entry = Database.clone_entry_and_save(entry)
     {:ok, cloned_entry}
   end
+
+  @doc """
+  Cleans up and saves the tags database. "Clean up" means removing tags and
+  cascades that are not used in any entries.
+
+  ## Examples
+
+      iex> cleanup_tags()
+      {:ok, "Deleted 2 tags and 0 cascades"}
+
+  """
+  def cleanup_tags() do
+    Database.cleanup_tags_and_save()
+  end
 end

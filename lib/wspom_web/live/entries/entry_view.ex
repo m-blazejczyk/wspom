@@ -98,15 +98,29 @@ defmodule WspomWeb.Live.EntryView do
     {:ok, cloned_entry} = Context.get_entry!(id)
     |> Context.clone_entry()
 
-    {:noreply,
-    socket
-    # TODO: insert in the right position
-    |> stream_insert(:entries, cloned_entry, at: -1)
-    |> put_flash(:info, "Entry cloned.")}
+    {
+      :noreply,
+      socket
+      # TODO: insert in the right position
+      |> stream_insert(:entries, cloned_entry, at: -1)
+      |> put_flash(:info, "Entry cloned.")
+    }
   end
   def handle_event("tag-next", _, socket) do
     entry = Context.get_next_entry_to_tag()
-    {:noreply, push_patch(socket, to: ~p"/entries?filter=year&day=#{entry.day}&month=#{entry.month}&year=#{entry.year}")}
+    {
+      :noreply,
+      socket
+      |> push_patch(to: ~p"/entries?filter=year&day=#{entry.day}&month=#{entry.month}&year=#{entry.year}")
+    }
+  end
+  def handle_event("cleanup-tags", _, socket) do
+    {:ok, message} = Context.cleanup_tags()
+    {
+      :noreply,
+      socket
+      |> put_flash(:info, message)
+    }
   end
 
   defp assign_if_not_exists(socket, key, value) do

@@ -205,6 +205,7 @@ defmodule Wspom.Entries.TnC do
 
   @doc """
   Deletes the cascade with the given name from the tags database.
+  Returns the modified tags database.
 
   ## Examples
 
@@ -213,5 +214,34 @@ defmodule Wspom.Entries.TnC do
   """
   def delete_cascade(%{cascades: cascades} = tags_db, cascade_name) do
     %{tags_db | cascades: cascades |> Map.delete(cascade_name)}
+  end
+
+  @doc """
+  Cleans up and saves the tags database. "Clean up" means removing tags and
+  cascades that are not used in any entries.
+
+  Returns the tags database.
+
+  ## Examples
+
+      iex> cleanup_tags(entries_db, tags_db)
+      {new_tags_db, message}
+  """
+  def cleanup_tags(entries_db, %{tags: tags, cascades: cascades} = tags_db) do
+    actual_tags = tags_from_entries(entries_db)
+    diff = MapSet.difference(tags, actual_tags)
+    message = if MapSet.size(diff) == 0 do
+      "Did not remove any tags."
+    else
+      "Removed #{MapSet.size(diff)} tags: #{diff |> Enum.join(", ")}"
+    end
+    {tags_db, message}
+  end
+
+  defp tags_from_entries(%{entries: entries}) do
+    entries
+    |> Enum.reduce(MapSet.new(), fn entry, tags ->
+      MapSet.union(entry.tags, tags)
+    end)
   end
 end

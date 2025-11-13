@@ -171,10 +171,15 @@ defmodule Wspom.Entries.TnC do
   @doc """
   Deletes the given tag from the tags database and the entries database.
 
+  The /2 variant only deletes the given tag from the tags database.
+
   ## Examples
 
       iex> delete_tag({%{}, %{}}, "some_tag")
       {%{}, %{}}
+
+      iex> delete_tag(%{}, "some_tag")
+      %{}
   """
   def delete_tag({%{entries: entries} = entries_db, %{} = tags_db}, tag) do
     new_tags_db = delete_tag(tags_db, tag)
@@ -190,15 +195,6 @@ defmodule Wspom.Entries.TnC do
 
     {%{entries_db | entries: new_entries}, new_tags_db}
   end
-
-  @doc """
-  This is a variant that only deletes the given tag from the tags database.
-
-  ## Examples
-
-      iex> delete_tag(%{}, "some_tag")
-      %{}
-  """
   def delete_tag(%{tags: tags, cascades: cascades} = tags_db, tag) do
     new_tags = tags |> MapSet.delete(tag)
 

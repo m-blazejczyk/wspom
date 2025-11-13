@@ -176,7 +176,30 @@ defmodule Wspom.Entries.TnC do
       iex> delete_tag({%{}, %{}}, "some_tag")
       {%{}, %{}}
   """
-  def delete_tag({%{entries: entries} = entries_db, %{tags: tags, cascades: cascades} = tags_db}, tag) do
+  def delete_tag({%{entries: entries} = entries_db, %{} = tags_db}, tag) do
+    new_tags_db = delete_tag(tags_db, tag)
+
+    new_entries = entries
+    |> Enum.map(fn entry ->
+      if entry.tags |> MapSet.member?(tag) do
+        %Entry{entry | tags: entry.tags |> MapSet.delete(tag)}
+      else
+        entry
+      end
+    end)
+
+    {%{entries_db | entries: new_entries}, new_tags_db}
+  end
+
+  @doc """
+  This is a variant that only deletes the given tag from the tags database.
+
+  ## Examples
+
+      iex> delete_tag(%{}, "some_tag")
+      %{}
+  """
+  def delete_tag(%{tags: tags, cascades: cascades} = tags_db, tag) do
     new_tags = tags |> MapSet.delete(tag)
 
     new_cascades = cascades
@@ -190,17 +213,7 @@ defmodule Wspom.Entries.TnC do
     |> Map.new()
     |> Map.delete(tag)
 
-    new_entries = entries
-    |> Enum.map(fn entry ->
-      if entry.tags |> MapSet.member?(tag) do
-        %Entry{entry | tags: entry.tags |> MapSet.delete(tag)}
-      else
-        entry
-      end
-    end)
-
-    {%{entries_db | entries: new_entries},
-      %{tags_db | tags: new_tags, cascades: new_cascades}}
+    %{tags_db | tags: new_tags, cascades: new_cascades}
   end
 
   @doc """
@@ -227,7 +240,7 @@ defmodule Wspom.Entries.TnC do
       iex> cleanup_tags(entries_db, tags_db)
       {new_tags_db, message}
   """
-  def cleanup_tags(entries_db, %{tags: tags, cascades: cascades} = tags_db) do
+  def cleanup_tags(entries_db, %{tags: tags} = tags_db) do
     actual_tags = tags_from_entries(entries_db)
     diff = MapSet.difference(tags, actual_tags)
     message = if MapSet.size(diff) == 0 do
@@ -235,7 +248,13 @@ defmodule Wspom.Entries.TnC do
     else
       "Removed #{MapSet.size(diff)} tags: #{diff |> Enum.join(", ")}"
     end
-    {tags_db, message}
+
+    new_tags_db = diff
+    |> Enum.reduce(tags_db, fn tag, tags_db_tmp ->
+      delete_tag(tags_db_tmp, tag)
+    end)
+
+    {new_tags_db, message}
   end
 
   defp tags_from_entries(%{entries: entries}) do

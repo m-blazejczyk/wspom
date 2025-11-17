@@ -22,10 +22,9 @@ defmodule Wspom.ReadingChart.Data do
 
     book_len = BookPos.to_comparable_int(length)
 
-    first_ytick = book_pos_at_first_ytick(length)
-    yticks = [first_ytick,
-      first_ytick |> BookPos.multiply(2),
-      first_ytick |> BookPos.multiply(3)]
+    yticks = [book_pos_for_tick(length, 0.25),
+      book_pos_for_tick(length, 0.5),
+      book_pos_for_tick(length, 0.75)]
     |> Enum.map(fn pos ->
       pos_perc = BookPos.to_comparable_int(pos) / book_len
       %TickY{
@@ -183,7 +182,7 @@ defmodule Wspom.ReadingChart.Data do
     }
   end
 
-  def book_pos_at_first_ytick(%BookPos{type: :pages, as_int: pages} = _length) do
+  def book_pos_at_first_ytick(%BookPos{type: :pages, as_int: pages}) do
     # This is a heuristic that I came up with using Google Sheets.
     # The first tick will be roughly at 25%-30% of the book length.
     scale = if pages < 300, do: 5, else: 10
@@ -198,5 +197,17 @@ defmodule Wspom.ReadingChart.Data do
   end
   def book_pos_at_first_ytick(%BookPos{type: :percent}) do
     BookPos.new_percent(25)
+  end
+
+  def book_pos_for_tick(%BookPos{type: :pages, as_int: pages}, perc) do
+    BookPos.new_pages(trunc(pages * perc))
+  end
+  def book_pos_for_tick(%BookPos{type: :time, as_time: {hours, minutes}}, perc) do
+    total_minutes = hours * 60 + minutes
+    tick_minutes = trunc(total_minutes * perc)
+    BookPos.new_time(div(tick_minutes, 60), rem(tick_minutes, 60))
+   end
+  def book_pos_for_tick(%BookPos{type: :percent}, perc) do
+    BookPos.new_pages(trunc(100 * perc))
   end
 end

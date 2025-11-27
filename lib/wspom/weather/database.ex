@@ -67,8 +67,14 @@ defmodule Wspom.Weather.Database do
   def get_hourly_earliest() do
     Agent.get(__MODULE__, fn %{hourly: hourly} -> hd(hourly) end)
   end
+  def get_hourly_earliest(n) do
+    Agent.get(__MODULE__, fn %{hourly: hourly} -> hourly |> Enum.take(n) end)
+  end
 
   def get_hourly_latest() do
     Agent.get(__MODULE__, fn %{hourly: hourly} -> List.last(hourly) end)
+  end
+  def get_hourly_latest(n) do
+    Agent.get(__MODULE__, fn %{hourly: hourly} -> hourly |> Enum.take(-n) end)
   end
 end

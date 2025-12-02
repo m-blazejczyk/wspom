@@ -37,6 +37,7 @@ scp wspom.dat michal@rpi:/home/michal/wspom
 scp tags.dat michal@rpi:/home/michal/wspom
 scp weight.dat michal@rpi:/home/michal/wspom
 scp books.dat michal@rpi:/home/michal/wspom
+scp weather.dat michal@rpi:/home/michal/wspom
 ```
 
 # Deploy or re-deploy
@@ -57,7 +58,7 @@ First, enter the screen:
 screen -r
 ```
 
-You shouls see the Phoenix log. Kill the running process with `CTRL+C A`, as usual. You will now be in the screen session which is still active. Kill it with the following (the session / sockett id will be different every time):
+You should see the Phoenix log. Kill the running process with `CTRL+C A`, as usual. You will now be in the screen session which is still active. Kill it with the following (the session / socket id will be different every time):
 
 ```
 screen -ls

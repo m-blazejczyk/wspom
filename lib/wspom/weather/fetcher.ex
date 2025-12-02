@@ -12,7 +12,7 @@ defmodule Wspom.Weather.Fetcher do
   the API enforces throttling (10 requests per second, max).
 
   ## Example:
-    download_weather_data(1_758_927_600, 1_764_198_000)
+    download_weather_data(1_758_927_600, 1_764_630_000)
     download_weather_data(1_758_927_600, 1_759_143_600)  # only 2.5 days
   """
   def download_weather_data(start_ts, end_ts) do

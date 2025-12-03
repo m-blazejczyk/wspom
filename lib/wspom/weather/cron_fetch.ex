@@ -1,7 +1,7 @@
 defmodule Wspom.Weather.CronFetch do
   use GenServer
 
-  @interval 5_000  # 5 second interval (in milliseconds)
+  @interval 2_000  # 2 second interval (in milliseconds)
 
   # Start the GenServer
   def start_link(_) do
@@ -10,7 +10,6 @@ defmodule Wspom.Weather.CronFetch do
 
   @impl true
   def init(:ok) do
-    # Start the first job immediately
     schedule()
     {:ok, {1, :ok}}
   end
@@ -21,13 +20,17 @@ defmodule Wspom.Weather.CronFetch do
       # Perform the task
       perform_fetch(n)
 
-      # Schedule the next job after it finishes
+      # Schedule the next fetch after the current one completes
+      # This is important because if `perform_fetch()` throws an
+      # exception, this code will never be executed and the process
+      # loop will stop and no more data will be fetched
       schedule()
     rescue
       e ->
+        # There is no way to get the stacktrace from the exception
         # Logger.error(Exception.format(:error, e, __STACKTRACE__))
         IO.puts("Error fetching data")
-        IO.puts(Exception.format(:error, e, __STACKTRACE__))
+        IO.puts(Exception.format(:error, e))
     end
 
     {:noreply, {n + 1, :ok}}

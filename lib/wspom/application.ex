@@ -24,6 +24,7 @@ defmodule Wspom.Application do
       {Wspom.Weight.Database, is_production: is_production},
       {Wspom.Books.Database, is_production: is_production},
       {Wspom.Weather.Database, is_production: is_production},
+      Wspom.Weather.CronFetch,
 
       # Start to serve requests, typically the last entry
       WspomWeb.Endpoint

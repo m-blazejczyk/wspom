@@ -1,5 +1,34 @@
 defmodule Wspom.Weather.Fetcher do
   @doc """
+  Calculates the range of timestamps to fetch data for. The output
+  is suitable for `download_weather_data()`.
+
+  Returns either {:ignore, start_ts, end_ts} if there is no new data
+  to download, or {:ok, start_ts, end_ts}.
+
+  This function returns ranges in one-hour increments, i.e. suitable
+  for processing.
+  """
+  def timestamps_to_fetch do
+    start_ts = Wspom.Weather.Database.get_hourly_latest().ts
+    now_ts = DateTime.now!("America/Montreal") |> DateTime.to_unix
+    adjust_ts_range(start_ts, now_ts)
+  end
+
+  defp adjust_ts_range(start_ts, end_ts)
+  when end_ts - start_ts < 3600 do
+    {:ignore, start_ts, end_ts}
+  end
+  defp adjust_ts_range(start_ts, end_ts) do
+    end_ts_final = div(end_ts, 3600) * 3600
+    if end_ts_final > start_ts do
+      {:ok, start_ts, end_ts_final}
+    else
+      {:ignore, start_ts, end_ts}
+    end
+  end
+
+  @doc """
   Downloads all raw weather data between the two specified timestamps.
 
   The starting timestamp will NOT be incluced, as per the API.
@@ -27,8 +56,6 @@ defmodule Wspom.Weather.Fetcher do
     end
 
     days = walk_period(start_ts, end_ts, 1, [])
-
-    IO.puts("\nData for #{length(days)} days was downloaded successfully.")
 
     # CAREFUL: The data returned by the API may contain surprises
     # when compared to the timestamp range. Best not to make assumptions

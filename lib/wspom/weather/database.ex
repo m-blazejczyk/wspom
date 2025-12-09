@@ -16,27 +16,45 @@ defmodule Wspom.Weather.Database do
       DbBase.load_db_file(@db_file, &init_db/0)
       |> maybe_migrate_and_save()
     else
-      %{
-        hourly: fake_hourly(),
-        version: 1,
-        is_production: false,
-      }
+      init_db(fake_hourly(), false)
     end
     |> summarize_db()
   end
 
-  defp init_db() do
+  defp init_db(hourly \\ [], is_prod \\ true) do
     %{
-      hourly: [],
-      version: 1,
-      is_production: true,
+      hourly: hourly,
+      status: %{
+        status: :success,
+        last_fetch: nil,
+        last_save: nil,
+        description: ""
+      },
+      version: 2,
+      is_production: is_prod,
     }
   end
 
   defp fake_hourly, do: []
 
-  defp maybe_migrate_and_save(%{version: _current_version} = state) do
-    # We will write this function when we need it!
+  defp maybe_migrate_and_save(%{version: 1} = state) do
+    %{state | version: 2}
+    |> Map.put(:status, %{
+      success: true,
+      last_fetch: nil,
+      last_save: nil,
+      description: ""
+    })
+    |> DbBase.save_db_file(@db_file, @db_file_backup)
+  end
+  defp maybe_migrate_and_save(%{version: 2} = state) do
+    %{state |
+      version: 3,
+      status: state.status |> Map.delete(:success) |> Map.put(:status, :success)
+    }
+    |> DbBase.save_db_file(@db_file, @db_file_backup)
+  end
+  defp maybe_migrate_and_save(%{version: 3} = state) do
     state
   end
 
@@ -79,6 +97,67 @@ defmodule Wspom.Weather.Database do
   end
 
   @doc """
+  Gets the fetch status. Returns the entire status map.
+  """
+  def get_fetch_status() do
+    Agent.get(__MODULE__, fn %{status: status} -> status end)
+  end
+
+  @doc """
+  Sets the fetch status.
+
+  `new_status` can be :success, :failed or :ignore.
+
+  `time` should be a DateTime.
+  """
+  def set_fetch_status(new_status, range_str) do
+    Agent.update(__MODULE__, fn %{status: status} = state ->
+      now = DateTime.now!("America/Montreal")
+      %{state |
+        status: act_set_fetch_status(status, new_status, now, range_str)
+      }
+    end)
+  end
+
+  defp act_set_fetch_status(old_status, :success, time, range_str) do
+    %{old_status |
+      status: :success,
+      last_fetch: time,
+      description:
+        """
+        Successfully fetched weather data at #{format_time(time)}.
+        Timestamp range requested: #{range_str}.
+        """
+    }
+  end
+  defp act_set_fetch_status(old_status, :ignore, time, range_str) do
+    %{old_status |
+      status: :ignore,
+      description:
+        """
+        IGNORED weather data fetch at #{format_time(time)}.
+        Last successful fetch was at #{format_time(old_status.last_fetch)}.
+        Timestamp range requested: #{range_str}.
+        """
+    }
+  end
+  defp act_set_fetch_status(old_status, :failed, time, range_str) do
+    %{old_status |
+      status: :failed,
+      description:
+        """
+        FAILED to fetch weather data at #{format_time(time)}.
+        Last successful fetch was at #{format_time(old_status.last_fetch)}.
+        Timestamp range requested: #{range_str}.
+        """
+    }
+  end
+
+  defp format_time(t) do
+    t |> Calendar.strftime("%a %b %-d, %-H:%M")
+  end
+
+  @doc """
   Appends the given data to the hourly data in the database.
 
   The new data should have been obtained via a call to
@@ -88,21 +167,29 @@ defmodule Wspom.Weather.Database do
   """
   def append_hourly_data(new_data)
   when is_list(new_data) and is_map(hd(new_data)) and is_map_key(hd(new_data), :ts) do
-    Agent.get_and_update(__MODULE__, fn %{hourly: hourly} = state ->
-      old_last = List.last(hourly).ts
-      new_first = hd(new_data).ts
-      if new_first - old_last != 3600 do
-        {
-          {:error, "Data to append starts at #{new_first}; old end: #{old_last}"},
-          state
-        }
-      else
-        {
-          :ok,
-          %{state | hourly: hourly ++ new_data}
-        }
-      end
+    Agent.get_and_update(__MODULE__, fn state ->
+      act_append_hourly_data(state, new_data)
     end)
+  end
+
+  defp act_append_hourly_data(%{status: %{status: :failed}} = state, _new_data) do
+    Logger.warning("append_hourly_data() called on db in failed state")
+    state
+  end
+  defp act_append_hourly_data(%{hourly: hourly} = state, new_data) do
+    old_last = List.last(hourly).ts
+    new_first = hd(new_data).ts
+    if new_first - old_last != 3600 do
+      {
+        {:error, "Data to append starts at #{new_first}; old end: #{old_last}"},
+        state
+      }
+    else
+      {
+        :ok,
+        %{state | hourly: hourly ++ new_data}
+      }
+    end
   end
 
   @doc """
@@ -110,13 +197,18 @@ defmodule Wspom.Weather.Database do
   database).
   """
   def save_data() do
-    Agent.update(__MODULE__,
-      fn %{is_production: is_prod} = state ->
-        if is_prod do
-          state |> DbBase.save_db_file(@db_file, @db_file_backup)
-        end
+    Agent.update(__MODULE__, fn state -> act_save_data(state) end)
+  end
 
-        state
-      end)
+  defp act_save_data(%{status: %{status: :failed}} = state) do
+    Logger.warning("save_data() called on db in failed state")
+    state
+  end
+  defp act_save_data(%{is_production: is_prod} = state) do
+    if is_prod do
+      state |> DbBase.save_db_file(@db_file, @db_file_backup)
+    end
+
+    state
   end
 end

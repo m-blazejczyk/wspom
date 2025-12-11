@@ -204,11 +204,12 @@ defmodule Wspom.Weather.Database do
     Logger.warning("save_data() called on db in failed state")
     state
   end
-  defp act_save_data(%{is_production: is_prod} = state) do
+  defp act_save_data(%{is_production: is_prod, status: status} = state) do
     if is_prod do
-      state |> DbBase.save_db_file(@db_file, @db_file_backup)
+      %{state | status: %{status | last_save: DateTime.now!("America/Montreal")}}
+      |> DbBase.save_db_file(@db_file, @db_file_backup)
+    else
+      state
     end
-
-    state
   end
 end

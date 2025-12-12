@@ -60,4 +60,10 @@ defmodule Wspom.Weather.Context do
       %{…}
   """
   def get_hourly_latest(), do: Database.get_hourly_latest
+
+  @doc """
+  Gets the full description of the status of fetch and save operations.
+  Returns a string separated with \n.
+  """
+  def get_status_description(), do: Database.get_status_description
 end

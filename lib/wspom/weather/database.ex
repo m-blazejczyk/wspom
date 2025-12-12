@@ -97,10 +97,37 @@ defmodule Wspom.Weather.Database do
   end
 
   @doc """
-  Gets the fetch status. Returns the entire status map.
+  Gets the status of fetch and save operations.
+  Returns the entire status map.
   """
-  def get_fetch_status() do
+  def get_status() do
     Agent.get(__MODULE__, fn %{status: status} -> status end)
+  end
+
+  @doc """
+  Gets the full description of the status of fetch and save operations.
+  Returns a string separated with \n.
+  """
+  def get_status_description() do
+    Agent.get(__MODULE__, fn %{status: status} ->
+      get_fetch_status_description(status.description)
+      <> get_save_status_description(status.last_save)
+    end)
+  end
+
+  defp get_fetch_status_description("" = _descr) do
+    "No fetch yet recorded.\n"
+  end
+  defp get_fetch_status_description(descr)
+  when is_binary(descr) do
+    descr
+  end
+
+  defp get_save_status_description(nil = _time) do
+    "No database save yet recorded.\n"
+  end
+  defp get_save_status_description(time) do
+    "Database was last saved at #{format_time(time)}."
   end
 
   @doc """

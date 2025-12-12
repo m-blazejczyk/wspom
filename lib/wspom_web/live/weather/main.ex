@@ -3,7 +3,7 @@ defmodule WspomWeb.Live.Weather.Main do
   use WspomWeb, :live_view
 
   alias Wspom.Charts.Subchart
-  alias Wspom.Weather.{Hourly, ChartData}
+  alias Wspom.Weather.{Hourly, ChartData, Context}
 
   # API documentation: https://weatherlink.github.io/v2-api/tutorial
 
@@ -34,6 +34,7 @@ defmodule WspomWeb.Live.Weather.Main do
     |> assign(:subcharts, subcharts)
     |> assign(:total_height, total_height)
     |> assign(:xticks, xticks)
+    |> assign(:status, Context.get_status_description)
   end
 
   @impl true
@@ -61,6 +62,7 @@ defmodule WspomWeb.Live.Weather.Main do
         |> assign(:subcharts, subcharts)
         |> assign(:total_height, total_height)
         |> assign(:xticks, xticks)
+        |> assign(:status, Context.get_status_description)
       }
     else
       {

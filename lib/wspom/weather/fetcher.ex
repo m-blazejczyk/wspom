@@ -1,4 +1,6 @@
 defmodule Wspom.Weather.Fetcher do
+  require Logger
+
   @doc """
   Calculates the range of timestamps to fetch data for. The output
   is suitable for `download_weather_data()`.
@@ -132,6 +134,9 @@ defmodule Wspom.Weather.Fetcher do
 
     api_key = System.get_env("WL_KEY")
     api_secret = System.get_env("WL_SECRET")
+
+    if api_key == nil, do: Logger.error("Environment variable WL_KEY missing")
+    if api_secret == nil, do: Logger.error("Environment variable WL_SECRET missing")
 
     data =
       HTTPoison.get!(

@@ -82,10 +82,9 @@ MIX_ENV=prod mix release
 
 # Run the application
 
-Go into the `wspom` directory and run `screen`:
+Run the application inside a new `screen` session:
 
 ```
-cd wspom
 screen
 authbind --deep _build/prod/rel/wspom/bin/wspom start
 ```

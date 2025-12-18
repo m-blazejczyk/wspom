@@ -267,7 +267,7 @@ defmodule WspomWeb.Live.ReadingRecordEditForm do
 
         {:noreply,
          socket
-         |> push_patch(to: socket.assigns.patch)}
+         |> push_navigate(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
@@ -283,7 +283,7 @@ defmodule WspomWeb.Live.ReadingRecordEditForm do
 
         {:noreply,
          socket
-         |> push_patch(to: socket.assigns.patch)}
+         |> push_navigate(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset, action: :validate))}

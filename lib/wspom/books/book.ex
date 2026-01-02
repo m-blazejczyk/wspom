@@ -1,7 +1,6 @@
 defmodule Wspom.Book do
   alias Ecto.Changeset
-  alias Wspom.Book
-  alias Wspom.BookPos
+  alias Wspom.{Book, BookPos, BookStats}
 
   import Ecto.Changeset
 
@@ -165,4 +164,43 @@ defmodule Wspom.Book do
     %{book | started_date: first.date}
   end
   def maybe_start_book(%Book{} = book), do: book
+
+  @doc """
+  Returns: Wspom.BookStats or :empty.
+
+  Definitions:
+  * :days - number of days between the earliest record of type :read
+    and the latest record NOT of type :skipped, plus 1
+  * :sessions - number of reading records of type :read
+  * :per_day - excludes :skipped
+  * :per_session - excludes :skipped and :updated
+  """
+  def calculate_stats(%Book{history: []}), do: :empty
+  def calculate_stats(%Book{history: history} = book) do
+    history_ordered = history |> Enum.reverse
+
+    # history_ordered |> Enum.find(fn rec -> rec.type == :read end)  # Check nil!
+    first_day = book.started_date
+    last_day = book.finished_date || Utils.date_now
+    days = Date.diff(first_day, last_day) + 1
+
+    {sessions, sessions_length, longest, _prev_pos} = history_ordered
+    |> Enum.reduce({0, 0, 0, 0}, fn rec, {cnt, len, max_len, prev} ->
+      pos = rec.position |> BookPos.to_comparable_int
+      if rec.type == :read do
+        {cnt + 1, len + pos - prev, Enum.max([max_len, pos - prev]), pos}
+      else
+        {cnt, len, max_len, pos}
+      end
+    end)
+
+    per_session = sessions_length / sessions
+
+    %BookStats{
+      days: days,
+      sessions: sessions,
+      per_session: per_session,
+      longest: longest
+    }
+  end
 end

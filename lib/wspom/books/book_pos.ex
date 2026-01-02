@@ -50,6 +50,13 @@ defmodule Wspom.BookPos do
   when is_integer(hours) and is_integer(minutes) do
     %BookPos{type: :time, as_time: {hours, minutes}}
   end
+  def new_time(total_minutes)
+  when is_integer(total_minutes) do
+    %BookPos{
+      type: :time,
+      as_time: {div(total_minutes, 60), rem(total_minutes, 60)}
+    }
+  end
 
   def new_percent(percent)
   when is_integer(percent) do
@@ -109,7 +116,7 @@ defmodule Wspom.BookPos do
   def multiply(%BookPos{type: :time, as_time: {hours, minutes}}, factor)
     when is_integer(factor) do
     total_minutes = (hours * 60 + minutes) * factor
-    BookPos.new_time(div(total_minutes, 60), rem(total_minutes, 60))
+    BookPos.new_time(total_minutes)
   end
   def multiply(%BookPos{type: type, as_int: pos}, factor)
     when is_integer(factor) do

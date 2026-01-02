@@ -12,6 +12,7 @@ defmodule WspomWeb.Live.Books.BookView do
   @impl true
   def handle_params(%{"book" => book_id} = params, _url, socket) do
     book = Context.get_book!(book_id)
+    IO.inspect(book |> Book.calculate_stats, label: "BOOK STATS")
     {:noreply,
       apply_action(socket, socket.assigns.live_action, book, params)}
   end

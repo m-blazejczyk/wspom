@@ -51,7 +51,7 @@ defmodule Wspom.BookPos do
     %BookPos{type: :time, as_time: {hours, minutes}}
   end
   def new_time(total_minutes)
-  when is_integer(total_minutes) do
+  when is_integer(total_minutes) and total_minutes >= 0 do
     %BookPos{
       type: :time,
       as_time: {div(total_minutes, 60), rem(total_minutes, 60)}
@@ -62,6 +62,10 @@ defmodule Wspom.BookPos do
   when is_integer(percent) do
     %BookPos{type: :percent, as_int: percent}
   end
+
+  def new_empty(:pages), do: %BookPos{type: :pages, as_int: 0}
+  def new_empty(:time), do: %BookPos{type: :time, as_time: {0, 0}}
+  def new_empty(:percent), do: %BookPos{type: :percent, as_int: 0}
 
   def type_to_string(:pages), do: "the number of pages"
   def type_to_string(:time), do: "time (h:mm)"
@@ -121,6 +125,27 @@ defmodule Wspom.BookPos do
   def multiply(%BookPos{type: type, as_int: pos}, factor)
     when is_integer(factor) do
     %BookPos{type: type, as_int: pos * factor}
+  end
+
+  # Subtracts two book positions. The first one must be bigger than the second.
+  # Returns a book position.
+  def subtract(%BookPos{type: :time} = bigger, %BookPos{type: :time} = smaller) do
+    total_minutes = to_comparable_int(bigger) - to_comparable_int(smaller)
+    BookPos.new_time(total_minutes)
+  end
+  def subtract(%BookPos{type: type_b, as_int: pos_b}, %BookPos{type: type_s, as_int: pos_s})
+  when type_b == type_s and pos_b >= pos_s do
+    %BookPos{type: type_b, as_int: pos_b - pos_s}
+  end
+
+  # Adds two book positions. Returns a book position.
+  def add(%BookPos{type: :time} = pos1, %BookPos{type: :time} = pos2) do
+    total_minutes = to_comparable_int(pos1) + to_comparable_int(pos2)
+    BookPos.new_time(total_minutes)
+  end
+  def add(%BookPos{type: type1, as_int: pos1}, %BookPos{type: type2, as_int: pos2})
+  when type1 == type2 do
+    %BookPos{type: type1, as_int: pos1 + pos2}
   end
 
   # Validates a form field representing a BookPos, entered as a string.

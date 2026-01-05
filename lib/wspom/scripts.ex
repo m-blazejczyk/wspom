@@ -263,24 +263,35 @@ defmodule Wspom.Scripts do
     {_len_per_type, _total_book_cnt} = books
     |> Enum.reduce({%{}, 0}, fn book, {types, book_cnt} ->
       {new_types, this_year?, _} = one_book_stats(book, year, types)
-      {new_types, (if this_year?, do: book_cnt + 1, else: book_cnt)}
+      if this_year? do
+        key = {book.medium, book.is_fiction}
+        {
+          new_types
+          |> Map.update!(key, fn {len, c} -> {len, c + 1} end),
+          book_cnt + 1
+        }
+      else
+        {new_types, book_cnt}
+      end
     end)
   end
 
   defp one_book_stats(%Wspom.Book{} = book, year, start_types) do
+    start_acc = {start_types, false, BookPos.new_empty(book.length.type)}
+
     book.history
     |> Enum.reverse
-    |> Enum.reduce({start_types, false, 0}, fn rec, {types, this_year?, prev_pos} ->
-      new_pos = BookPos.to_comparable_int(rec.position)
-      if rec.date.year == year and rec.type != :skipped do
-        # Modify `types` here
+    |> Enum.reduce(start_acc, fn rec, {types, this_year?, prev_pos} ->
+      if rec.date.year == year and rec.type != :skipped and rec.position.type != :percent do
         key = {book.medium, book.is_fiction}
-        amount = new_pos - prev_pos
+        amount = BookPos.subtract(rec.position, prev_pos)
         new_types = types
-        |> Map.update(key, amount, fn prev_len -> prev_len + amount end)
-        {new_types, true, new_pos}
+        |> Map.update(key, {amount, 0}, fn {prev_len, v} ->
+          {BookPos.add(prev_len, amount), v}
+        end)
+        {new_types, true, rec.position}
       else
-        {types, this_year?, new_pos}
+        {types, this_year?, rec.position}
       end
     end)
   end

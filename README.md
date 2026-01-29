@@ -16,6 +16,7 @@ scp michal@rpi:/home/michal/wspom/tags.dat .
 scp michal@rpi:/home/michal/wspom/wspom.dat .
 scp michal@rpi:/home/michal/wspom/weight.dat .
 scp michal@rpi:/home/michal/wspom/books.dat .
+scp michal@rpi:/home/michal/wspom/weather.dat .
 ```
 
 or all the files at once, including backups:

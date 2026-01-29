@@ -83,10 +83,19 @@ defmodule Wspom.Scripts do
   # Then:
   #   entries = Wspom.Scripts.read_text("/home/michal/Documents/Wspom/test.txt", 2025)
   # or:
-  #   entries = Wspom.Scripts.read_text("/home/michal/Documents/Wspom/wspom2023.toimport.txt", 2023)
+  #   entries = Wspom.Scripts.read_text("/home/michal/Documents/Wspom/wspom2026.toimport.txt", 2026); 0
   #
+  # This will produce a list of error messages or a statement that the data is ok.
   # Then call:
   #   Wspom.Entries.Database.append_entries_and_save(entries)
+  #
+  # IMPORTANT:
+  # - The file must not start with "------"
+  # - Weekday abbreviations must be removed from entry headers
+  # - Combining multiple days into an entry is not allowed
+  # - After deleting wspom.dat and starting the app, the database will be
+  #   seeded with 5 random entries
+  #
   def read_text(filename, year) do
     {entries_raw, _} =
       File.read!(filename)

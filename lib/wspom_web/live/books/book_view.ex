@@ -12,33 +12,34 @@ defmodule WspomWeb.Live.Books.BookView do
   @impl true
   def handle_params(%{"book" => book_id} = params, _url, socket) do
     book = Context.get_book!(book_id)
-    IO.inspect(book |> Book.calculate_stats, label: "BOOK STATS")
     {:noreply,
-      apply_action(socket, socket.assigns.live_action, book, params)}
+      apply_action(
+        socket
+        |> assign(:book, book)
+        |> assign(:stats, book |> Book.calculate_stats),
+        socket.assigns.live_action,
+        book,
+        params)}
   end
 
-  defp apply_action(socket, :view, book, _params) do
+  defp apply_action(socket, :view, _book, _params) do
     socket
-    |> assign(:book, book)
     |> assign(:page_title, "View Book")
   end
 
-  defp apply_action(socket, :edit, book, _params) do
+  defp apply_action(socket, :edit, _book, _params) do
     socket
-    |> assign(:book, book)
     |> assign(:page_title, "Edit Book")
   end
 
-  defp apply_action(socket, :add_read, book, _params) do
+  defp apply_action(socket, :add_read, _book, _params) do
     socket
-    |> assign(:book, book)
     |> assign(:reading_rec, nil)
     |> assign(:page_title, "Read Book")
   end
 
   defp apply_action(socket, :edit_read, book, %{"hist" => record_id}) do
     socket
-    |> assign(:book, book)
     |> assign(:reading_rec, book |> Book.find_reading_record(record_id))
     |> assign(:page_title, "Edit Book Reading Record")
   end

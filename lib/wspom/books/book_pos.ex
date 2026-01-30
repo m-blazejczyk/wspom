@@ -116,6 +116,20 @@ defmodule Wspom.BookPos do
     percent
   end
 
+  # Converts an integer value that is expected to be equivalent values
+  # returned from `to_comparable_int()` to a valid `BookPos`.
+  # Useful in cases when you need to perform math on "comparable ints"
+  # and then format or store the outcome.
+  def from_comparable_int(int_pos, :pages = _type) do
+    new_pages(int_pos)
+  end
+  def from_comparable_int(int_pos, :time = _type) do
+    new_time(int_pos)
+  end
+  def from_comparable_int(int_pos, :percent = _type) do
+    new_percent(int_pos)
+  end
+
   # Multiplies the given position by the second argument (expected to be an int).
   def multiply(%BookPos{type: :time, as_time: {hours, minutes}}, factor)
     when is_integer(factor) do

@@ -179,10 +179,9 @@ defmodule Wspom.Book do
   def calculate_stats(%Book{history: history} = book) do
     history_ordered = history |> Enum.reverse
 
-    # history_ordered |> Enum.find(fn rec -> rec.type == :read end)  # Check nil!
     first_day = book.started_date
     last_day = book.finished_date || Utils.date_now
-    days = Date.diff(first_day, last_day) + 1
+    days = Date.diff(last_day, first_day) + 1
 
     {sessions, sessions_length, longest, _prev_pos} = history_ordered
     |> Enum.reduce({0, 0, 0, 0}, fn rec, {cnt, len, max_len, prev} ->
@@ -194,12 +193,30 @@ defmodule Wspom.Book do
       end
     end)
 
-    per_session = sessions_length / sessions
+    per_session = BookPos.from_comparable_int(
+      div(sessions_length, sessions), book.length.type)
+
+    {actually_read, _prev_pos} = history_ordered
+    |> Enum.reduce({0, 0}, fn rec, {len, prev} ->
+      pos = rec.position |> BookPos.to_comparable_int
+      if rec.type != :skipped do
+        {len + pos - prev, pos}
+      else
+        {len, pos}
+      end
+    end)
+
+    red_per_day = BookPos.from_comparable_int(
+      div(actually_read, days), book.length.type)
+
+    longest = BookPos.from_comparable_int(
+      longest, book.length.type)
 
     %BookStats{
       days: days,
       sessions: sessions,
       per_session: per_session,
+      per_day: red_per_day,
       longest: longest
     }
   end

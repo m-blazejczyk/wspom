@@ -5,6 +5,7 @@ defmodule WspomWeb.PageController do
     entry_stats = Wspom.Entries.Context.get_stats()
     weight_stats = Wspom.Weight.Context.get_stats()
     books_stats = Wspom.Books.Context.get_stats()
+    weather_stats = Wspom.Weather.Context.get_stats()
     render(
       conn, :home,
       # The home page is often custom made - skip the default app layout.
@@ -12,7 +13,7 @@ defmodule WspomWeb.PageController do
       entries: "#{entry_stats.entries} entries",
       days: "#{weight_stats.days} days",
       books: "#{books_stats.books} books",
-      weather: "Nothing yet"
+      weather: "#{weather_stats.days} days (#{:io_lib.format("~.1f", [weather_stats.years])} years)"
     )
   end
 end

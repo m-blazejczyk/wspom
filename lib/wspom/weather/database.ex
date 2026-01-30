@@ -66,7 +66,10 @@ defmodule Wspom.Weather.Database do
 
   def get_stats do
     Agent.get(__MODULE__, fn %{hourly: hourly} ->
-      %{hourly: length(hourly)}
+      %{hours: length(hourly),
+        days: div(length(hourly), 24),
+        years: length(hourly) / (24 * 365)
+      }
     end)
   end
 

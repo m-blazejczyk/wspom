@@ -541,13 +541,14 @@ defmodule WspomWeb.CoreComponents do
   attr :extra_class, :string, default: "mt-14"
   slot :item, required: true do
     attr :title, :string, required: true
+    attr :shown, :boolean
   end
 
   def list(assigns) do
     ~H"""
     <div class={["w-full", @extra_class]}>
       <dl class="-my-4 divide-y divide-zinc-100">
-        <div :for={item <- @item} class="flex gap-4 py-4 leading-6 sm:gap-8">
+        <div :for={item <- @item} :if={Map.get(item, :shown, true)} class="flex gap-4 py-4 leading-6 sm:gap-8">
           <dt class="w-1/4 flex-none text-zinc-800 px-6"><%= item.title %></dt>
           <dd class="text-zinc-600"><%= render_slot(item) %></dd>
         </div>

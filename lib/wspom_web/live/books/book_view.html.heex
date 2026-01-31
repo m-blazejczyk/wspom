@@ -31,12 +31,11 @@
   <div class="flex justify-center items-center w-full">
     <.list>
       <:item title="Short title"><%= @book.short_title %></:item>
-      <:item title="Status"><%= format_status(@book.status) %></:item>
+      <:item title="Status" shown={@book.status != :active}><%= format_status(@book.status) %></:item>
       <:item title="Started"><%= @book.started_date %></:item>
-      <:item title="Completed"><%= @book.finished_date %></:item>
+      <:item title="Completed" shown={@book.finished_date != nil}><%= @book.finished_date %></:item>
       <:item title="Length"><%= @book.length %></:item>
-      <:item title="Medium"><%= format_medium(@book.medium) %></:item>
-      <:item title="Type"><%= format_is_fiction(@book.is_fiction) %></:item>
+      <:item title="Type"><%= "#{format_medium(@book.medium)} (#{format_is_fiction(@book.is_fiction)})" %></:item>
     </.list>
   </div>
   <div id="show_stats" class="flex w-full mt-8">

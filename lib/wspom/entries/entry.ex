@@ -46,23 +46,45 @@ defmodule Wspom.Entry do
     |> validate_required([:description, :title, :year, :month, :day])
     |> validate_number(:day, greater_than: 0, less_than: 32)
     |> validate_number(:month, greater_than: 0, less_than: 13)
-    |> validate_number(:year, greater_than: 1899, less_than: 2026)
+    |> validate_number(:year, greater_than: 1899, less_than: 2027)
     |> validate_inclusion(:importance, ["normal", "important", "very_important"])
     |> validate_date()
     |> ignore_tags()
+    |> fix_tags(entry, attrs)
   end
 
+  # This function is needed because of the (very annoying) way Changeset.cast works.
+  # Because 'tags' is a MapSet in Entry, Changeset.cast always returns an error,
+  # complaining about the 'tags' field.
+  # This function simply removes any errors related to 'tags' from the changeset.
+  # We will validate tags separately.
+  # (All this is because Ecto does not support MapSet as a field type and I
+  # did not know how to implement a custom Ecto.Type for MapSet).
   defp ignore_tags(%Ecto.Changeset{} = changeset) do
-    # This function is needed because of the (very annoying) way Changeset.cast works.
-    # Because 'tags' is a MapSet in Entry, Changeset.cast always returns an error,
-    # complaining about the 'tags' field.
-    # This function simply removes any errors related to 'tags' from the changeset.
-    # We will validate tags separately.
     new_changeset = %Ecto.Changeset{changeset | errors: Keyword.delete(changeset.errors, :tags)}
     if length(new_changeset.errors) == 0 do
       %Ecto.Changeset{new_changeset | valid?: true}
     else
       new_changeset
+    end
+  end
+
+  # This function is needed because of a very strange behavior of Changeset.cast:
+  # if the 'tags' field is cleared in the form (i.e. set to an empty string),
+  # Changeset.cast does not register any change to the 'tags' field.
+  # This is most likely related to the fact that 'tags' is a MapSet in Entry
+  # which causes `cast` to generate a validation error (see `ignore_tags()`).
+  defp fix_tags(%Ecto.Changeset{valid?: false} = changeset, _entry, _attrs) do
+    changeset
+  end
+  defp fix_tags(%Ecto.Changeset{} = changeset, entry, attrs) do
+    if Ecto.Changeset.get_change(changeset, :tags) == nil
+      and attrs["tags"] != nil
+      and tags_to_string(entry.tags) != attrs["tags"] do
+      changeset |> Ecto.Changeset.put_change(:tags, attrs["tags"])
+    else
+      IO.puts("No need to fix tags in changeset")
+      changeset
     end
   end
 
@@ -162,7 +184,7 @@ defmodule Wspom.Entry do
         {:error, {:tags, error}}
       {:ok, %{tags_applied: tags} = tags_info} ->
         {:continue,
-        entry |> Map.put(:tags, tags),
+        %{entry | tags: tags},
         tags_info}
     end
   end

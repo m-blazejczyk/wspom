@@ -72,6 +72,12 @@ Get latest:
 git pull
 ```
 
+Update dependencies if needed:
+
+```
+mix deps.update --all
+```
+
 Rebuild:
 
 ```

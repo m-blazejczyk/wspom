@@ -9,7 +9,7 @@ defmodule Wspom.Weight.Context do
 
   @doc """
   Returns a new weight measurement record with a `nil` id, with `date`
-  defaulted to today, and with the weight set to nil.
+  defaulted to the latest record plus one day, and with the weight set to nil.
 
   ## Examples
 
@@ -17,9 +17,21 @@ defmodule Wspom.Weight.Context do
       %{id: nil, date: ~D[2025-07-30], weight: nil}
   """
   def new_form_data() do
+    d = Database.get_most_recent_record()
+    |> new_form_date()
+
     %{id: nil,
-      date: Utils.date_now(),
+      date: d,
       weight: nil}
+  end
+
+  # Returns the date for a new form record, based on the most recent record.
+  # If there is no most recent record, returns today's date.
+  defp new_form_date(nil) do
+    Utils.date_now()
+  end
+  defp new_form_date(%{date: date}) do
+    date |> Date.add(1)
   end
 
   @doc """

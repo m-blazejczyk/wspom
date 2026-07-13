@@ -116,7 +116,7 @@
     title={@page_title}
     action={@live_action}
     id={:new}
-    record={Wspom.ReadingRecord.new_form_data(@book.id)}
+    record={Wspom.ReadingRecord.new_form_data(@book.id, Wspom.Books.Context.next_reading_date(@book.id))}
     book={@book}
     patch={~p"/books/#{@book.id}"}
   />

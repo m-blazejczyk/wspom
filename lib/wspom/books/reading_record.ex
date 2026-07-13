@@ -131,11 +131,12 @@ defmodule Wspom.ReadingRecord do
   end
 
   # Returns a new book progress object with a `nil` id and with `date`
-  # defaulted to today, formatted as string. The position defaults to ""
-  # to make it easier on the form. This is the data structure expected
-  # by the form component - not the data structure to be saved in the database.
-  def new_form_data(book_id) do
-    %ReadingRecord{id: nil, book_id: book_id, date: Utils.date_now(),
+  # defaulted to the latest record plus one day, formatted as string.
+  # The position defaults to "" to make it easier on the form.
+  # This is the data structure expected by the form component -
+  # not the data structure to be saved in the database.
+  def new_form_data(book_id, date) do
+    %ReadingRecord{id: nil, book_id: book_id, date: date,
       type: :read, position: nil}
   end
 

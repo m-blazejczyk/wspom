@@ -79,6 +79,15 @@ defmodule Wspom.Weight.Database do
     Agent.get(__MODULE__, fn %{data: data} -> data end)
   end
 
+  def get_most_recent_record() do
+    Agent.get(__MODULE__, fn %{data: data} ->
+      data |> Enum.max_by(
+        fn record -> record.date end,
+        fn d1, d2 -> Date.compare(d1, d2) == :gt end,
+        fn -> nil end)
+    end)
+  end
+
   def add_record_and_save(created_record) do
     Logger.notice("Saving the added record…")
     modify_and_save_data(created_record, fn records, record ->

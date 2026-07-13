@@ -114,6 +114,16 @@ defmodule Wspom.Books.Context do
   end
 
   @doc """
+  Returns the date of the most recent reading record for a given book
+  plus one day.
+  If the book has no reading records, returns today's date.
+  If the book is not found, returns nil.
+  """
+  def next_reading_date(book_id) do
+    Database.next_reading_date(book_id)
+  end
+
+  @doc """
   Returns an `%Ecto.Changeset{}` for tracking changes to reading records.
   This function is invoked every time a field in the form changes.
   `book` is the book that this reading record will be a part of.
@@ -142,7 +152,7 @@ defmodule Wspom.Books.Context do
       {:error, %Ecto.Changeset{}}
   """
   def create_reading_record(%Book{} = book, params \\ %{}) do
-    ReadingRecord.new_form_data(book.id)
+    ReadingRecord.new_form_data(book.id, next_reading_date(book.id))
     |> ReadingRecord.changeset(book, params)
     |> save_reading_record(book, &Database.add_reading_record_and_save/2)
   end

@@ -153,6 +153,27 @@ defmodule Wspom.Books.Database do
     Agent.get(__MODULE__, fn %{books: books} -> books end)
   end
 
+  @doc """
+  Returns the date of the most recent reading record for a given book
+  plus one day.
+  If the book has no reading records, returns today's date.
+  If the book is not found, returns nil.
+  """
+  def next_reading_date(book_id) do
+    next_reading_date_for_book(get_book(book_id))
+  end
+
+  defp next_reading_date_for_book(nil) do
+    nil
+  end
+  defp next_reading_date_for_book(%Book{history: []}) do
+    # Return today's date if there are no reading records
+    Utils.date_now()
+  end
+  defp next_reading_date_for_book(%Book{history: history}) do
+    history |> hd() |> Map.get(:date) |> Date.add(1)
+  end
+
   def add_book_and_save(%Book{} = created_book) do
     Logger.notice("Saving a new book (#{created_book.title})…")
     modify_and_save_data(created_book, fn books, book ->

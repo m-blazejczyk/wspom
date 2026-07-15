@@ -54,10 +54,13 @@ defmodule WspomWeb.Live.ReadingRecordEditForm do
             <.button type="button" class="float-left w-16" phx-click={JS.push("day_earlier")} phx-target={@myself}>
               &lt;
             </.button>
+            <.button type="button" class="float-right w-16" phx-click={JS.push("today")} phx-target={@myself}>
+              T
+            </.button>
             <.button type="button" class="float-right w-16" phx-click={JS.push("day_later")} phx-target={@myself}>
               &gt;
             </.button>
-          </div>
+           </div>
         </div>
 
         <.input field={@form[:position]} type="text" label="Position"
@@ -215,6 +218,10 @@ defmodule WspomWeb.Live.ReadingRecordEditForm do
   end
   def handle_event("day_later", _, socket) do
     add_days_to_date(socket, 1)
+  end
+  def handle_event("today", _, socket) do
+    current_date = DateTime.now!("America/Montreal") |> DateTime.to_date()
+    handle_form_change(socket, Utils.set_form_param(socket, "date", current_date))
   end
   def handle_event("append", %{"text" => text}, socket) do
     new_position = get_position_from_form(socket) <> text

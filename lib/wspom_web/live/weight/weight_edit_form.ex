@@ -108,6 +108,9 @@ defmodule WspomWeb.Live.WeightEditForm do
             <.button type="button" class="float-left w-16" phx-click={JS.push("day_earlier")} phx-target={@myself}>
               &lt;
             </.button>
+            <.button type="button" class="float-right w-16" phx-click={JS.push("today")} phx-target={@myself}>
+              T
+            </.button>
             <.button type="button" class="float-right w-16" phx-click={JS.push("day_later")} phx-target={@myself}>
               &gt;
             </.button>
@@ -159,6 +162,10 @@ defmodule WspomWeb.Live.WeightEditForm do
   end
   def handle_event("day_later", _, socket) do
     add_days_to_date(socket, 1)
+  end
+  def handle_event("today", _, socket) do
+    today = DateTime.now!("America/Montreal") |> DateTime.to_date()
+    handle_form_change(socket, Utils.set_form_param(socket, "date", today))
   end
   def handle_event("append", %{"text" => text}, socket) do
     raw = get_form_param(socket, "weight")

@@ -304,4 +304,20 @@ defmodule Wspom.Scripts do
       end
     end)
   end
+
+  # Fix the end date of a book
+  def fix_book() do
+    db = Wspom.DbBase.load_db_file("books.dat")
+    bk = db.books |> Enum.find(fn b -> b.id == 115 end)
+    new_hist = %{ bk.history |> hd | date: ~D[2026-09-02] }
+    new_bk = %{bk | history: [new_hist | tl(bk.history)],
+      finished_date: ~D[2026-09-02]}
+    new_books = db.books |> Enum.map(fn b -> if b.id == 115, do: new_bk, else: b end)
+    new_db = %{
+      books: new_books,
+      version: db.version,
+      is_production: db.is_production,
+    }
+    new_db |> Wspom.DbBase.save_db_file("booksfixed.dat", "booksfixed_backup.dat")
+ end
 end

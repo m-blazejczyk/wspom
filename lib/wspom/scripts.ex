@@ -309,9 +309,9 @@ defmodule Wspom.Scripts do
   def fix_book() do
     db = Wspom.DbBase.load_db_file("books.dat")
     bk = db.books |> Enum.find(fn b -> b.id == 115 end)
-    new_hist = %{ bk.history |> hd | date: ~D[2026-09-02] }
+    new_hist = %{ bk.history |> hd | date: ~D[2026-09-07] }
     new_bk = %{bk | history: [new_hist | tl(bk.history)],
-      finished_date: ~D[2026-09-02]}
+      finished_date: ~D[2026-09-07]}
     new_books = db.books |> Enum.map(fn b -> if b.id == 115, do: new_bk, else: b end)
     new_db = %{
       books: new_books,

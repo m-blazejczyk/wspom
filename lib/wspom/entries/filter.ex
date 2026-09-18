@@ -115,65 +115,65 @@ defmodule Wspom.Entries.Filter do
   end
 
   def current_link(%Filter{which: :day, day: day, month: month}) do
-    ~p"/entries?filter=day&day=#{day}&month=#{month}"
+    ~p"/entries/view?filter=day&day=#{day}&month=#{month}"
   end
   def current_link(%Filter{which: :year, day: day, month: month, year: year}) do
-    ~p"/entries?filter=year&day=#{day}&month=#{month}&year=#{year}"
+    ~p"/entries/view?filter=year&day=#{day}&month=#{month}&year=#{year}"
   end
   def current_link(%Filter{which: :tag, day: day, month: month, year: year, tag: tag}) do
-    ~p"/entries?filter=tag&tag=#{tag}&day=#{day}&month=#{month}&year=#{year}"
+    ~p"/entries/view?filter=tag&tag=#{tag}&day=#{day}&month=#{month}&year=#{year}"
   end
 
   def prev_link(%Filter{prev_date: nil}) do
     ""
   end
   def prev_link(%Filter{which: :day, prev_date: prev_date}) do
-    ~p"/entries?filter=day&day=#{prev_date.day}&month=#{prev_date.month}"
+    ~p"/entries/view?filter=day&day=#{prev_date.day}&month=#{prev_date.month}"
   end
   def prev_link(%Filter{which: :year, prev_date: prev_date}) do
-    ~p"/entries?filter=year&day=#{prev_date.day}&month=#{prev_date.month}&year=#{prev_date.year}"
+    ~p"/entries/view?filter=year&day=#{prev_date.day}&month=#{prev_date.month}&year=#{prev_date.year}"
   end
   def prev_link(%Filter{which: :tag, tag: tag, prev_date: prev_date}) do
-    ~p"/entries?filter=tag&tag=#{tag}&day=#{prev_date.day}&month=#{prev_date.month}&year=#{prev_date.year}"
+    ~p"/entries/view?filter=tag&tag=#{tag}&day=#{prev_date.day}&month=#{prev_date.month}&year=#{prev_date.year}"
   end
 
   def next_link(%Filter{next_date: nil}) do
     ""
   end
   def next_link(%Filter{which: :day, next_date: next_date}) do
-    ~p"/entries?filter=day&day=#{next_date.day}&month=#{next_date.month}"
+    ~p"/entries/view?filter=day&day=#{next_date.day}&month=#{next_date.month}"
   end
   def next_link(%Filter{which: :year, next_date: next_date}) do
-    ~p"/entries?filter=year&day=#{next_date.day}&month=#{next_date.month}&year=#{next_date.year}"
+    ~p"/entries/view?filter=year&day=#{next_date.day}&month=#{next_date.month}&year=#{next_date.year}"
   end
   def next_link(%Filter{which: :tag, tag: tag, next_date: next_date}) do
-    ~p"/entries?filter=tag&tag=#{tag}&day=#{next_date.day}&month=#{next_date.month}&year=#{next_date.year}"
+    ~p"/entries/view?filter=tag&tag=#{tag}&day=#{next_date.day}&month=#{next_date.month}&year=#{next_date.year}"
   end
 
   def ff_prev_link(%Filter{which: :day, prev_date7: prev_date7}) do
-    ~p"/entries?filter=day&day=#{prev_date7.day}&month=#{prev_date7.month}"
+    ~p"/entries/view?filter=day&day=#{prev_date7.day}&month=#{prev_date7.month}"
   end
   def ff_prev_link(_) do
     ""
   end
 
   def ff_next_link(%Filter{which: :day, next_date7: next_date7}) do
-    ~p"/entries?filter=day&day=#{next_date7.day}&month=#{next_date7.month}"
+    ~p"/entries/view?filter=day&day=#{next_date7.day}&month=#{next_date7.month}"
   end
   def ff_next_link(_) do
     ""
   end
 
   def switch_to_day_link(%Filter{day: day, month: month}) do
-    ~p"/entries?filter=day&day=#{day}&month=#{month}"
+    ~p"/entries/view?filter=day&day=#{day}&month=#{month}"
   end
 
   def switch_to_year_link(%Filter{day: day, month: month}, year) do
-    ~p"/entries?filter=year&day=#{day}&month=#{month}&year=#{year}"
+    ~p"/entries/view?filter=year&day=#{day}&month=#{month}&year=#{year}"
   end
 
   def switch_to_tag_link(%Filter{day: day, month: month}, year, tag) do
-    ~p"/entries?filter=tag&tag=#{tag}&day=#{day}&month=#{month}&year=#{year}"
+    ~p"/entries/view?filter=tag&tag=#{tag}&day=#{day}&month=#{month}&year=#{year}"
   end
 
   @spec filter(%Filter{}, list(%Wspom.Entry{})) :: list(%Wspom.Entry{})

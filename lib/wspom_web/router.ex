@@ -20,6 +20,7 @@ defmodule WspomWeb.Router do
     get "/", PageController, :home
 
     live "/entries", Live.EntryView, :index
+    live "/entries/view", Live.EntryView, :view
     live "/entries/new", Live.EntryView, :new
     live "/entries/:id/edit", Live.EntryView, :edit
 

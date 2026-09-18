@@ -35,14 +35,14 @@ defmodule WspomWeb.Live.EntryView do
     |> assign(:cascades, nil)
   end
 
-  defp apply_action(socket, :index, %{"filter" => _which, "day" => _day, "month" => _month} = params) do
+  defp apply_action(socket, :view, %{"filter" => _which, "day" => _day, "month" => _month} = params) do
     # This is any subsequent page load - we have query params
     entries = Context.list_entries()
     filter = Filter.from_params(params, entries)
     socket
     |> build_socket_for_index(filter, entries)
   end
-  defp apply_action(socket, :index, %{}) do
+  defp apply_action(socket, :view, %{}) do
     # This is the initial load - no query parameters
     entries = Context.list_entries()
     filter = Filter.default()
@@ -111,7 +111,7 @@ defmodule WspomWeb.Live.EntryView do
     {
       :noreply,
       socket
-      |> push_patch(to: ~p"/entries?filter=year&day=#{entry.day}&month=#{entry.month}&year=#{entry.year}")
+      |> push_patch(to: ~p"/entries/view?filter=year&day=#{entry.day}&month=#{entry.month}&year=#{entry.year}")
     }
   end
   def handle_event("cleanup-tags", _, socket) do

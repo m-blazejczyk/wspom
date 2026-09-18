@@ -1,4 +1,4 @@
-defmodule WspomWeb.PageController do
+defmodule WspomWeb.HomeController do
   use WspomWeb, :controller
 
   def home(conn, _params) do
@@ -8,12 +8,22 @@ defmodule WspomWeb.PageController do
     weather_stats = Wspom.Weather.Context.get_stats()
     render(
       conn, :home,
-      # The home page is often custom made - skip the default app layout.
-      layout: false,
+      layout: false,  # Skip the default app layout.
       entries: "#{entry_stats.entries} entries",
       days: "#{weight_stats.days} days",
       books: "#{books_stats.books} books",
       weather: "#{weather_stats.days} days (#{:io_lib.format("~.1f", [weather_stats.years])} years)"
+    )
+  end
+
+  def entries(conn, _params) do
+    render(
+      conn, :entries,
+      layout: false,  # Skip the default app layout.
+      entries: "Fake entries",
+      days: "No days",
+      books: "Zero books",
+      weather: "Bad weather"
     )
   end
 end

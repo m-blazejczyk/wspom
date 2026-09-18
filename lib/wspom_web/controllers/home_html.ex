@@ -1,4 +1,4 @@
-defmodule WspomWeb.PageHTML do
+defmodule WspomWeb.HomeHTML do
   use WspomWeb, :html
 
   embed_templates "*"

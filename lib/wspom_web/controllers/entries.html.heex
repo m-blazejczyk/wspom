@@ -1,0 +1,20 @@
+<.flash_group flash={@flash} />
+<section class="p-4">
+  <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <WspomWeb.CardComponent.card href={~p"/entries"} img={~p"/images/diary_64.png"}
+      name="Wspom" info={@entries} label="Wspom" />
+    <WspomWeb.CardComponent.card href={~p"/weight"} img={~p"/images/scale_64.png"}
+      name="Weight" info={@days} label="Weight" />
+    <WspomWeb.CardComponent.card href={~p"/books"} img={~p"/images/books_64.png"}
+      name="Books" info={@books} label="Books" />
+    <WspomWeb.CardComponent.card href={~p"/weather"} img={~p"/images/weather_64.png"}
+      name="Weather" info={@weather} label="Weather" />
+  </ul>
+  <p class="px-2 text-xs leading-2 m-8">
+    wsp <%= Application.spec(:wspom, :vsn) %>
+    <br>
+    ph <%= Application.spec(:phoenix, :vsn) %>
+    <br>
+    elx <%= System.version %>
+  </p>
+</section>

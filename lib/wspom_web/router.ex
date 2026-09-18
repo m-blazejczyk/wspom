@@ -17,9 +17,9 @@ defmodule WspomWeb.Router do
   scope "/", WspomWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    get "/", HomeController, :home
 
-    live "/entries", Live.EntryView, :index
+    get "/entries", HomeController, :entries
     live "/entries/view", Live.EntryView, :view
     live "/entries/new", Live.EntryView, :new
     live "/entries/:id/edit", Live.EntryView, :edit

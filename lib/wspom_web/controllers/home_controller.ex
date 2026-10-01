@@ -20,10 +20,12 @@ defmodule WspomWeb.HomeController do
     render(
       conn, :entries,
       layout: false,  # Skip the default app layout.
-      entries: "Fake entries",
-      days: "No days",
-      books: "Zero books",
-      weather: "Bad weather"
-    )
+      entries: "Fake",
+      last_on: "Fake",
+      days: "Fake",
+      years: "Fake",
+      tags: "Fake",
+      tagged: "Fake"
+   )
   end
 end

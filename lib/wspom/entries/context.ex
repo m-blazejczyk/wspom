@@ -3,10 +3,17 @@ defmodule Wspom.Entries.Context do
   alias Wspom.Entry
 
   @doc """
-  Returns a map with database stats.
+  Returns a map with database stats for the home page.
   """
   def get_stats do
     Database.get_stats()
+  end
+
+  @doc """
+  Returns a map with database stats for the entries landing page.
+  """
+  def get_landing_page_stats do
+    Database.get_landing_page_stats()
   end
 
   @doc """

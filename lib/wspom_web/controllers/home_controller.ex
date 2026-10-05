@@ -17,15 +17,21 @@ defmodule WspomWeb.HomeController do
   end
 
   def entries(conn, _params) do
+    stats = Wspom.Entries.Context.get_landing_page_stats()
     render(
       conn, :entries,
       layout: false,  # Skip the default app layout.
-      entries: "Fake",
-      last_on: "Fake",
-      days: "Fake",
-      years: "Fake",
-      tags: "Fake",
-      tagged: "Fake"
+      stats: stats
+      # entries: stats.entries,
+      # days: stats.days,
+      # years: stats.years,
+      # pages: stats.pages,
+      # tagged: stats.tagged,
+      # important: stats.important,
+      # very_important: stats.very_important,
+      # needs_review: stats.needs_review,
+      # tags: stats.tags,
+      # cascades: stats.cascades
    )
   end
 end

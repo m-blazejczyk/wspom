@@ -8,6 +8,7 @@ defmodule Wspom.Entries.Database do
   alias Wspom.Entries.Migrations
   alias Wspom.Entries.TnC
   alias Wspom.Entry
+  alias Wspom.Entries.Stats
 
   @db_file "wspom.dat"
   @db_file_backup "wspom.bak.dat"
@@ -133,6 +134,16 @@ defmodule Wspom.Entries.Database do
         tags: MapSet.size(tags),
         cascades: map_size(cascades)
       }
+    end)
+  end
+
+  def get_landing_page_stats do
+    Agent.get(__MODULE__, fn {%{entries: entries}, %{tags: tags, cascades: cascades}} ->
+      entries_stats = Stats.get_stats(entries)
+      Map.merge(entries_stats, %{
+        tags: MapSet.size(tags),
+        cascades: map_size(cascades)
+      })
     end)
   end
 

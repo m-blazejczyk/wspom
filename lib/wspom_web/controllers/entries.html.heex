@@ -5,12 +5,16 @@
       name="Today" info="Sep 27" label="Today" />
   </ul>
   <ul class="pt-3 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6">
-    <WspomWeb.CardComponent.info_card name="Entries" info={@entries} />
-    <WspomWeb.CardComponent.info_card name="Last on" info={@last_on} />
-    <WspomWeb.CardComponent.info_card name="Days" info={@days} />
-    <WspomWeb.CardComponent.info_card name="Years" info={@years} />
-    <WspomWeb.CardComponent.info_card name="Tags" info={@tags} />
-    <WspomWeb.CardComponent.info_card name="Tagged entries" info={@tagged} />
+    <WspomWeb.CardComponent.info_card name="Entries" info={@stats.entries} />
+    <WspomWeb.CardComponent.info_card name="Important" info={@stats.important} />
+    <WspomWeb.CardComponent.info_card name="Very Important" info={@stats.very_important} />
+    <WspomWeb.CardComponent.info_card name="Needs Review" info={@stats.needs_review} />
+    <WspomWeb.CardComponent.info_card name="Years" info={@stats.years} />
+    <WspomWeb.CardComponent.info_card name="Days" info={@stats.days} />
+    <WspomWeb.CardComponent.info_card name="Pages" info={@stats.pages} />
+    <WspomWeb.CardComponent.info_card name="Tags" info={@stats.tags} />
+    <WspomWeb.CardComponent.info_card name="Tagged entries" info={@stats.tagged} />
+    <WspomWeb.CardComponent.info_card name="Cascades" info={@stats.cascades} />
   </ul>
   <ul class="pt-3 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6">
     <WspomWeb.CardComponent.link_card name="pre-1992" info="x entries" href={~p"/entries/view"} />

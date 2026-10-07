@@ -22,16 +22,6 @@ defmodule WspomWeb.HomeController do
       conn, :entries,
       layout: false,  # Skip the default app layout.
       stats: stats
-      # entries: stats.entries,
-      # days: stats.days,
-      # years: stats.years,
-      # pages: stats.pages,
-      # tagged: stats.tagged,
-      # important: stats.important,
-      # very_important: stats.very_important,
-      # needs_review: stats.needs_review,
-      # tags: stats.tags,
-      # cascades: stats.cascades
    )
   end
 end

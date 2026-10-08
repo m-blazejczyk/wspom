@@ -194,7 +194,12 @@ defmodule Wspom.Book do
     end)
 
     per_session = BookPos.from_comparable_int(
-      div(sessions_length, sessions), book.length.type)
+      if sessions > 0 do
+        div(sessions_length, sessions)
+      else
+        0
+      end,
+      book.length.type)
 
     {actually_read, _prev_pos} = history_ordered
     |> Enum.reduce({0, 0}, fn rec, {len, prev} ->
@@ -207,7 +212,12 @@ defmodule Wspom.Book do
     end)
 
     red_per_day = BookPos.from_comparable_int(
-      div(actually_read, days), book.length.type)
+      if days > 0 do
+        div(actually_read, days)
+      else
+        0
+      end,
+      book.length.type)
 
     longest = BookPos.from_comparable_int(
       longest, book.length.type)

@@ -4,7 +4,7 @@ defmodule WspomWeb.CardComponent do
 
   def card(assigns) do
     ~H"""
-    <li>
+    <li class={assigns[:class_li] || ""}>
       <a href={@href}
         class="block h-full transition-all duration-200 bg-white border border-gray-200 rounded group hover:shadow-lg hover:border-gray-700 hover:ring-1 hover:ring-gray-700/5">
         <div class="flex items-center p-6">
@@ -90,7 +90,7 @@ defmodule WspomWeb.CardComponent do
 
   def small_card(assigns) do
     ~H"""
-    <li>
+    <li class={assigns[:class_li] || ""}>
       <.link patch={@href}
         class="block h-full transition-all duration-200 bg-white border border-gray-200 rounded group hover:shadow-lg hover:border-gray-700 hover:ring-1 hover:ring-gray-700/5">
         <div class="flex items-center p-4">

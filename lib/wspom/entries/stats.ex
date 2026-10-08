@@ -18,7 +18,6 @@ defmodule Wspom.Entries.Stats do
     years_list = all_years
     |> Enum.reduce([], &years_disp_reducer/2)
     |> Enum.reverse()
-    |> IO.inspect(label: "years_list")
     # Stats based on the first pages of "Miazga", single-spaced,
     # font size 12 Liberation Serif:
     # - 28 pages is 100K characters

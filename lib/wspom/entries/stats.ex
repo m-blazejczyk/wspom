@@ -35,7 +35,10 @@ defmodule Wspom.Entries.Stats do
     needs_review_count = entries
     |> Enum.count(& &1.needs_review)
 
+    now = Utils.date_now()
+
     %{
+      now: "#{Timex.month_shortname(now.month)} #{now.day}",
       entries: entries_count,
       days: days_count,
       years: years_count,

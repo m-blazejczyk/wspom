@@ -1,12 +1,12 @@
 <.flash_group flash={@flash} />
 <section class="p-4 gap-6">
-  <ul class="grid grid-cols-8 gap-6">
+  <ul class="flex gap-2">
     <WspomWeb.CardComponent.small_card href={~p"/"}
       img={~p"/images/home_64.png"} label="Go back to the home page"
-      class_li="col-span-4 sm:col-span-2 lg:col-span-1" />
+      class_li="w-32 flex-none" />
     <WspomWeb.CardComponent.card href={~p"/entries/view"} img={~p"/images/diary_64.png"}
       name="Today" info="Sep 27" label="Today"
-      class_li="col-span-4 sm:col-span-6 lg:col-span-7" />
+      class_li="flex-1" />
   </ul>
   <ul class="pt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
     <WspomWeb.CardComponent.info_card name="Entries" info={@stats.entries} />
